@@ -1,0 +1,18 @@
+Package: mitml
+Type: Package
+Title: Tools for Multiple Imputation in Multilevel Modeling
+Version: 0.3-4
+Date: 2016-09-13
+Author:  Simon Grund [aut,cre], Alexander Robitzsch [aut], Oliver Luedtke [aut]
+Maintainer: Simon Grund <grund@ipn.uni-kiel.de>
+URL: https://github.com/simongrund1/mitml
+BugReports: https://github.com/simongrund1/mitml/issues
+Imports: pan, jomo, haven, grDevices, graphics, stats, utils
+Suggests: lme4, nlme, mice, miceadds
+LazyData: true
+LazyLoad: true
+Description: Provides tools for multiple imputation of missing data in multilevel
+ modeling. Includes a user-friendly interface to the packages 'pan' and 'jomo',
+ and several functions for visualization, data management and the analysis 
+ of multiply imputed data sets.
+License: GPL (>=2)

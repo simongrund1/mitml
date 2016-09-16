@@ -23,3 +23,5 @@ The version hosted here is essentially a snapshot of the CRAN version, allowing 
 install.packages("devtools")
 devtools::install_github("simongrund1/mitml")
 ```
+
+[![](http://www.r-pkg.org/badges/version/mitml)](https://cran.r-project.org/package=mitml) [![](http://cranlogs.r-pkg.org/badges/mitml)](https://cran.r-project.org/package=mitml)

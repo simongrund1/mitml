@@ -37,6 +37,9 @@ S3method(summary,mitml)
 
 S3method(print,mitml.summary)
 
+S3method(c,mitml.list)
+S3method(cbind,mitml.list)
+S3method(rbind,mitml.list)
 S3method(with,mitml.list)
 S3method(within,mitml.list)
 

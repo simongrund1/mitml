@@ -58,9 +58,9 @@ mitmlComplete <- function(x, print="all", force.list=FALSE){
     if(any(nofac)) x[ ind[nofac,] ] <- rpm[nofac,i]
 
     for(ff in fac){
-      fi <- ind[,2]==ff
+      fi <- which(ind[,2]==ff)
       lev <- attr(x,"labels")[[colnames(x)[ff]]]
-      if(sum(fi)>0) x[ ind[fi,] ] <- lev[rpm[fi,i]]
+      if(length(fi)>0) x[ ind[fi,,drop=F] ] <- lev[rpm[fi,i]]
     }
 
   }else{

@@ -9,7 +9,7 @@ The functions \code{with} and \code{within} evaluate R expressions in a list of 
 \usage{
 
 \method{with}{mitml.list}(data, expr, ...)
-\method{within}{mitml.list}(data, expr, ...)
+\method{within}{mitml.list}(data, expr, ignore=NULL, ...)
 
 }
 
@@ -17,6 +17,7 @@ The functions \code{with} and \code{within} evaluate R expressions in a list of 
 
   \item{data}{A list of imputed data sets with class \code{mitml.list} as produced by \code{mitmlComplete}.}
   \item{expr}{An R expression to be evaluated for each data set.}
+  \item{ignore}{A character vector denoting objects not to be saved.}
   \item{\dots}{Not being used.}
 
 }
@@ -24,7 +25,9 @@ The functions \code{with} and \code{within} evaluate R expressions in a list of 
 \details{
 
 The two functions are defined as \code{with} and \code{within} methods for objects of class \code{mitml.list}. Both \code{with} and \code{within} evaluate an R expression in each of the imputed data sets.
-However, the two functions return different values (see below).
+However, the two functions return different values:
+\code{with} returns the evaluated expression, whereas \code{within} returns the resuling data sets.
+The \code{ignore} argument may be used to declare objects that are not to be saved within \code{within}.
 
 }
 
@@ -56,8 +59,14 @@ implist <- mitmlComplete(imp, print=1:5)
 # calculate and save cluster means
 new1.implist <- within(implist, Means.ReadAchiev <- clusterMeans(ReadAchiev, ID))
 
-# calculate interaction terms
-new2.implist <- within(implist, int.SesCa <- SES*CognAbility )
+# center variables, calculate interaction terms, ignore byproducts
+new2.implist <- within(implist,{
+  M.SES <- mean(SES)
+  M.CognAbility <- mean(CognAbility)
+  C.SES <- SES - M.SES
+  C.CognAbility <- CognAbility - M.CognAbility
+  SES.CognAbility <- C.SES * C.CognAbility
+}, ignore=c("M.SES", "M.CognAbility"))
 
 # * Example 2: fitting statistical models
 

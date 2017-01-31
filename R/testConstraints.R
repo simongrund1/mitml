@@ -68,9 +68,16 @@ testConstraints <- function(model, qhat, uhat, constraints, method=c("D1","D2"),
       coef.method <- "nlme"
     }
 
+    # geeglm (geepack)
+    if(any(grepl("geeglm",cls)) & coef.method=="default"){
+      if(!requireNamespace("geepack", quietly=TRUE)) stop("The 'geepack' package must be installed in order to handle 'geeglm' class objects.")
+      coef.method <- "geeglm"
+    }
+
     fe <- switch(coef.method,
       lmer=.getCOEF.lmer(model),
       nlme=.getCOEF.nlme(model),
+      geeglm=.getCOEF.geeglm(model),
       default=.getCOEF.default(model)
     )
 

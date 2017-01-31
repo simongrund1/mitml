@@ -44,7 +44,8 @@ This procedure is referred to as \eqn{D_3} and can be used by setting \code{meth
 In general, Wald-like hypothesis tests (\eqn{D_1} and \eqn{D_2}) are appropriate if the parameters can be assumed to follow a multivariate normal distribution (e.g., regression coefficients, fixed effects in multilevel models).
 Likelihood-based comparisons (\eqn{D_2} and \eqn{D_3}) are also appropriate in such cases and may also be used for variance components.
 
-The function supports different classes of statistical models depending on which \code{method} is chosen. \eqn{D_1} supports quite general models as long as they define \code{coef} and \code{vcov} methods (or similar) for extracting the parameter estimates and their estimated covariance matrix. 
+The function supports different classes of statistical models depending on which \code{method} is chosen.
+\eqn{D_1} supports quite general models as long as they define \code{coef} and \code{vcov} methods (or similar) for extracting the parameter estimates and their estimated covariance matrix. 
 \eqn{D_2} can be used for the same models (if \code{use="wald"}, or alternatively, for models that define a \code{logLik} method (if \code{use="likelihood"}).
 Finally, \eqn{D_3} supports linear models and linear mixed-effects models with a single cluster variable as estimated by \code{lme4} or \code{nlme} (see Laird, Lange, & Stram, 1987).
 Support for other statistical models may be added in future releases.

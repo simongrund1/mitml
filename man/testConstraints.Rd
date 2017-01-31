@@ -33,7 +33,7 @@ The Wald-like tests that are carried out by \code{testConstraints} can be aggreg
 
 For \eqn{D_1}, the complete-data degrees of freedom can be adjusted for smaller samples by specifying \code{df.com}.
 
-Currently, the procedure supports statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}) and multilevel models estimated with \code{lme4} or \code{nlme}.
+Currently, the procedure supports statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}), multilevel models estimated with \code{lme4} or \code{nlme}, and GEEs estimated with \code{geepack}.
 The arguments \code{qhat} and \code{uhat} allow for more general hypothesis tests regardless of model class.
 Support for further models may be added in future releases.
 

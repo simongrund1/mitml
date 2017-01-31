@@ -73,16 +73,35 @@
 
 }
 
+# *** geeglm method (geepack)
+.getCOEF.geeglm <- function(model,null.model=NULL,diagonal=FALSE){
+
+  if(!requireNamespace("geepack", quietly=TRUE)) stop("The 'geepack' package must be installed in order to use this function.")
+
+  vcov.geeglm <- function(x) summary(x)$cov.scaled  
+  .getCOEF.default(model, null.model=null.model, diagonal=diagonal,
+                   vcov.func=vcov.geeglm)
+
+}
+
 # *** default method
-.getCOEF.default <- function(model,null.model=NULL,diagonal=FALSE){
+.getCOEF.default <- function(model, null.model=NULL, diagonal=FALSE,
+                             coef.func=NULL, vcov.func=NULL){
+
+  # use predefined methods
+  if(!is.null(coef.func)) coef <- coef.func
+  if(!is.null(vcov.func)) vcov <- vcov.func
 
   if(is.null(null.model)){
 
     if(diagonal){
       nms <- names(coef(model[[1]]))
       Qhat <- sapply(model,coef)
-      if(is.null(dim(Qhat))){ Uhat <- sapply(model, vcov )
-      }else{ Uhat <- sapply(model,function(z) diag(vcov(z))) }
+      if(is.null(dim(Qhat))){
+        Uhat <- sapply(model, vcov )
+      }else{
+        Uhat <- sapply(model,function(z) diag(vcov(z)))
+      }
     }else{
       nms <- names(coef(model[[1]]))
       p <- length(nms)

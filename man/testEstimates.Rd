@@ -34,7 +34,7 @@ Accessing variance components is highly dependent on the model being estimated a
 Users may prefer calculating these estimates manually using \code{\link{with.mitml.list}} (see Example 3).
 No inferences are calculated for variance components.
 
-Currently, the procedure supports statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}) and multilevel models estimated with \code{lme4} or \code{nlme}.
+Currently, the procedure supports statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}), multilevel models estimated with \code{lme4} or \code{nlme}, and GEEs estimated with \code{geepack}.
 The arguments \code{qhat} and \code{uhat} allow for more general aggregation of parameter estimates regardless of model class.
 Support for further models may be added in future releases.
 

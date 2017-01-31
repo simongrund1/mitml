@@ -107,6 +107,45 @@
   list(vlist=vlist,addp=addp)
 }
 
+# *** geeglm method
+.getVC.geeglm <- function(model){
+
+  if(!requireNamespace("geepack", quietly=TRUE)) stop("The 'geepack' package must be installed in order to use this function.")
+  m <- length(model)
+  vlist <- addp <- NULL
+
+  # variance components (currently not used)
+  # vlist <- list()
+
+  # additional parameters
+  # 1. scale parameter (gamma)
+  isfix <- model[[1]]$geese$model$scale.fix
+  if(!isfix){
+    gamma <- sapply(model, function(x) x$geese$gamma)
+    if(is.null(dim(gamma))){
+      dim(gamma) <- c(1,m)
+      rownames(gamma) <- names(model[[1]]$geese$gamma)
+    }
+    addp <- c(addp,rowMeans(gamma))
+    nms <- gsub("^[(]Intercept[)]$", "Intercept", names(addp))
+    names(addp) <- paste0("Scale:",nms)
+  }
+  # 2. correlation parameters (alpha)
+  corstr <- model[[1]]$geese$model$corstr
+  isfix <- corstr%in%c("fixed","userdefined")
+  if(!isfix){
+    alpha <- sapply(model, function(x) x$geese$alpha)
+    if(is.null(dim(alpha))){
+      dim(alpha) <- c(1,m)
+      rownames(alpha) <- names(model[[1]]$geese$alpha)
+    }
+    rownames(alpha) <- paste0("Correlation:",rownames(alpha))
+    addp <- c(addp,rowMeans(alpha))
+  }
+
+  list(vlist=vlist,addp=addp)
+}
+
 # *** lm method
 .getVC.lm <- function(model,ML=FALSE){
 

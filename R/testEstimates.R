@@ -45,9 +45,9 @@ testEstimates <- function(model, qhat, uhat, var.comp=FALSE, df.com=NULL){
       v <- (vm^(-1)+vobs^(-1))^(-1)
     }
 
-    p <- 1-pt(abs(t),df=v)
+    p <- 2*(1-pt(abs(t),df=v))   # two-tailed p-value, SiG 2017-02-09
     out <- matrix(c(Qbar,se,t,v,p,r,fmi),ncol=7)
-    colnames(out) <- c("Estimate","Std.Error","t.value","df","p.value","RIV","FMI")
+    colnames(out) <- c("Estimate","Std.Error","t.value","df","P(>|t|)","RIV","FMI")   # two-tailed p-value, SiG 2017-02-09
     rownames(out) <- names(Qbar)
 
     # print vout for missing U
@@ -121,9 +121,10 @@ testEstimates <- function(model, qhat, uhat, var.comp=FALSE, df.com=NULL){
       v <- (vm^(-1)+vobs^(-1))^(-1)
     }
 
-    p <- 1-pt(abs(t),df=v)
+    p <- 2*(1-pt(abs(t),df=v))   # two-tailed p-value, SiG 2017-02-09
     out <- matrix(c(Qbar,se,t,v,p,r,fmi),ncol=7)
-    colnames(out) <- c("Estimate","Std.Error","t.value","df","p.value","RIV","FMI")
+    colnames(out) <- c("Estimate","Std.Error","t.value","df","P(>|t|)","RIV","FMI")   # two-tailed p-value, SiG 2017-02-09
+
     rownames(out) <- names(Qbar)
 
     # * combine variance components

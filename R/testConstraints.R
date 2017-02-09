@@ -168,7 +168,7 @@ testConstraints <- function(model, qhat, uhat, constraints, method=c("D1","D2"),
   }
 
   out <- matrix(c(val,k,v,p,r),ncol=5)
-  colnames(out) <- c("F.value","df1","df2","p.value","RIV")
+  colnames(out) <- c("F.value","df1","df2","P(>F)","RIV")   # new label for p-value, SiG 2017-02-09
 
   out <- list(
     call=match.call(),

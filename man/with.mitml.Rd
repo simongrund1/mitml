@@ -1,7 +1,7 @@
 \name{with.mitml.list}
 \alias{with.mitml.list}
 \alias{within.mitml.list}
-\title{Evaluate an expression in a list of imputed data set}
+\title{Evaluate an expression in a list of imputed data sets}
 \description{
 The functions \code{with} and \code{within} evaluate R expressions in a list of multiply imputed data sets.
 }

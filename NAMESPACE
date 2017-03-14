@@ -1,5 +1,6 @@
 import(stats)
 import(jomo)
+import(pan)
 
 importFrom(graphics,abline,layout,par,plot,plot.new,axTicks,axis,lines,text,title)
 importFrom(grDevices,dev.new,dev.off,devAskNewPage)
@@ -19,13 +20,18 @@ export(panImpute,
        testConstraints,
        with.mitml.list,
        within.mitml.list,
-       anova.mitml.result,
        long2mitml.list,
        jomo2mitml.list,
        mids2mitml.list,
        amelia2mitml.list,
        as.mitml.list,
        is.mitml.list,
+       c.mitml.list,
+       cbind.mitml.list,
+       rbind.mitml.list,
+       sort.mitml.list,
+       subset.mitml.list,
+       anova.mitml.result,
        write.mitml,
        write.mitmlMplus,
        write.mitmlSAV,
@@ -41,6 +47,8 @@ S3method(print,mitml.summary)
 S3method(c,mitml.list)
 S3method(cbind,mitml.list)
 S3method(rbind,mitml.list)
+S3method(sort,mitml.list)
+S3method(subset,mitml.list)
 S3method(with,mitml.list)
 S3method(within,mitml.list)
 

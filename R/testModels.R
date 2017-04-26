@@ -41,6 +41,12 @@ testModels <- function(model, null.model, method=c("D1","D2","D3"), use=c("wald"
     coef.method <- "geeglm"
   }
 
+  # coxph (survival)
+  if(any(grepl("coxph",cls)) & coef.method=="default"){
+    if(!requireNamespace("survival", quietly=TRUE)) stop("The 'survival' package must be installed in order to handle 'coxph' class objects.")
+    lr.method <- "coxph"
+  }
+
   # ***
   #!
   if(method=="D1"){
@@ -135,9 +141,11 @@ testModels <- function(model, null.model, method=c("D1","D2","D3"), use=c("wald"
         null.model[reml0] <- lapply(null.model[reml0], .update.ML, lr.method=lr.method)
       }
 
-      dW <- switch(coef.method,
+      dW <- switch(lr.method,
         lmer=.getLR.lmer(model,null.model),
         nlme=.getLR.nlme(model,null.model),
+        coxph=.getLR.coxph(model,null.model),
+        lm=.getLR.default(model,null.model),
         default=.getLR.default(model,null.model)
       )
 

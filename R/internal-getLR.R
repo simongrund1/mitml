@@ -71,6 +71,41 @@
 
 }
 
+# *** coxph method
+.getLR.coxph <- function(model, null.model=NULL, psi=NULL, null.psi=NULL){
+
+  ll.null <- function(object,...){
+    out <- object$loglik[1]
+    attr(out, "df") <- 0
+    out
+  }
+
+  if(is.null(null.model)){
+  # TODO: global model fit (experimental, D2)
+
+    cls0 <- class(model[[1]])[1]=="coxph.null"
+    k <- attr(logLik(model[[1]]),"df")
+    logL1 <- sapply(model, if(cls0) ll.null else logLik)
+    dW <- -2*logL1
+
+  }else{
+
+    cls0 <- class(null.model[[1]])[1]=="coxph.null"
+    k <- attr(logLik(model[[1]]),"df") - (if(cls0) 0 else attr(logLik(null.model[[1]]),"df"))
+    if(is.null(psi) & is.null(null.psi)){
+      logL0 <- sapply(null.model, if(cls0) ll.null else logLik)
+      logL1 <- sapply(model,logLik)
+    }else{
+      # not yet supported (caught at higher level)
+    }
+    dW <- -2*(logL0-logL1)
+
+  }
+  attr(dW,"df") <- k
+  dW
+
+}
+
 # *** default method
 .getLR.default <- function(model,null.model=NULL, psi=NULL, null.psi=NULL){
 

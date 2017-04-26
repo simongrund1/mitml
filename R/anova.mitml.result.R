@@ -18,6 +18,12 @@ anova.mitml.result <- function(object, ...){
     if(!requireNamespace("nlme", quietly=TRUE)) stop("The 'nlme' package must be installed to handle 'lme' class objects.")
     lr.method <- "nlme"
   }
+  # coxph (survival)
+  if(any(grepl("coxph",cls)) & lr.method=="default"){
+    if(!requireNamespace("survival", quietly=TRUE)) stop("The 'survival' package must be installed in order to handle 'coxph' class objects.")
+    lr.method <- "coxph"
+  }
+
 
   # check use of D3
   if(lr.method%in%c("lm","lmer","nlme")){
@@ -39,6 +45,7 @@ anova.mitml.result <- function(object, ...){
     df[mm] <- switch(lr.method,
       lmer=attr(logLik(modlist[[mm]][[1]]),"df"),
       nlme=attr(logLik(modlist[[mm]][[1]]),"df"),
+      coxph=if(class(modlist[[mm]][[1]])[1]=="coxph.null") 0 else attr(logLik(modlist[[mm]][[1]]),"df"),
       lm=.tryResidualDf(modlist[[mm]][[1]]),
       default=.tryResidualDf(modlist[[mm]][[1]])
     )

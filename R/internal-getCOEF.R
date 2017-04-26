@@ -112,13 +112,21 @@
   }else{
 
     par0 <- names(coef(null.model[[1]]))
+    if(is.null(par0)) par0 <- character(0)
     par1 <- names(coef(model[[1]]))
     dpar <- setdiff(par1,par0)
     nms <- NULL
     p <- length(par1)
     i <- which(par1%in%dpar)
-    Qhat <- sapply(model,coef)[dpar,]
-    Uhat <- vapply(model,vcov, FUN.VALUE=matrix(0,p,p))[i,i,]
+    Qhat <- sapply(model,coef)
+    Uhat <- vapply(model,vcov, FUN.VALUE=matrix(0,p,p))
+    if(is.null(dim(Qhat))){
+      dim(Qhat) <- c(1,length(model))
+      dim(Uhat) <- c(1,1,length(model))
+      rownames(Qhat) <- par1
+    }
+    Qhat <- Qhat[dpar,,drop=F]
+    Uhat <- Uhat[i,i,,drop=F]
 
   }
   out <- list(Qhat=Qhat,Uhat=Uhat,nms=nms)

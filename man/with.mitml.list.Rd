@@ -38,7 +38,7 @@ The \code{ignore} argument may be used to declare objects that are not to be sav
 %   \item{\code{within}}{: Evaluates the R expression for each data set and returns the altered data sets as a list \code{mitml.list}. This is useful for manipulating the data prior to data analysis (e.g., centering, calculating cluster means, etc.).}
 % }
 
-\code{with}: Returns the evaluated expression from each data set as a list (class \code{mitml.result}. This is useful for fitting statistical models to multiply imputed data. The list of fitted models can be analyzed using \code{\link{testEstimates}}, \code{\link{testModels}}, \code{\link{testConstraints}}, or \code{\link{anova}}.
+\code{with}: Returns the evaluated expression from each data set as a list (class \code{mitml.result}). This is useful for fitting statistical models to multiply imputed data. The list of fitted models can be analyzed using \code{\link{testEstimates}}, \code{\link{testModels}}, \code{\link{testConstraints}}, or \code{\link{anova}}.
 
 \code{within}: Evaluates the R expression for each data set and returns the altered data sets as a list \code{mitml.list}. This is useful for manipulating the data prior to data analysis (e.g., centering, calculating cluster means, etc.).
 

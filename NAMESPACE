@@ -32,6 +32,7 @@ export(panImpute,
        sort.mitml.list,
        subset.mitml.list,
        anova.mitml.result,
+       confint.mitml.testEstimates,
        write.mitml,
        write.mitmlMplus,
        write.mitmlSAV,
@@ -57,6 +58,7 @@ S3method(print,mitml.anova)
 
 S3method(print,mitml.testEstimates)
 S3method(summary,mitml.testEstimates)
+S3method(confint,mitml.testEstimates)
 S3method(print,mitml.testModels)
 S3method(summary,mitml.testModels)
 S3method(print,mitml.testConstraints)

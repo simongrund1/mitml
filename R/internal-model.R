@@ -18,6 +18,7 @@
   ft <- terms(formula)
   tl <- attr(ft,"term.labels")
   vrs <- attr(ft,"variables")[-1]
+  nms <- colnames(data)
 
   # responses
   yvrs <- as.character(vrs)[attr(ft,"response")]
@@ -25,7 +26,7 @@
   y.fml <- as.formula(paste0("~",yvrs))
   yvrs <- attr(terms(y.fml), "term.labels")
   # check for untransformed yvrs
-  err <- !(yvrs %in% colnames(data))
+  err <- !(yvrs %in% nms)
   if(any(err)) stop("Could not find: ", paste0(yvrs[err],collapse=", "), "). Target variables must be contained in the data set 'as is', and transformations must be applied beforehand.")
 
   # cluster id
@@ -54,7 +55,7 @@
   mmq <- suppressWarnings( model.matrix(cl.fml, data=data) )
   pnames <- colnames(mmp)
   qnames <- colnames(mmq)
-  psave <- setdiff( c(pnames,qnames), c("(Intercept)",colnames(data)) )
+  psave <- setdiff( c(pnames,qnames), c("(Intercept)",nms) )
 
   switch( method ,
     pan={ # panImpute (matrix input)
@@ -101,7 +102,7 @@
     y.fml <- as.formula(paste0("~",yvrs))
     yvrs <- attr(terms(y.fml), "term.labels")
     # check for untransformed yvrs
-    err <- !(yvrs %in% colnames(data))
+    err <- !(yvrs %in% nms)
     if(any(err)) stop("Could not find: ", paste0(yvrs[err],collapse=", "), "). Target variables must be contained in the data set 'as is', and transformations must be applied beforehand.")
 
     # predictors: fixed only at L2
@@ -113,7 +114,7 @@
     attr(data,"na.action") <- identity
     mmp <- suppressWarnings( model.matrix(fe.fml, data=data) )
     pnames <- colnames(mmp)
-    psave <- c( psave, setdiff( c(pnames), c("(Intercept)",colnames(data)) ) )
+    psave <- c( psave, setdiff( c(pnames), c("(Intercept)",nms) ) )
 
     switch( method ,
       jomo={ # jomoImpute, for higher-level functions (data input)
@@ -144,10 +145,8 @@
 
 }
 
-
-# prepare model input by type
-.model.byType <- function(data, type, group, group.original,
-                   method=c("pan","jomo","jomo.matrix")){
+# convert type to formula
+.type2formula <- function(data, type){
 
   # L2: separate model equations
   type <- .check.modelL2(type)
@@ -157,97 +156,44 @@
     type <- type[[1]]
   }
 
-  # *** evaluate L1 model
-  #
+  nms <- colnames(data)
 
+  # grouping
+  grp <- if(any(type==-1)) nms[type==-1] else NULL
+  if(isL2 & is.null(grp)){
+    if(any(type.L2==-1)) grp <- nms[type.L2==-1]
+  }
+
+  # L1 model
   if(ncol(data)!=length(type)) stop("Length of 'type' must be equal to the number of colums in 'data'.")
   if(sum(type==-2)<1) stop("Cluster indicator not found.")
   if(sum(type==-2)>1) stop("Only one cluster indicator may be specified.")
+   
+  cls <- nms[type==-2]
 
-  data <- data[ order(group,data[,type==-2]), ]
-  group.original <- group.original[ order(group) ]
-  group <- group[ order(group) ]
+  yvrs <- paste( nms[type==1], collapse="+" )
+  pvrs <- paste( c(1,nms[type%in%c(2,3)]), collapse="+" )
+  qvrs <- paste( c(1,nms[type==3]), collapse="+" )
+  
+  # build L1 formula
+  fml <- formula( paste(yvrs, "~", pvrs, "+ (", qvrs, "|", cls, ")") )
 
-  clname <- colnames(data)[type==-2]
-  clus <- data[,clname]
-  yvrs <- colnames(data)[type==1]
-
-  switch( method ,
-    pan={ # panImpute (matrix input)
-      y <- data.matrix(data[yvrs])
-      ycat <- NULL
-    },
-    jomo={ # jomoImpute, newer versions (data input)
-      y <- data[yvrs]
-      ycat <- NULL
-    },
-    jomo.matrix={ # jomoImpute, older versions (matrix input)
-      y <- data.matrix(data[yvrs])
-      cvrs <- sapply(data[,yvrs,drop=F], is.factor)
-      ycat <- y[,cvrs,drop=F]
-      y <- y[,!cvrs,drop=F]
-    }
-  )
-
-  pred <- cbind(1,as.matrix(data[type%in%c(2,3)]))
-  pvrs <- c("(Intercept)",colnames(data)[type%in%c(2,3)])
-  qvrs <- c("(Intercept)",colnames(data)[type==3])
-  colnames(pred) <- pvrs
-
-  xcol <- 1:length(pvrs)
-  zcol <- xcol[pvrs%in%qvrs]
-
-  # assign to parent frame
-  inp <- list(
-    y=y, ycat=ycat, clus=clus, pred=pred, xcol=xcol, zcol=zcol, data=data,
-    group=group, group.original=group.original, clname=clname, yvrs=yvrs,
-    pvrs=pvrs, qvrs=qvrs, pnames=pvrs, qnames=qvrs
-  )
-  for(i in names(inp)) assign(i, inp[[i]], pos=parent.frame())
-
-  # *** evaluate L2 model
-  #
-
+  # L2 model
   if(isL2){
 
     if(ncol(data)!=length(type.L2)) stop("Length of 'type' must be equal to the number of colums in 'data'.")
 
-    yvrs <- colnames(data)[type.L2==1]
+    yvrs <- paste( nms[type.L2==1], collapse="+" )
+    pvrs <- paste( c(1,nms[type.L2%in%c(2,3)]), collapse="+" )
 
-    switch( method ,
-      pan={ # panImpute (matrix input)
-        y <- data.matrix(data[yvrs])
-        ycat <- NULL
-      },
-      jomo={ # jomoImpute, newer versions (data input)
-        y <- data[yvrs]
-        ycat <- NULL
-      },
-      jomo.matrix={ # jomoImpute, older versions (matrix input)
-        y <- data.matrix(data[yvrs])
-        cvrs <- sapply(data[,yvrs,drop=F], is.factor)
-        ycat <- y[,cvrs,drop=F]
-        y <- y[,!cvrs,drop=F]
-      }
-    )
-
-    pred <- cbind(1,as.matrix(data[type.L2%in%c(2,3)]))
-    pvrs <- c("(Intercept)",colnames(data)[type.L2%in%c(2,3)])
-    colnames(pred) <- pvrs
-
-    xcol <- 1:length(pvrs)
-
-    # assign to parent frame
-    inp <- list(
-      y.L2=y, ycat.L2=ycat, pred.L2=pred, xcol.L2=xcol, yvrs.L2=yvrs,
-      pvrs.L2=pvrs, pnames.L2=pvrs
-    )
-    for(i in names(inp)) assign(i, inp[[i]], pos=parent.frame())
+    # build formula (make list)
+    fml <- list( fml,
+                 formula( paste(yvrs, "~", pvrs) ) )
 
   }
 
-  invisible(NULL)
+  attr(fml,"group") <- grp
+  return(fml)
 
 }
-
 

@@ -4,11 +4,6 @@ panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
 
 # wrapper function for the Gibbs sampler in the pan package
 
-
-  # empty objects to assign to
-  clname <- yvrs <- y <- ycat <- zcol <- xcol <- pred <- clus <- psave <-
-    pvrs <- qvrs <- pnames <- qnames <- NULL
-
   # *** checks
   if(!missing(type) & !missing(formula)) stop("Only one of 'type' or 'formula' may be specified.")
   if(save.pred & !missing(type)){
@@ -16,38 +11,36 @@ panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
     save.pred=FALSE
   }
 
+  # convert type
+  if(!missing(type)){
+    formula <- .type2formula(data,type)
+    group <- attr(formula, "group")
+  }
+
+  # empty objects to assign to
+  clname <- yvrs <- y <- ycat <- zcol <- xcol <- pred <- clus <- psave <-
+    pvrs <- qvrs <- pnames <- qnames <- NULL
+
   # preserve original order
   if(!is.data.frame(data)) as.data.frame(data)
   data <- cbind(data, original.order=1:nrow(data))
-  if(!missing(type)) type <- c(type,0)
 
   # address additional grouping
   grname <- group
-  if(!missing(formula)){
-    if(is.null(group)){
-      group <- rep(1,nrow(data))
-    }else{
-      group <- data[,group]
-      if(length(group)!=nrow(data)) stop("Argument 'group' is not correctly specified.")
-    }
-  }
-  if(!missing(type)){
-    if(sum(type==-1)>1) stop("Argument 'group' is not correctly specified,")
-    if(sum(type==-1)==0){
-      group <- rep(1,nrow(data))
-    }else{
-      group <- data[,type==-1]
-      type[type==-1] <- 0
-    }
+  if(is.null(group)){
+    group <- rep(1,nrow(data))
+  }else{
+    group <- data[,group]
+    if(length(group)!=nrow(data)) stop("Argument 'group' is not correctly specified.")
   }
   group.original <- group
   group <- as.numeric(factor(group,levels=unique(group)))
 
-  # *** model input
-  if(!missing(formula)) .model.byFormula(data, formula, group, group.original,
-                                         method="pan")
-  if(!missing(type)) .model.byType(data, type, group, group.original,
-                                   method="pan")
+  # ***
+  # model input
+
+  # populate local frame
+  .model.byFormula(data, formula, group, group.original, method="pan")
 
   # check model input
   if(any(is.na(group)))

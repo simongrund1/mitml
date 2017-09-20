@@ -12,15 +12,14 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
   }
   random.L1 <- match.arg(random.L1)
 
-  # check for number of model equations
-  if(!missing(formula)){
-    formula  <- .check.modelL2( formula )
-    isL2 <- attr(formula,"is.L2")
-  }
+  # convert type
   if(!missing(type)){
-    type  <- .check.modelL2( type )
-    isL2 <- attr(type,"is.L2")
+    formula <- .type2formula(data,type)
+    group <- attr(formula, "group")
   }
+  # check for number of model equations
+  formula  <- .check.modelL2( formula )
+  isL2 <- attr(formula,"is.L2")
 
   # objects to assign to
   clname <- yvrs <- y <- ycat <- zcol <- xcol <- pred <- clus <- psave <- pvrs <-
@@ -30,40 +29,23 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
   # preserve original order
   if(!is.data.frame(data)) as.data.frame(data)
   data <- cbind(data, original.order=1:nrow(data))
-  if(!missing(type)) type <- if(isL2) lapply(type,c,0) else c(type,0)
 
   # address additional grouping
   grname <- group
-  if(!missing(formula)){
-    if(is.null(group)){
-      group <- rep(1,nrow(data))
-    }else{
-      group <- data[,group]
-      if(length(group)!=nrow(data)) stop("Argument 'group' is not correctly specified.")
-    }
-  }
-  if(!missing(type)){
-    type.g <- if(isL2) type[[1]]==-1 | type[[2]]==-1 else type==-1
-    if(sum(type.g)>1) stop("Argument 'group' is not correctly specified.")
-    if(sum(type.g)==0){
-      group <- rep(1,nrow(data))
-    }else{
-      group <- data[,type.g]
-      if(isL2) type[[1]][type.g] <- type[[2]][type.g] <- 0 else type[type.g] <- 0
-    }
+  if(is.null(group)){
+    group <- rep(1,nrow(data))
+  }else{
+    if(!group%in%colnames(data)) stop("Argument 'group' is not correctly specified.")
+    group <- data[,group]
   }
   group.original <- group
   group <- as.numeric(factor(group,levels=unique(group)))
 
-  # *** retreive model input
-  #
+  # ***
+  # model input
 
-  # by formula
-  if(!missing(formula)) .model.byFormula(data, formula, group, group.original,
-                                         method="jomo.matrix")
-  # by type
-  if(!missing(type)) .model.byType(data, type, group, group.original,
-                                   method="jomo.matrix")
+  # populate local frame
+  .model.byFormula(data, formula, group, group.original, method="jomo.matrix")
 
   # check model input
   if(any(is.na(group)))

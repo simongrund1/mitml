@@ -1,15 +1,16 @@
 panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
                       group=NULL, prior=NULL, seed=NULL, save.pred=FALSE,
-                      silent=FALSE){
+                      keep.chains=c("full","diagonal"), silent=FALSE){
 
 # wrapper function for the Gibbs sampler in the pan package
 
   # *** checks
-  if(!missing(type) & !missing(formula)) stop("Only one of 'type' or 'formula' may be specified.")
-  if(save.pred & !missing(type)){
+  if(!missing(type) && !missing(formula)) stop("Only one of 'type' or 'formula' may be specified.")
+  if(save.pred && !missing(type)){
     warning("Option 'save.pred' is ignored if 'type' is specified")
     save.pred=FALSE
   }
+  keep.chains <- match.arg(keep.chains)
 
   # convert type
   if(!missing(type)){
@@ -78,16 +79,25 @@ panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
   ind <- ind[ ind[,2] %in% which(colnames(data.ord)%in%colnames(y)),,drop=FALSE ]
   rpm <- matrix(NA, nrow(ind), m)
 
+  # standard dimensions
   ng <- length(unique(group))
   np <- length(xcol)
   nq <- length(zcol)
   nr <- ncol(y)
+
+  # reduced dimensions
+  dpsi <- nr*nq
+  dsig <- nr
+  if(keep.chains=="diagonal"){
+    dpsi <- dsig <- 1
+  }
+
   bpar <- list(beta=array( NA, c(np,nr,n.burn,ng) ),
-               psi=array( NA, c(nr*nq,nr*nq,n.burn,ng) ),
-               sigma=array( NA, c(nr,nr,n.burn,ng) ))
+               psi=array( NA, c(nr*nq,dpsi,n.burn,ng) ),
+               sigma=array( NA, c(nr,dsig,n.burn,ng) ))
   ipar <- list(beta=array( NA, c(np,nr,n.iter*m,ng) ),
-               psi=array( NA, c(nr*nq,nr*nq,n.iter*m,ng) ),
-               sigma=array( NA, c(nr,nr,n.iter*m,ng) ))
+               psi=array( NA, c(nr*nq,dpsi,n.iter*m,ng) ),
+               sigma=array( NA, c(nr,dsig,n.iter*m,ng) ))
 
   # burn-in
   if(!silent){
@@ -107,9 +117,15 @@ panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
     cur <- pan::pan(gy, subj=gclus, gpred, xcol, zcol, prior, seed=rns[1,gg], iter=n.burn)
     glast[[gg]] <- cur$last
 
+    # save parameter chains
     bpar[["beta"]][,,,gg] <- cur$beta
-    bpar[["psi"]][,,,gg] <- cur$psi
-    bpar[["sigma"]][,,,gg] <- cur$sigma
+    if(keep.chains=="diagonal"){
+      bpar[["psi"]][,,,gg] <- .adiag( cur$psi )
+      bpar[["sigma"]][,,,gg] <-.adiag( cur$sigma )
+    }else{
+      bpar[["psi"]][,,,gg] <- cur$psi
+      bpar[["sigma"]][,,,gg] <- cur$sigma
+    }
 
   }
 
@@ -134,11 +150,19 @@ panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
         start=glast[[gg]])
       glast[[gg]] <- cur$last
 
-      # populate output
+      # save imputations
       gy.imp[[gg]] <- cur$y
-      ipar[["beta"]][,,(n.iter*(ii-1)+1):(n.iter*ii),gg] <- cur$beta
-      ipar[["psi"]][,,(n.iter*(ii-1)+1):(n.iter*ii),gg] <- cur$psi
-      ipar[["sigma"]][,,(n.iter*(ii-1)+1):(n.iter*ii),gg] <- cur$sigma
+
+      # save parameter chains
+      i0 <- seq.int(n.iter*(ii-1)+1, n.iter*ii)
+      ipar[["beta"]][,,i0,gg] <- cur$beta
+      if(keep.chains=="diagonal"){
+        ipar[["psi"]][,,i0,gg] <- .adiag( cur$psi ) 
+        ipar[["sigma"]][,,i0,gg] <- .adiag( cur$sigma )
+      }else{
+        ipar[["psi"]][,,i0,gg] <- cur$psi
+        ipar[["sigma"]][,,i0,gg] <- cur$sigma
+      }
 
     }
     y.imp <- do.call(rbind,gy.imp)
@@ -155,7 +179,7 @@ panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
   data.ord <- data.ord[,-ncol(data.ord)]
 
   # prepare output data
-  if( save.pred & !missing(formula) ) data.ord <- cbind(data.ord,pred[,psave,drop=F])
+  if( save.pred && !missing(formula) ) data.ord <- cbind(data.ord,pred[,psave,drop=F])
   attr(data.ord,"sort") <- srt
   attr(data.ord,"group") <- group.original
   model <- list(clus=clname, yvrs=yvrs, pvrs=pvrs, qvrs=qvrs)
@@ -171,6 +195,7 @@ panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
     random.L1="none",
     prior=prior,
     iter=list(burn=n.burn, iter=n.iter, m=m),
+    keep.chains=keep.chains,
     par.burnin=bpar,
     par.imputation=ipar
   )

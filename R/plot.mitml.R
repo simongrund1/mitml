@@ -26,6 +26,10 @@ plot.mitml <- function(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group
   # check for random L1
   rl1 <- x$random.L1=="full"
 
+  # parameter chains (for backwards compatibility)
+  kc <- x$keep.chains
+  if(is.null(kc)) kc <- "full"
+
   # check print and position for selected parameters
   if(!is.null(pos) & length(print)>1){
     pos <- NULL
@@ -391,25 +395,31 @@ plot.mitml <- function(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group
   dpsi <- length(yvrs)*length(qvrs)
   if(isL2) dpsi <- dpsi+length(yvrs.L2)
 
-  for(ic in 1:dpsi){
-    for(ir in ic:dpsi){
+  # if only "diagonal" entries, fix max. column index to 1
+  cpsi <- if(kc=="diagonal") 1 else dpsi
 
-      # check for residual at L2
-      icL2 <- ic > (length(yvrs)*length(qvrs))
-      irL2 <- ir > (length(yvrs)*length(qvrs))
+  for(ic in 1:cpsi){
+    for(ir in ic:dpsi){
 
       # skip if different individual parameters requested
       if(!is.null(pos)){
         if(!(pos[1]==ir & pos[2]==ic)) next
       }
 
+      # if only "diagonal" entries, use ir for all labels
+      ic2 <- if(kc=="diagonal") ir else ic
+
+      # check for residual at L2
+      icL2 <- ic > (length(yvrs)*length(qvrs))
+      irL2 <- ir > (length(yvrs)*length(qvrs))
+
       if(export!="none"){
         filename <- paste0("PSI_", gfile,
                            names(yvrs.comb[bvec[2,ir]]),
                            if(!irL2) paste0("_ON_", names(qvrs[bvec[1,ir]])),
                            "_WITH_",
-                           names(yvrs.comb[bvec[2,ic]]),
-                           if(!icL2) paste0("_ON_", names(qvrs[bvec[1,ic]])),
+                           names(yvrs.comb[bvec[2,ic2]]),
+                           if(!icL2) paste0("_ON_", names(qvrs[bvec[1,ic2]])),
                            ".", export)
         filename <- gsub("[(),]","",filename)
         filename <- gsub("[[:space:]]","-",filename)
@@ -450,8 +460,8 @@ plot.mitml <- function(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group
                         if(!irL2) paste0(" ON ", names(qvrs[bvec[1,ir]]), ")"),
                         " WITH ",
                         if(!icL2) "(",
-                        names(yvrs.comb[bvec[2,ic]]),
-                        if(!icL2) paste0(" ON ", names(qvrs[bvec[1,ic]]), ")")
+                        names(yvrs.comb[bvec[2,ic2]]),
+                        if(!icL2) paste0(" ON ", names(qvrs[bvec[1,ic2]]), ")")
                         ),
             cex.main=1)
       axt <- axTicks(1)
@@ -542,13 +552,19 @@ plot.mitml <- function(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group
       warning("Could not use entry [",pos0[1],",",pos0[2],"] in 'sigma'. Used [",pos[1],",",pos[2],"] instead.")
   }
 
+  # if only "diagonal" entries, fix max. column index to 1
+  csig <- if(kc=="diagonal") 1 else length(yvrs)
+
   for(icl in clus3){
 
-  for(ic in 1:length(yvrs)){
+  for(ic in 1:csig){
     for(ir in ic:length(yvrs)){
 
       # adjust row index for cluster-specific covariance matrices
       ir2 <- ir+(icl-1)*length(yvrs)
+
+      # if only "diagonal" entries, use ir for all labels
+      ic2 <- if(kc=="diagonal") ir else ic
 
       # skip if individual parameters requested
       if(!is.null(pos)){
@@ -559,7 +575,7 @@ plot.mitml <- function(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group
         filename <- paste0("SIGMA_", gfile,
                            names(yvrs[ir]),
                            "_WITH_",
-                           names(yvrs[ic]),
+                           names(yvrs[ic2]),
                            if(rl1) paste0("_",clus,clus2[icl]),
                            ".",export)
         filename <- gsub("[(),]","",filename)
@@ -598,7 +614,7 @@ plot.mitml <- function(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group
       title(main=paste0("Sigma [",ir2,",",ic,glab,"]: ",
                         names(yvrs[ir]),
                         " WITH ",
-                        names(yvrs[ic]),
+                        names(yvrs[ic2]),
                         if(rl1) paste0(" [",clus,":",clus2[icl],"]")),
             cex.main=1)
       axt <- axTicks(1)

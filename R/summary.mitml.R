@@ -10,6 +10,9 @@ summary.mitml <- function(object, n.Rhat=3, goodness.of.appr=FALSE,
   k <- object$iter$iter
   isL2 <- attr(object$model,"is.L2")
 
+  # parameter chains (for backwards compatibility)
+  if(is.null(object$keep.chains)) object$keep.chains <- "full"
+
   # percent missing
   mdr <- sapply(inc, FUN=function(x){mean(is.na(x))})
   mdr[] <- sprintf(mdr*100,fmt="%.1f")
@@ -74,6 +77,7 @@ summary.mitml <- function(object, n.Rhat=3, goodness.of.appr=FALSE,
     model=object$model,
     prior=object$prior,
     iter=object$iter,
+    keep.chains=object$keep.chains,
     ngr=ngr,
     missing.rates=mdr,
     conv=conv

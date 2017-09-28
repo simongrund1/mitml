@@ -33,6 +33,12 @@ print.mitml.summary <- function(x,...){
   # print convergence diagnostics
   if(!is.null(conv)){
 
+    # note for reduced chains
+    if(x$keep.chains!="full"){
+      cat("\nNote: Convergence criteria were calculated from a reduced set of\nparameters (setting: ",
+          x$keep.chains, ").\n", sep="")
+    }
+
     for(cc in attr(conv,"stats")){
 
       # summary for Rhat and SDprop

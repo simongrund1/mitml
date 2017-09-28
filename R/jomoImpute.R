@@ -1,6 +1,7 @@
 jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
                        n.burn=5000, n.iter=100, m=10, group=NULL, prior=NULL,
-                       seed=NULL, save.pred=FALSE, silent=FALSE){
+                       seed=NULL, save.pred=FALSE,
+                       keep.chains=c("full","diagonal"), silent=FALSE){
 
 # wrapper function for the different samplers of the jomo package
 
@@ -11,6 +12,7 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
     save.pred=FALSE
   }
   random.L1 <- match.arg(random.L1)
+  keep.chains <- match.arg(keep.chains)
 
   # convert type
   if(!missing(type)){
@@ -91,7 +93,7 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
                       if(isL2 & random.L1=="none") "com",
                       if(random.L1!="none") "hr", ".MCMCchain"), asNamespace("jomo"))
 
-  # data properties
+  # standard dimensions and data properties
   ng <- length(unique(group))
   np <- length(xcol)
   nq <- length(zcol)
@@ -111,18 +113,30 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
     nr2.L2 <- integer(ng)    # zero counts for compatibility
     ncon.L2 <- ncat.L2 <- 0  # of shared code
   }
+
   # ... manage categories groupwise
   for(gg in unique(group)){
 
-    ynumcat[gg,] <- apply(ycat[group==gg,,drop=F], 2, function(x) length(unique(x[!is.na(x)])))
+    ynumcat[gg,] <- apply(ycat[group==gg,,drop=F], 2,
+                          FUN=function(x) length(unique(x[!is.na(x)])))
     nc[gg] <- length(unique(clus[group==gg]))
     nr2[gg] <- ncon+sum(ynumcat[gg,])-length(ynumcat[gg,]) # combined con + cat (indicators)
+
     if(isL2){
-      ynumcat.L2[gg,] <- apply(ycat.L2[group==gg,,drop=F], 2, function(x) length(unique(x[!is.na(x)])))
+      ynumcat.L2[gg,] <- apply(ycat.L2[group==gg,,drop=F], 2,
+                               FUN=function(x) length(unique(x[!is.na(x)])))
       nc.L2[gg] <- length(unique(clus[group==gg]))
       nr2.L2[gg] <- ncon.L2+sum(ynumcat.L2[gg,])-length(ynumcat.L2[gg,])
     }
 
+  }
+
+  # reduced dimensions
+  dpsi <- max(nr2)*nq+max(nr2.L2)
+  dsig1 <- ifelse(random.L1=="full", max(nr2)*max(nc), max(nr2))
+  dsig2 <- max(nr2)
+  if(keep.chains=="diagonal"){
+    dpsi <- dsig2 <- 1
   }
 
   # * * * * * * * * * * * * * * * * * * * *
@@ -153,16 +167,12 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
 
   bpar <- c(list(beta=array( NA, c(np,max(nr2),n.burn,ng) )),
             if(isL2) list(beta2=array( NA, c(np.L2,max(nr2.L2),n.burn,ng) )),
-            list(psi=array( NA, c(max(nr2)*nq+max(nr2.L2),
-                                  max(nr2)*nq+max(nr2.L2),n.burn,ng) ),
-                 sigma=array( NA, c(ifelse(random.L1=="full",max(nr2)*max(nc),max(nr2)),
-                                    max(nr2),n.burn,ng) )))
+            list(psi=array( NA, c(max(nr2)*nq+max(nr2.L2),dpsi,n.burn,ng) ),
+                 sigma=array( NA, c(dsig1,dsig2,n.burn,ng) )))
   ipar <- c(list(beta=array( NA, c(np,max(nr2),n.iter*m,ng) )),
             if(isL2) list(beta2=array( NA, c(np.L2,max(nr2.L2),n.iter*m,ng) )),
-            list(psi=array( NA, c(max(nr2)*nq+max(nr2.L2),
-                                  max(nr2)*nq+max(nr2.L2),n.iter*m,ng) ),
-                sigma=array( NA, c(ifelse(random.L1=="full",max(nr2)*max(nc),max(nr2)),
-                                   max(nr2),n.iter*m,ng) )))
+            list(psi=array( NA, c(max(nr2)*nq+max(nr2.L2),dpsi,n.iter*m,ng) ),
+                 sigma=array( NA, c(dsig1,dsig2,n.iter*m,ng) )))
 
   # burn-in
   if(!silent){
@@ -212,19 +222,34 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
     cur <- do.call( func, func.args )
     glast[[gg]] <- cur
 
-    # populate output
+    # current parameter dimensions (group-specific)
     bdim <- dim(cur$collectbeta)[1:2]
     pdim <- dim(cur$collectcovu)[1:2]
     sdim <- dim(cur$collectomega)[1:2]
+
+    # save parameter chains
     bpar[["beta"]][1:bdim[1],1:bdim[2],,gg] <- cur$collectbeta
-    bpar[["psi"]][1:pdim[1],1:pdim[2],,gg] <- cur$collectcovu
+    if(keep.chains=="diagonal"){
+      bpar[["psi"]][1:pdim[1],1,,gg] <- .adiag(cur$collectcovu)
+    }else{
+      bpar[["psi"]][1:pdim[1],1:pdim[2],,gg] <- cur$collectcovu
+    }
     # ... random covariance matrices at L1
     if(random.L1=="mean"){
       tmp <- cur$collectomega
       dim(tmp) <- c(nr2[gg],nc[gg],nr2[gg],n.burn)
-      bpar[["sigma"]][1:sdim[2],1:sdim[2],,gg] <- apply(tmp,c(1,3,4),mean)
-    } else {
-      bpar[["sigma"]][1:sdim[1],1:sdim[2],,gg] <- cur$collectomega
+      if(keep.chains=="diagonal"){
+        bpar[["sigma"]][1:sdim[2],1,,gg] <- .adiag(apply(tmp,c(1,3,4),mean))
+      }else{
+        bpar[["sigma"]][1:sdim[2],1:sdim[2],,gg] <- apply(tmp,c(1,3,4),mean)
+      }
+    }else{
+      if(keep.chains=="diagonal"){
+        bpar[["sigma"]][1:sdim[1],1,,gg] <- .adiag(cur$collectomega,
+          stacked=(random.L1=="full"))
+      }else{
+        bpar[["sigma"]][1:sdim[1],1:sdim[2],,gg] <- cur$collectomega
+      }
     }
     # ... L2 model
     if(isL2){
@@ -287,23 +312,40 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
       cur <- do.call( func, func.args )
       glast[[gg]] <- cur
 
-      # populate output
+      # save imputations
       ri <- (nrow(gclus)+1):nrow(cur$finimp)
       ci <- which(colnames(cur$finimp) %in% c(yvrs,yvrs.L2))
       gy.imp[[gg]] <- cur$finimp[ri,ci,drop=F]
+
+      # current parameter dimensions (group-specific)
       bdim <- dim(cur$collectbeta)[1:2]
       pdim <- dim(cur$collectcovu)[1:2]
       sdim <- dim(cur$collectomega)[1:2]
+
+      # save parameter chains
       iind <- (n.iter*(ii-1)+1):(n.iter*ii)
       ipar[["beta"]][1:bdim[1],1:bdim[2],iind,gg] <- cur$collectbeta
-      ipar[["psi"]][1:pdim[1],1:pdim[2],iind,gg] <- cur$collectcovu
+      if(keep.chains=="diagonal"){
+        ipar[["psi"]][1:pdim[1],1,iind,gg] <- .adiag(cur$collectcovu)
+      }else{
+        ipar[["psi"]][1:pdim[1],1:pdim[2],iind,gg] <- cur$collectcovu
+      }
       # ... random covariance matrices at L1
       if(random.L1=="mean"){
         tmp <- cur$collectomega
         dim(tmp) <- c(nr2[gg],nc[gg],nr2[gg],n.iter)
-        ipar[["sigma"]][1:sdim[2],1:sdim[2],iind,gg] <- apply(tmp,c(1,3,4),mean)
-      } else {
-        ipar[["sigma"]][1:sdim[1],1:sdim[2],iind,gg] <- cur$collectomega
+        if(keep.chains=="diagonal"){
+          ipar[["sigma"]][1:sdim[2],1,iind,gg] <- .adiag(apply(tmp,c(1,3,4),mean))
+        }else{
+          ipar[["sigma"]][1:sdim[2],1:sdim[2],iind,gg] <- apply(tmp,c(1,3,4),mean)
+        }
+      }else{
+        if(keep.chains=="diagonal"){
+          ipar[["sigma"]][1:sdim[1],1,iind,gg] <- .adiag(cur$collectomega,
+            stacked=(random.L1=="full"))
+        }else{
+          ipar[["sigma"]][1:sdim[1],1:sdim[2],iind,gg] <- cur$collectomega
+        }
       }
       # ... L2 model
       if(isL2){
@@ -368,33 +410,12 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
     random.L1=random.L1,
     prior=prior,
     iter=list(burn=n.burn, iter=n.iter, m=m),
+    keep.chains=keep.chains,
     par.burnin=bpar,
     par.imputation=ipar
   )
   class(out) <- c("mitml","jomo")
   out
-
-}
-
-# check for L2 model
-.check.modelL2 <- function(x){
-
-  # check number of model equations
-  if(is.list(x) & length(x)>2)
-    stop("Cannot determine the number of levels. The 'formula' or 'type' argument must indicate either a single model for responses at level 1, or two models for responses at level 1 and 2.")
-
-  if(is.list(x) & length(x)==1) x <- x[[1]] # unlist
-  isL2 <- is.list(x) & length(x)==2
-
-  attr(x,"is.L2") <- isL2
-  x
-
-}
-
-.check.variablesL2 <- function(x,clus){
-
-  apply(x, 2, function(a) all( abs(a-clusterMeans(a,clus)) < sqrt(.Machine$double.eps),
-                               na.rm=T))
 
 }
 

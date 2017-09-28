@@ -9,7 +9,7 @@ Imputations can be generated using \code{type} or \code{formula}, which offer di
 
 jomoImpute(data, type, formula, random.L1=c("none","mean","full"), n.burn=5000,
   n.iter=100, m=10, group=NULL, prior=NULL, seed=NULL, save.pred=FALSE,
-  silent=FALSE)
+  keep.chains=c("full","diagonal"), silent=FALSE)
 
 }
 
@@ -26,6 +26,7 @@ jomoImpute(data, type, formula, random.L1=c("none","mean","full"), n.burn=5000,
   \item{prior}{(optional) A list with components \code{Binv}, \code{Dinv}, and \code{a} for specifying prior distributions for the covariance matrix of random effects and the covariance matrix of residuals (see details). Default is to using least-informative priors.}
   \item{seed}{(optional) An integer value initializing R's random number generator for reproducible results. Default is to using the global seed.}
   \item{save.pred}{(optional) Logical flag indicating if variables derived using \code{formula} should be included in the imputed data sets. Default is to \code{FALSE}.}
+  \item{keep.chains}{(optional) A character string denoting which parameter chains to save. Default is to save all chains (see details).}
   \item{silent}{(optional) Logical flag indicating if console output should be suppressed. Default is to \code{FALSE}.}
 
 }
@@ -55,7 +56,7 @@ Given below is a list of operators that \code{jomoImpute} currently understands:
   \item{\code{~}: separates the target (left-hand) and predictor (right-hand) side of the model}
   \item{\code{+}: adds target or predictor variables to the model}
   \item{\code{*}: adds an interaction term of two or more predictors}
-  \item{\code{|}: denotes cluster-specific random effects and specifies the cluster indicator (i.e., \code{1|ID})}
+  \item{\code{|}: denotes cluster-specific random effects and specifies the cluster indicator (e.g., \code{1|ID})}
   \item{\code{I()}: defines functions to be interpreted by \code{model.matrix}}
 }
 Predictors are allowed to have fixed effects, random effects, or both on all target variables.
@@ -87,6 +88,9 @@ These must be supplied as a list containing the following components:
 }
 Note that \code{jomo} does not allow for the degrees of freedom for the inverse-Wishart prior to be specified by the user.
 These are always set to the lowest value possible (largest dispersion) or determined iteratively if the residuals at level 1 are modeled as random (see above).
+
+In imputation models with many parameters, the number of parameter chains being saved can be reduced with the \code{keep.chains} argument (see \code{\link{panImpute}}).
+This setting influences the storage mode of parameters (e.g., dimensions and indices of arrays) and should be used with caution.
 
 }
 

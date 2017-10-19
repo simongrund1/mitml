@@ -5,12 +5,12 @@ body {
   padding-left: 2em;
   padding-right: 2em;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 500;
-  line-height: 1.5;
+  line-height: 1.65;
   text-align: justify;
   text-justify: inter-word;
-  margin: 1em auto;
+  margin: 2em auto;
 }
 
 #header {
@@ -28,35 +28,36 @@ body {
   background-color: #f6f6f6;
   font-size: 16px;
   line-height: 1.5;
+  text-align: left;
 }
-  #TOC .toctitle {
-    font-weight: bold;
-    font-size: 18px;
-    margin-left: 5px;
-  }
+#TOC .toctitle {
+  font-weight: bold;
+  font-size: 18px;
+  margin-left: 5px;
+}
 
-  #TOC ul {
-    padding-left: 40px;
-    margin-left: -1.5em;
-    margin-top: 5px;
-    margin-bottom: 5px;
-  }
-  #TOC ul ul {
-    margin-left: -2em;
-  }
-  #TOC li {
-    line-height: 16px;
-  }
+#TOC ul {
+  padding-left: 40px;
+  margin-left: -1.5em;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+#TOC ul ul {
+  margin-left: -2em;
+}
+#TOC li {
+  line-height: 16px;
+}
 
 p {
   margin: 0.6em 0;
 }
 
 blockquote {
-  border-left:1px solid #e5e5e5;
-  background-color: #f7f7f7;
-  padding: 0.25em 0.75em;
-  margin: 0;
+  border-left:3px dotted #e5e5e5;
+  background-color: #fff;
+  padding: 0 1em;
+  margin: 0.9em 0;
 }
 
 
@@ -70,23 +71,26 @@ hr {
 dl {
   margin-left: 0;
 }
-  dl dd {
-    margin-bottom: 13px;
-    margin-left: 13px;
-  }
-  dl dt {
-    font-weight: bold;
-  }
+dl dd {
+  margin-bottom: 13px;
+  margin-left: 13px;
+}
+dl dt {
+  font-weight: bold;
+}
 
+ul, ol {
+  text-align: left;
+}
 ul {
   margin-top: 0;
 }
-  ul li {
-    list-style: circle outside;
-  }
-  ul ul {
-    margin-bottom: 0;
-  }
+ul li {
+  list-style: circle outside;
+}
+ul ul {
+  margin-bottom: 0;
+}
 
 pre, code {
   background-color: #f7f7f7;
@@ -102,12 +106,9 @@ pre {
   margin: 5px 0px 10px 0px;
   padding: 10px;
 }
-pre:not([class]) {
-  background-color: #f7f7f7;
-}
 
 code {
-  font-family: Consolas, 'Liberation Mono', 'DejaVu Sans Mono', 'Courier New', monospace;
+  font-family: Consolas, monospace;
   font-size: 85%;
 }
 p > code, li > code {
@@ -120,34 +121,50 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size:28px;
+  font-size: 2em;
   font-weight: 600;
 }
 
 h2 {
-  color:#191919;
+  color: #191919;
+  font-size: 1.5em;
   font-weight: 600;
 }
 
-h3, h4, h5, h6 {
-  color:#292929;
+h3, h4, h5 {
+  color: #292929;
   font-weight: 600;
+}
+
+/* Reference list */
+h6 {
+  color:#191919;
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 0.83em;
+  margin-bottom: 0.83em;
+  }
+h6 ~ p {
+  text-align: left;
 }
 
 a {
-  color: #0033dd;
+  color: #777;
   text-decoration: none;
 }
 a:hover {
-  color: #6666ff; }
+  color: #aaa;
+  text-decoration: underline;
+}
+/*
 a:visited {
-  color: #800080; }
+  color: #777;
+}
 a:visited:hover {
-  color: #BB00BB; }
-a[href^="http:"] {
-  text-decoration: underline; }
-a[href^="https:"] {
-  text-decoration: underline; }
+  color: #aaa;
+  text-decoration: underline;
+}
+*/
 
 /* tables */
 
@@ -187,12 +204,6 @@ table thead, table tr.even {
   background-color: #f7f7f7;
 }
 
-/* MathJax */
-
-/*.MathJax {
-  font-size: 70% !important;
-}*/
-
 /* images */
 
 img {
@@ -216,17 +227,18 @@ div.figure {
 
 /* code highlighting */
 
-code > span.kw { color: #a8227b; font-weight: normal; } /* Keyword */
-code > span.co { color: #558817; font-style: normal; } /* Comment */
-code > span.dt { color: #a8660d; font-weight: bold; } /* Data Type */
-code > span.fu { color: #a8227b; } /* Function calls */ 
-code > span.dv { color: #a8660d; } /* Decimal Values */
-code > span.bn { color: #a8660d; } /* Base N */
-code > span.fl { color: #a8660d; } /* Float */
-code > span.ch { color: #a8660d; } /* Character */
-code > span.st { color: #a8660d; } /* String */
-code > span.ot { color: #007020; } /* Other Token */
-code > span.al { color: #ff0000; font-weight: bold; } /* Alert Token */
+pre > code { color: #707070; } /* General Code w/o Class */
+pre > code.r { color: #333333; } /* General Code */
+code > span.kw { color: #558200; font-weight: normal; } /* Keyword */
+code > span.co { color: #707070; font-style: normal; } /* Comment */
+code > span.dt { color: #333333; } /* Data Type */
+code > span.fu { color: #558200; } /* Function calls */ 
+code > span.dv { color: #007878; } /* Decimal Values */
+code > span.bn { color: #007878; } /* Base N */
+code > span.fl { color: #007878; } /* Float */
+code > span.ch { color: #985b00; } /* Character */
+code > span.st { color: #985b00; } /* String */
+code > span.ot { color: #007878; } /* Other Token */
+code > span.al { color: #a61717; font-weight: bold; } /* Alert Token */
 code > span.er { color: #a61717; background-color: #e3d2d2; } /* Error Token */
-
 

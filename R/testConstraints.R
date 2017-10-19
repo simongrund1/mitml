@@ -111,7 +111,6 @@ testConstraints <- function(model, qhat, uhat, constraints, method=c("D1","D2"),
 
     # derivative, new covariance matrix
     gdash.theta <- matrix(NA,q,p)
-    #for(qq in 1:q) for(pp in 1:p) gdash.theta[qq,pp] <- eval( D(g[qq],names(theta)[pp]), envir=env.g )
     for(qq in 1:q){
       tmp <- numericDeriv(g[[qq]],names(theta),env.g)
       gdash.theta[qq,] <- attr(tmp,"gradient")

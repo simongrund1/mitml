@@ -30,7 +30,7 @@ A usual application of the package may consist of the following steps.
 
 The `mitml` package offers a set of tools to facilitate each of these steps.
 This vignette is intended as a step-by-step illustration of the basic features of `mitml`.
-Further information can be found in the other [vignettes](https://cran.r-project.org/package=mitml) and the package [documentation](https://cran.r-project.org/package=mitml/mitml.pdf).
+Further information can be found in the other [vignettes](https://github.com/simongrund1/mitml/wiki) and the package [documentation](https://cran.r-project.org/package=mitml/mitml.pdf).
 
 ## Example data
 

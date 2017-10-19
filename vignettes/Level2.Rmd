@@ -25,7 +25,7 @@ Specifically, the vignette addresses the following topics:
 1. Specification of the two-level imputation model for missing data at both Level 1 and 2
 2. Running the imputation procedure
 
-Further information can be found in the other [vignettes](https://cran.r-project.org/package=mitml) and the package [documentation](https://cran.r-project.org/package=mitml/mitml.pdf).
+Further information can be found in the other [vignettes](https://github.com/simongrund1/mitml/wiki) and the package [documentation](https://cran.r-project.org/package=mitml/mitml.pdf).
 
 ## Example data
 

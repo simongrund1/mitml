@@ -78,7 +78,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Model comparisons</li>
 <li>Parameter constraints</li>
 </ol>
-<p>Further information can be found in the other <a href="https://cran.r-project.org/package=mitml">vignettes</a> and the package <a href="https://cran.r-project.org/package=mitml/mitml.pdf">documentation</a>.</p>
+<p>Further information can be found in the other <a href="https://github.com/simongrund1/mitml/wiki">vignettes</a> and the package <a href="https://cran.r-project.org/package=mitml/mitml.pdf">documentation</a>.</p>
 <div id="example-data-studentratings" class="section level2">
 <h2>Example data (<code>studentratings</code>)</h2>
 <p>For the purposes of this vignette, we make use of the <code>studentratings</code> data set, which contains simulated data from 750 students in 50 schools including scores on reading and math achievement, socioeconomic status (SES), and ratings on school and classroom environment.</p>
@@ -160,11 +160,11 @@ implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(impl
 # 
 # Final parameter estimates and inferences obtained from 20 imputed data sets.
 # 
-#              Estimate Std.Error   t.value        df   P(&gt;|t|)       RIV       FMI 
-# (Intercept)   433.540    28.484    15.220   708.482     0.000     0.196     0.166 
-# SexGirl         2.768     7.354     0.376 47354.653     0.707     0.020     0.020 
-# I.SES           0.836     0.272     3.074   150.095     0.003     0.552     0.364 
-# G.SES           1.298     0.601     2.159   651.297     0.031     0.206     0.173 
+#               Estimate  Std.Error    t.value         df    P(&gt;|t|)        RIV        FMI 
+# (Intercept)    433.015     28.481     15.203   1081.280      0.000      0.153      0.134 
+# SexGirl          3.380      7.335      0.461 279399.842      0.645      0.008      0.008 
+# I.SES            0.692      0.257      2.690    233.427      0.008      0.399      0.291 
+# G.SES            1.296      0.597      2.173   1096.956      0.030      0.152      0.133 
 # 
 # Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
 <p>In addition, the argument <code>var.comp=TRUE</code> can be used to obtain pooled estimates of variance components, and <code>df.com</code> can be used to specify the complete-data degrees of freedom, which provides more appropriate (i.e., conservative) inferences in smaller samples.</p>
@@ -178,15 +178,15 @@ implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(impl
 # Final parameter estimates and inferences obtained from 20 imputed data sets.
 # 
 #              Estimate Std.Error   t.value        df   P(&gt;|t|)       RIV       FMI 
-# (Intercept)   433.540    28.484    15.220    35.070     0.000     0.196     0.166 
-# SexGirl         2.768     7.354     0.376    43.199     0.708     0.020     0.020 
-# I.SES           0.836     0.272     3.074    23.898     0.005     0.552     0.364 
-# G.SES           1.298     0.601     2.159    34.640     0.038     0.206     0.173 
+# (Intercept)   433.015    28.481    15.203    36.965     0.000     0.153     0.134 
+# SexGirl         3.380     7.335     0.461    43.752     0.647     0.008     0.008 
+# I.SES           0.692     0.257     2.690    27.781     0.012     0.399     0.291 
+# G.SES           1.296     0.597     2.173    37.022     0.036     0.152     0.133 
 # 
 #                         Estimate 
-# Intercept~~Intercept|ID  168.776 
-# Residual~~Residual      8029.502 
-# ICC|ID                     0.021 
+# Intercept~~Intercept|ID  168.506 
+# Residual~~Residual      8092.631 
+# ICC|ID                     0.020 
 # 
 # Hypothesis test adjusted for small samples with df=[46]
 # complete-data degrees of freedom.</code></pre>
@@ -210,7 +210,7 @@ implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(impl
 # Combination method: D1 
 # 
 #    F.value     df1     df2   P(&gt;F)     RIV 
-#      7.330       2 419.891   0.001   0.379 
+#      6.095       2 674.475   0.002   0.275 
 # 
 # Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
 <blockquote>
@@ -227,7 +227,7 @@ implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(impl
 # Combination method: D1 
 # 
 #    F.value     df1     df2   P(&gt;F)     RIV 
-#      7.330       2  39.039   0.002   0.379 
+#      6.095       2  40.687   0.005   0.275 
 # 
 # Hypothesis test adjusted for small samples with df=[46]
 # complete-data degrees of freedom.</code></pre>
@@ -242,7 +242,7 @@ implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(impl
 # Combination method: D3 
 # 
 #    F.value     df1     df2   P(&gt;F)     RIV 
-#      6.893       2 336.441   0.001   0.445 
+#      5.787       2 519.143   0.003   0.328 
 # 
 # Models originally fit with REML were automatically refit using ML.</code></pre>
 </div>
@@ -266,7 +266,7 @@ implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(impl
 # Combination method: D1 
 # 
 #    F.value     df1     df2   P(&gt;F)     RIV 
-#      7.330       2 419.891   0.001   0.379 
+#      6.095       2 674.475   0.002   0.275 
 # 
 # Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
 <p>This test is identical to the Wald test given in the previous section. Arbitrary constraints on the parameters can be specified and tested in this manner, where each character string denotes an expression to be tested against zero.</p>
@@ -286,7 +286,7 @@ implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(impl
 # Combination method: D1 
 # 
 #    F.value     df1     df2   P(&gt;F)     RIV 
-#      0.477       1 254.141   0.490   0.290 
+#      0.881       1 616.380   0.348   0.166 
 # 
 # Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
 <p>Similar to model comparisons, constraints can be tested with different methods (<span class="math inline">\(D_1\)</span> and <span class="math inline">\(D_2\)</span>) and can accommodate smaller samples by a value for <code>df.com</code>. Further examples for the analysis of multiply imputed data sets with <code>mitml</code> are given by Enders (2016) and Grund, Lüdtke, and Robitzsch (2016a).</p>

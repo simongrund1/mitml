@@ -27,7 +27,7 @@ Specifically, this vignette addresses the following topics:
 3. Model comparisons
 4. Parameter constraints
 
-Further information can be found in the other [vignettes](https://cran.r-project.org/package=mitml) and the package [documentation](https://cran.r-project.org/package=mitml/mitml.pdf).
+Further information can be found in the other [vignettes](https://github.com/simongrund1/mitml/wiki) and the package [documentation](https://cran.r-project.org/package=mitml/mitml.pdf).
 
 ## Example data (`studentratings`)
 

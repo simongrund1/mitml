@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Analysis of Multiply Imputed Data Sets</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amax%2Dwidth%3A%20720px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2016px%3B%0Afont%2Dweight%3A%20500%3B%0Aline%2Dheight%3A%201%2E65%3B%0Atext%2Dalign%3A%20justify%3B%0Atext%2Djustify%3A%20inter%2Dword%3B%0Amargin%3A%202em%20auto%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2016px%3B%0Aline%2Dheight%3A%201%2E5%3B%0Atext%2Dalign%3A%20left%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2018px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E6em%200%3B%0A%7D%0Ablockquote%20%7B%0Aborder%2Dleft%3A3px%20dotted%20%23e5e5e5%3B%0Abackground%2Dcolor%3A%20%23fff%3B%0Apadding%3A%200%201em%3B%0Amargin%3A%200%2E9em%200%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%2C%20ol%20%7B%0Atext%2Dalign%3A%20left%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aline%2Dheight%3A%201%2E2%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Apadding%3A%200px%3B%0Awhite%2Dspace%3A%20pre%3B%20%0Aoverflow%2Dx%3A%20auto%3B%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%202px%3B%0A%7D%0Ah1%2C%20h2%2C%20h3%2C%20h4%2C%20h5%2C%20h6%20%7B%0Atext%2Dalign%3A%20left%3B%0Aline%2Dheight%3A%201%2E2%3B%0A%7D%0Ah1%20%7B%0Afont%2Dsize%3A%202em%3B%0Afont%2Dweight%3A%20600%3B%0A%7D%0Ah2%20%7B%0Acolor%3A%20%23191919%3B%0Afont%2Dsize%3A%201%2E5em%3B%0Afont%2Dweight%3A%20600%3B%0A%7D%0Ah3%2C%20h4%2C%20h5%20%7B%0Acolor%3A%20%23292929%3B%0Afont%2Dweight%3A%20600%3B%0A%7D%0A%0Ah6%20%7B%0Acolor%3A%23191919%3B%0Afont%2Dsize%3A%201%2E5em%3B%0Afont%2Dweight%3A%20600%3B%0Amargin%2Dtop%3A%200%2E83em%3B%0Amargin%2Dbottom%3A%200%2E83em%3B%0A%7D%0Ah6%20%7E%20p%20%7B%0Atext%2Dalign%3A%20left%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%23777%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%23aaa%3B%0Atext%2Ddecoration%3A%20underline%3B%0A%7D%0A%0A%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20%7B%0Amargin%2Dtop%3A%2025px%3B%0Amargin%2Dbottom%3A%2025px%3B%0Amargin%2Dleft%3A%20auto%3B%0Amargin%2Dright%3A%20auto%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0Aborder%2Dspacing%3A%200%3B%0A%7D%0Ath%20%7B%0Apadding%3A5px%2010px%3B%0Aborder%3A%201px%20solid%20%23b2b2b2%3B%0A%7D%0Atd%20%7B%0Apadding%3A5px%2010px%3B%0Aborder%3A%201px%20solid%20%23e5e5e5%3B%0A%7D%0Adt%20%7B%0Acolor%3A%23444%3B%0Afont%2Dweight%3A500%3B%0A%7D%0Ath%20%7B%0Acolor%3A%23444%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Aimg%20%7B%0Adisplay%3A%20block%3B%0Amargin%2Dleft%3A%20auto%3B%0Amargin%2Dright%3A%20auto%3B%0Amax%2Dwidth%3A100%25%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%0A%2Egif%5Fplay%2C%20%23gif%3Ahover%20%2Egif%5Fstop%7B%0Adisplay%3Anone%0A%7D%0A%2Egif%5Fstop%2C%20%23gif%3Ahover%20%2Egif%5Fplay%7B%0Adisplay%3Ablock%0A%7D%0A%0Apre%20%3E%20code%20%7B%20color%3A%20%23707070%3B%20%7D%20%0Apre%20%3E%20code%2Er%20%7B%20color%3A%20%23333333%3B%20%7D%20%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23558200%3B%20font%2Dweight%3A%20normal%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23707070%3B%20font%2Dstyle%3A%20normal%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23333333%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23558200%3B%20%7D%20%20code%20%3E%20span%2Edv%20%7B%20color%3A%20%23007878%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23007878%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23007878%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23985b00%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23985b00%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007878%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23a61717%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Analysis of Multiply Imputed Data Sets</h1>
+
+
+
+<hr />
+<p>This vignette is intended to provide an overview of the analysis of multiply imputed data sets with <code>mitml</code>. Specifically, this vignette addresses the following topics:</p>
+<ol style="list-style-type: decimal">
+<li>Working with multiply imputed data sets</li>
+<li>Rubin’s rules for pooling individual parameters</li>
+<li>Model comparisons</li>
+<li>Parameter constraints</li>
+</ol>
+<p>Further information can be found in the other <a href="https://cran.r-project.org/package=mitml">vignettes</a> and the package <a href="https://cran.r-project.org/package=mitml/mitml.pdf">documentation</a>.</p>
+<div id="example-data-studentratings" class="section level2">
+<h2>Example data (<code>studentratings</code>)</h2>
+<p>For the purposes of this vignette, we make use of the <code>studentratings</code> data set, which contains simulated data from 750 students in 50 schools including scores on reading and math achievement, socioeconomic status (SES), and ratings on school and classroom environment.</p>
+<p>The package and the data set can be loaded as follows.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mitml)
+<span class="kw">library</span>(lme4)
+<span class="kw">data</span>(studentratings)</code></pre></div>
+<p>As evident from its <code>summary</code>, most variables in the data set contain missing values.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">summary</span>(studentratings)</code></pre></div>
+<pre><code>#        ID       FedState     Sex              MathAchiev       MathDis      
+#  Min.   :1001   B :375   Length:750         Min.   :225.0   Min.   :0.2987  
+#  1st Qu.:1013   SH:375   Class :character   1st Qu.:440.7   1st Qu.:1.9594  
+#  Median :1513            Mode  :character   Median :492.7   Median :2.4350  
+#  Mean   :1513                               Mean   :495.4   Mean   :2.4717  
+#  3rd Qu.:2013                               3rd Qu.:553.2   3rd Qu.:3.0113  
+#  Max.   :2025                               Max.   :808.1   Max.   :4.7888  
+#                                             NA's   :132     NA's   :466     
+#       SES          ReadAchiev       ReadDis        CognAbility      SchClimate     
+#  Min.   :-9.00   Min.   :191.1   Min.   :0.7637   Min.   :28.89   Min.   :0.02449  
+#  1st Qu.:35.00   1st Qu.:427.4   1st Qu.:2.1249   1st Qu.:43.80   1st Qu.:1.15338  
+#  Median :46.00   Median :490.2   Median :2.5300   Median :48.69   Median :1.65636  
+#  Mean   :46.55   Mean   :489.9   Mean   :2.5899   Mean   :48.82   Mean   :1.73196  
+#  3rd Qu.:59.00   3rd Qu.:558.4   3rd Qu.:3.0663   3rd Qu.:53.94   3rd Qu.:2.24018  
+#  Max.   :93.00   Max.   :818.5   Max.   :4.8554   Max.   :71.29   Max.   :4.19316  
+#  NA's   :281                     NA's   :153                      NA's   :140</code></pre>
+<p>In the present example, we investigate the differences in mathematics achievement that can be attributed to differences in SES when controlling for students’ sex. Specifically, we are interested in the following model.</p>
+<p><span class="math display">\[
+\mathit{MA}_{ij} = \gamma_{00} + \gamma_{10} \mathit{Sex}_{ij} + \gamma_{20} (\mathit{SES}_{ij}-\overline{\mathit{SES}}_{\bullet j}) + \gamma_{01} \overline{\mathit{SES}}_{\bullet j} + u_{0j} + e_{ij}
+\]</span></p>
+<p>Note that this model also employs group-mean centering to separate the individual and group-level effects of SES.</p>
+</div>
+<div id="generating-imputations" class="section level2">
+<h2>Generating imputations</h2>
+<p>In the present example, we generate 20 imputations from the following imputation model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fml &lt;-<span class="st"> </span>ReadDis <span class="op">+</span><span class="st"> </span>SES <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID)
+imp &lt;-<span class="st"> </span><span class="kw">panImpute</span>(studentratings, <span class="dt">formula=</span>fml, <span class="dt">n.burn=</span><span class="dv">5000</span>, <span class="dt">n.iter=</span><span class="dv">200</span>, <span class="dt">m=</span><span class="dv">20</span>)</code></pre></div>
+<p>The completed data are then extracted with <code>mitmlComplete</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">implist &lt;-<span class="st"> </span><span class="kw">mitmlComplete</span>(imp, <span class="st">&quot;all&quot;</span>)</code></pre></div>
+</div>
+<div id="transforming-the-imputed-data-sets" class="section level2">
+<h2>Transforming the imputed data sets</h2>
+<p>In empirical research, the raw data rarely enter the analyses but often require to be transformed beforehand. For this purpose, the <code>mitml</code> package provides the <code>within</code> function, which applies a given transformation directly to each data set.</p>
+<p>In the following, we use this to (a) calculate the group means of SES and (b) center the individual scores around their group means.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">implist &lt;-<span class="st"> </span><span class="kw">within</span>(implist,{
+  G.SES &lt;-<span class="st"> </span><span class="kw">clusterMeans</span>(SES,ID) <span class="co"># calculate group means</span>
+  I.SES &lt;-<span class="st"> </span>SES <span class="op">-</span><span class="st"> </span>G.SES          <span class="co"># center around group means</span>
+})</code></pre></div>
+<p>This method can be used to apply arbitrary transformations to all of the completed data sets simultaneously.</p>
+<blockquote>
+<p><strong>Note regarding</strong> <code>dplyr</code><strong>:</strong> Due to how it is implemented, <code>within</code> cannot be used directly with <code>dplyr</code>. Instead, users may use <code>with</code> instead of <code>within</code> with the following workaround.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">implist &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{
+  df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">as.list</span>(<span class="kw">environment</span>()))
+  df &lt;-<span class="st"> </span>... <span class="co"># dplyr commands</span>
+  df
+})
+implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(implist)</code></pre></div>
+<p>Advanced users may also consider using <code>lapply</code> for a similar workaround.<span style="color:white">`</span></p>
+</blockquote>
+</div>
+<div id="fitting-the-analysis-model" class="section level2">
+<h2>Fitting the analysis model</h2>
+<p>In order to analyze the imputed data, each data set is analyzed using regular complete-data techniques. For this purpose, <code>mitml</code> offers the <code>with</code> function. In the present example, we use it to fit the model of interest with the R package <code>lme4</code>.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{
+  <span class="kw">lmer</span>(MathAchiev <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>I.SES <span class="op">+</span><span class="st"> </span>G.SES <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID))
+})</code></pre></div>
+<p>This results in a list of fitted models, one for each of the imputed data sets.</p>
+</div>
+<div id="pooling" class="section level2">
+<h2>Pooling</h2>
+<p>The results obtained from the imputed data sets must be pooled in order to obtain a set of final parameter estimates and inferences. In the following, we employ a number of different pooling methods that can be used to address common statistical tasks, for example, for (a) estimating and testing individual parameters, (b) model comparisons, and (c) tests of constraints about one or several parameters.</p>
+<div id="parameter-estimates" class="section level4">
+<h4>Parameter estimates</h4>
+<p>Individual parameters are commonly pooled with the rules developed by Rubin (1987). In <code>mitml</code>, Rubin’s rules are implemented in the <code>testEstimates</code> function.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">testEstimates</span>(fit)</code></pre></div>
+<pre><code># 
+# Call:
+# 
+# testEstimates(model = fit)
+# 
+# Final parameter estimates and inferences obtained from 20 imputed data sets.
+# 
+#              Estimate Std.Error   t.value        df   P(&gt;|t|)       RIV       FMI 
+# (Intercept)   433.540    28.484    15.220   708.482     0.000     0.196     0.166 
+# SexGirl         2.768     7.354     0.376 47354.653     0.707     0.020     0.020 
+# I.SES           0.836     0.272     3.074   150.095     0.003     0.552     0.364 
+# G.SES           1.298     0.601     2.159   651.297     0.031     0.206     0.173 
+# 
+# Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
+<p>In addition, the argument <code>var.comp=TRUE</code> can be used to obtain pooled estimates of variance components, and <code>df.com</code> can be used to specify the complete-data degrees of freedom, which provides more appropriate (i.e., conservative) inferences in smaller samples.</p>
+<p>For example, using a conservative value for the complete-data degrees of freedom for the fixed effects in the model of interest (Snijders &amp; Bosker, 2012), the output changes as follows.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">testEstimates</span>(fit, <span class="dt">var.comp=</span><span class="ot">TRUE</span>, <span class="dt">df.com=</span><span class="dv">46</span>)</code></pre></div>
+<pre><code># 
+# Call:
+# 
+# testEstimates(model = fit, var.comp = TRUE, df.com = 46)
+# 
+# Final parameter estimates and inferences obtained from 20 imputed data sets.
+# 
+#              Estimate Std.Error   t.value        df   P(&gt;|t|)       RIV       FMI 
+# (Intercept)   433.540    28.484    15.220    35.070     0.000     0.196     0.166 
+# SexGirl         2.768     7.354     0.376    43.199     0.708     0.020     0.020 
+# I.SES           0.836     0.272     3.074    23.898     0.005     0.552     0.364 
+# G.SES           1.298     0.601     2.159    34.640     0.038     0.206     0.173 
+# 
+#                         Estimate 
+# Intercept~~Intercept|ID  168.776 
+# Residual~~Residual      8029.502 
+# ICC|ID                     0.021 
+# 
+# Hypothesis test adjusted for small samples with df=[46]
+# complete-data degrees of freedom.</code></pre>
+</div>
+<div id="multiple-parameters-and-model-comparisons" class="section level4">
+<h4>Multiple parameters and model comparisons</h4>
+<p>Oftentimes, statistical inference concerns more than one parameter at a time. For example, the combined influence of SES (within and between groups) on mathematics achievement is represented by two parameters in the model of interest.</p>
+<p>Multiple pooling methods for Wald and likelihood ratio tests (LRTs) are implemented in the <code>testModels</code> function. This function requires the specification of a full model and a restricted model, which are then compared using (pooled) Wald tests or LRTs. Specifically, <code>testModels</code> allows users to pool Wald tests (<span class="math inline">\(D_1\)</span>), <span class="math inline">\(\chi^2\)</span> test statistics (<span class="math inline">\(D_2\)</span>), and LRTs (<span class="math inline">\(D_3\)</span>; for a comparison of these methods, see also Grund, Lüdtke, &amp; Robitzsch, 2016b).</p>
+<p>To examine the combined influence of SES on mathematics achievement, the following restricted model can be specified and compared with the model of interest (using <span class="math inline">\(D_1\)</span>).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">fit.null &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{
+  <span class="kw">lmer</span>(MathAchiev <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID))
+})
+
+<span class="kw">testModels</span>(fit, fit.null)</code></pre></div>
+<pre><code># 
+# Call:
+# 
+# testModels(model = fit, null.model = fit.null)
+# 
+# Model comparison calculated from 20 imputed data sets.
+# Combination method: D1 
+# 
+#    F.value     df1     df2   P(&gt;F)     RIV 
+#      7.330       2 419.891   0.001   0.379 
+# 
+# Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
+<blockquote>
+<p><strong>Note regarding the order of arguments:</strong> Please note that <code>testModels</code> expects that the first argument contains the full model, and the second argument contains the restricted model. If the order of the arguments is reversed, the results will not be interpretable.</p>
+</blockquote>
+<p>Similar to the test for individual parameters, smaller samples can be accommodated with <code>testModels</code> (with method <span class="math inline">\(D_1\)</span>) by specifying the complete-data degrees of freedom for the denominator of the <span class="math inline">\(F\)</span> statistic.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">testModels</span>(fit, fit.null, <span class="dt">df.com=</span><span class="dv">46</span>)</code></pre></div>
+<pre><code># 
+# Call:
+# 
+# testModels(model = fit, null.model = fit.null, df.com = 46)
+# 
+# Model comparison calculated from 20 imputed data sets.
+# Combination method: D1 
+# 
+#    F.value     df1     df2   P(&gt;F)     RIV 
+#      7.330       2  39.039   0.002   0.379 
+# 
+# Hypothesis test adjusted for small samples with df=[46]
+# complete-data degrees of freedom.</code></pre>
+<p>The pooling method used by <code>testModels</code> is determined by the <code>method</code> argument. For example, to calculate the pooled LRT corresponding to the Wald test above (i.e., <span class="math inline">\(D_3\)</span>), the following command can be issued.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">testModels</span>(fit, fit.null, <span class="dt">method=</span><span class="st">&quot;D3&quot;</span>)</code></pre></div>
+<pre><code># 
+# Call:
+# 
+# testModels(model = fit, null.model = fit.null, method = &quot;D3&quot;)
+# 
+# Model comparison calculated from 20 imputed data sets.
+# Combination method: D3 
+# 
+#    F.value     df1     df2   P(&gt;F)     RIV 
+#      6.893       2 336.441   0.001   0.445 
+# 
+# Models originally fit with REML were automatically refit using ML.</code></pre>
+</div>
+<div id="constraints-on-parameters" class="section level4">
+<h4>Constraints on parameters</h4>
+<p>Finally, it is often useful to investigate functions (or constraints) of the parameters in the model of interest. In complete data sets, this can be achieved with a test of linear hypotheses or the delta method. The <code>mitml</code> package implements a pooled version of the delta method in the <code>testConstraints</code> function.</p>
+<p>For example, the combined influence of SES on mathematics achievement can also be tested without model comparisons by testing the constraint that the parameters pertaining to <code>I.SES</code> and <code>G.SES</code> are both zero. This constraint is defined and tested as follows.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">c1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;I.SES&quot;</span>, <span class="st">&quot;G.SES&quot;</span>)
+<span class="kw">testConstraints</span>(fit, <span class="dt">constraints=</span>c1)</code></pre></div>
+<pre><code># 
+# Call:
+# 
+# testConstraints(model = fit, constraints = c1)
+# 
+# Hypothesis test calculated from 20 imputed data sets. The following
+# constraints were specified:
+# 
+#  I.SES
+#  G.SES
+# 
+# Combination method: D1 
+# 
+#    F.value     df1     df2   P(&gt;F)     RIV 
+#      7.330       2 419.891   0.001   0.379 
+# 
+# Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
+<p>This test is identical to the Wald test given in the previous section. Arbitrary constraints on the parameters can be specified and tested in this manner, where each character string denotes an expression to be tested against zero.</p>
+<p>In the present example, we are also interested in the <em>contextual</em> effect of SES on mathematics achievement (e.g., Snijders &amp; Bosker, 2012). The contextual effect is simply the difference between the coefficients pertaining to <code>G.SES</code> and <code>I.SES</code> and can be tested as follows.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">c2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;G.SES - I.SES&quot;</span>)
+<span class="kw">testConstraints</span>(fit, <span class="dt">constraints=</span>c2)</code></pre></div>
+<pre><code># 
+# Call:
+# 
+# testConstraints(model = fit, constraints = c2)
+# 
+# Hypothesis test calculated from 20 imputed data sets. The following
+# constraints were specified:
+# 
+#  G.SES - I.SES
+# 
+# Combination method: D1 
+# 
+#    F.value     df1     df2   P(&gt;F)     RIV 
+#      0.477       1 254.141   0.490   0.290 
+# 
+# Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
+<p>Similar to model comparisons, constraints can be tested with different methods (<span class="math inline">\(D_1\)</span> and <span class="math inline">\(D_2\)</span>) and can accommodate smaller samples by a value for <code>df.com</code>. Further examples for the analysis of multiply imputed data sets with <code>mitml</code> are given by Enders (2016) and Grund, Lüdtke, and Robitzsch (2016a).</p>
+<div id="references" class="section level6">
+<h6>References</h6>
+<p>Enders, C. K. (2016). Multiple imputation as a flexible tool for missing data handling in clinical research. <em>Behaviour Research and Therapy</em>. doi: 10.1016/j.brat.2016.11.008 (<a href="https://doi.org/10.1016/j.brat.2016.11.008">Link</a>)</p>
+<p>Grund, S., Lüdtke, O., &amp; Robitzsch, A. (2016a). Multiple imputation of multilevel missing data: An introduction to the R package pan. <em>SAGE Open</em>, <em>6</em>(4), 1–17. doi: 10.1177/2158244016668220 (<a href="https://doi.org/10.1177/2158244016668220">Link</a>)</p>
+<p>Grund, S., Lüdtke, O., &amp; Robitzsch, A. (2016b). Pooling ANOVA results from multiply imputed datasets: A simulation study. <em>Methodology</em>, <em>12</em>, 75–88. doi: 10.1027/1614-2241/a000111 (<a href="https://doi.org/10.1027/1614-2241/a000111">Link</a>)</p>
+<p>Rubin, D. B. (1987). <em>Multiple imputation for nonresponse in surveys</em>. Hoboken, NJ: Wiley.</p>
+<p>Snijders, T. A. B., &amp; Bosker, R. J. (2012). <em>Multilevel analysis: An introduction to basic and advanced multilevel modeling</em>. Thousand Oaks, CA: Sage.</p>
+<hr />
+<pre><code># Author: Simon Grund (grund@ipn.uni-kiel.de)
+# Date:   2017-10-19</code></pre>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

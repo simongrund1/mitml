@@ -3,7 +3,7 @@ mitmlComplete <- function(x, print="all", force.list=FALSE){
   if(sum(print<=0)>1) stop("Only one negative or zero value is allowed in 'print'.")
 
   dat <- x$data
-  srt <- attr(x$data,"sort")
+  srt <- order( attr(x$data,"sort") )
   labs <- attr(x$data,"labels")
   method <- class(x)[2]
 

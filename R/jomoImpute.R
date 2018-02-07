@@ -143,8 +143,8 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
 
   # seed
   original.seed <- NULL
+  if(exists(".Random.seed", .GlobalEnv)) original.seed <- .Random.seed
   if(!is.null(seed)){
-    if(exists(".Random.seed", .GlobalEnv)) original.seed <- .Random.seed
     set.seed(seed)
   }
 

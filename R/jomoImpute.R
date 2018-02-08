@@ -141,10 +141,10 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
 
   # * * * * * * * * * * * * * * * * * * * *
 
-  # seed
+  # save original seed (if seed is provided)
   original.seed <- NULL
-  if(exists(".Random.seed", .GlobalEnv)) original.seed <- .Random.seed
   if(!is.null(seed)){
+    if(exists(".Random.seed", .GlobalEnv)) original.seed <- .Random.seed
     set.seed(seed)
   }
 
@@ -367,11 +367,13 @@ jomoImpute <- function(data, type, formula, random.L1=c("none","mean","full"),
   srt <- data.ord[,ncol(data.ord)]
   data.ord <- data.ord[,-ncol(data.ord)]
 
-  # restore seed
-  if(is.null(original.seed)){
-    rm(".Random.seed", envir = .GlobalEnv)
-  }else{
-    assign(".Random.seed", original.seed, envir=.GlobalEnv)
+  # restore original seed (if seed was provided)
+  if(!is.null(seed)){
+    if(is.null(original.seed)){
+      rm(".Random.seed", envir = .GlobalEnv)
+    }else{
+      assign(".Random.seed", original.seed, envir=.GlobalEnv)
+    }
   }
 
   # *** prepare output

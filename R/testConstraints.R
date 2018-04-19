@@ -10,7 +10,8 @@ testConstraints <- function(model, qhat, uhat, constraints, method=c("D1","D2"),
   method <- match.arg(method)
 
   cons <- gsub("\\(Intercept\\)","Intercept",constraints)
-
+  cons <- gsub(":","_.x._", cons)
+  
   # warnings for ignored arguments
   if(!is.null(df.com) & method=="D2") warning("Setting complete-data degrees of freedom is only available for 'D1' and will be ignored with 'D2'.")
 
@@ -100,6 +101,7 @@ testConstraints <- function(model, qhat, uhat, constraints, method=c("D1","D2"),
     theta <- Qhat[,ii]
     Sigma <- Uhat[,,ii]
     names(theta) <- gsub("\\(Intercept\\)","Intercept",names(theta))
+    names(theta) <- gsub(":","_.x._",names(theta))
 
     g <- parse(text=cons)
     env.g <- new.env()
@@ -169,6 +171,9 @@ testConstraints <- function(model, qhat, uhat, constraints, method=c("D1","D2"),
   out <- matrix(c(val,k,v,p,r),ncol=5)
   colnames(out) <- c("F.value","df1","df2","P(>F)","RIV")   # new label for p-value, SiG 2017-02-09
 
+  ## return interaction labels to their original form (":")
+  cons <- gsub("_.x._",":", cons)
+  
   out <- list(
     call=match.call(),
     constraints=cons,

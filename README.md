@@ -28,4 +28,4 @@ install.packages("devtools")
 devtools::install_github("simongrund1/mitml")
 ```
 
-![GitHub release](https://img.shields.io/github/release/simongrund1/mitml.svg) ![Github commits](https://img.shields.io/github/commits-since/simongrund1/mitml/latest.svg?colorB=orange)
+![Github commits](https://img.shields.io/github/commits-since/simongrund1/mitml/latest.svg?colorB=green)

@@ -17,6 +17,8 @@ The official version of `mitml` is hosted on CRAN and may be found [here](https:
 install.packages("mitml")
 ```
 
+[![CRAN release](http://www.r-pkg.org/badges/version/mitml)](https://cran.r-project.org/package=mitml) [![CRAN downloads](http://cranlogs.r-pkg.org/badges/mitml)](https://cran.r-project.org/package=mitml)
+
 #### GitHub version
 
 The version hosted here is the development version of `mitml`, allowing better tracking of [issues](https://github.com/simongrund1/mitml/issues) and possibly containing features and changes in advance. The GitHub version can be installed using `devtools` as:
@@ -26,4 +28,4 @@ install.packages("devtools")
 devtools::install_github("simongrund1/mitml")
 ```
 
-[![](http://www.r-pkg.org/badges/version/mitml)](https://cran.r-project.org/package=mitml) [![](http://cranlogs.r-pkg.org/badges/mitml)](https://cran.r-project.org/package=mitml)
+![GitHub release](https://img.shields.io/github/release/simongrund1/mitml.svg) ![Github commits](https://img.shields.io/github/commits-since/simongrund1/mitml/latest.svg?colorB=orange)

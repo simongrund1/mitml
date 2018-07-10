@@ -51,5 +51,5 @@ confint(est)
 # ... with different confidence levels
 confint(est, level=0.90)
 confint(est, level=0.999)
-
 }
+

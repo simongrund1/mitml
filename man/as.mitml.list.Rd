@@ -19,7 +19,7 @@ The list entries are converted to \code{data.frame} if necessary, in which case 
 
 }
 \author{Simon Grund}
-\seealso{\code{\link{is.mitml.list}},\code{\link{long2mitml.list}}}
+\seealso{\code{\link{is.mitml.list}}, \code{\link{long2mitml.list}}}
 
 \examples{
 # data frame with 'imputation' indicator

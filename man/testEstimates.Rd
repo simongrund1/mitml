@@ -55,7 +55,7 @@ Rubin, D. B. (1987). \emph{Multiple imputation for nonresponse in surveys}. Hobo
 
 \author{Simon Grund}
 
-\seealso{\code{\link{with.mitml.list}}}
+\seealso{\code{\link{with.mitml.list}}, \code{\link{confint.mitml.testEstimates}}}
 \examples{
 data(studentratings)
 

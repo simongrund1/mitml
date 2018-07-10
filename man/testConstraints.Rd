@@ -29,7 +29,8 @@ In cases where this is not possible, hypothesis tests can be carried out using u
 Constraints and functions of the model parameters can be specified in the \code{constraints} argument.
 The constraints must be supplied as a character vector, where each string denotes a function or a constraint to be tested (see examples).
 
-The Wald-like tests that are carried out by \code{testConstraints} can be aggregated across data sets by methods \eqn{D_1} (Li, Raghunathan & Rubin, 1991) and \eqn{D_2} (Li, Meng, Raghunathan & Rubin, 1991), where \eqn{D_1} operates on the constrained estimates and standard errors, and \eqn{D_2} operates on the Wald-statistics (for an explanation, see \code{testModels}).
+The Wald-like tests that are carried out by \code{testConstraints} can be aggregated across data sets with the two methods \eqn{D_1} (Li, Raghunathan & Rubin, 1991) and \eqn{D_2} (Li, Meng, Raghunathan & Rubin, 1991), where \eqn{D_1} operates on the constrained estimates and standard errors, and \eqn{D_2} operates on the Wald-statistics (for an explanation, see \code{testModels}).
+The pooled estimates and standard errors reported in the output are always based on \eqn{D_1}.
 
 For \eqn{D_1}, the complete-data degrees of freedom can be adjusted for smaller samples by specifying \code{df.com}.
 

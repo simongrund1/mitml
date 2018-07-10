@@ -123,13 +123,18 @@ testConstraints <- function(model, qhat, uhat, constraints, method=c("D1","D2"),
   }
 
   # *** aggregation
-  if(method=="D1"){
+  #
 
-    Qbar <- apply(newQhat,1,mean)
-    Ubar <- apply(newUhat,c(1,2),mean)
-    B <- cov(t(newQhat))
-    r <- (1+m^(-1))*sum(diag(B%*%solve(Ubar)))/k
-    Ttilde <- (1 + r)*Ubar
+  # common part (based on D1)
+  Qbar <- apply(newQhat,1,mean)
+  Ubar <- apply(newUhat,c(1,2),mean)
+
+  B <- cov(t(newQhat))
+  r <- (1+m^(-1))*sum(diag(B%*%solve(Ubar)))/k # based on D1
+
+  Ttilde <- (1 + r)*Ubar
+
+  if(method=="D1"){
 
     # D1 (Li, Raghunathan and Rubin, 1991)
     val <- t(Qbar) %*% solve(Ttilde) %*% Qbar / k
@@ -153,7 +158,6 @@ testConstraints <- function(model, qhat, uhat, constraints, method=c("D1","D2"),
 
   if(method=="D2"){
 
-    Qbar <- Ttilde <- NULL
     dW <- sapply(1:m, function(z) t(newQhat[,z]) %*% solve(newUhat[,,z]) %*% newQhat[,z])
 
     # D2 (Li, Meng et al., 1991)

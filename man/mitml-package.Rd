@@ -6,7 +6,7 @@
 This package includes a user-friendly interface to the algorithms implemented in the R packages \code{pan} and \code{jomo}, as well as several functions for visualizing, managing and analyzing multiply imputed data sets.
 
 The main interface to \code{pan} is the function \code{\link{panImpute}}, which allows specification of imputation models for continuous variables with missing data at level 1.
-In addition, the function \code{\link{jomoImpute}} provides an interface to \code{jomo}, which extends the functionality of \code{pan} to continuous and categorical variables with missing data at level 1 and level 2.
+In addition, the function \code{\link{jomoImpute}} provides an interface to \code{jomo}, which extends the functionality of \code{pan} to continuous and categorical variables with missing data at level 1 and level 2 and also allows for the specification of single-level imputation models.
 Imputations and parameter chains are stored in objects of class \code{mitml}.
 To obtain the completed (i.e., imputed) data sets, \code{\link{mitmlComplete}} is used, producing a list of imputed data sets of class \code{mitml.list} that can be used in further analyses.
 

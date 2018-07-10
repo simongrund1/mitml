@@ -180,9 +180,12 @@ panImpute <- function(data, type, formula, n.burn=5000, n.iter=100, m=10,
 
   # prepare output data
   if( save.pred && !missing(formula) ) data.ord <- cbind(data.ord,pred[,psave,drop=F])
+  # ordering
   attr(data.ord,"sort") <- srt
   attr(data.ord,"group") <- group.original
+  # model summary
   model <- list(clus=clname, yvrs=yvrs, pvrs=pvrs, qvrs=qvrs)
+  attr(model,"is.ML") <- TRUE
   attr(model,"is.L2") <- FALSE
   attr(model,"full.names") <- list(pvrs=pnames, qvrs=qnames)
 

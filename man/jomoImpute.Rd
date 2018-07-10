@@ -1,8 +1,9 @@
 \name{jomoImpute}
 \alias{jomoImpute}
-\title{Impute multilevel missing data using \code{jomo}}
+\title{Impute single-level and multilevel missing data using \code{jomo}}
 \description{This function provides an interface to the \code{jomo} package, which uses the MCMC algorithms presented in Carpenter & Kenward (2013).
-Through this wrapper function, imputations can be generated for (mixed) categorical and continuous variables (Goldstein et al., 2009) at level 1 and level 2 as well as imputation using random (residual) covariance matrices (Yucel, 2011).
+Through this wrapper function, single-level and multilevel imputations can be generated for (mixed) categorical and continuous variables (Goldstein et al., 2009).
+The multilevel procedures support imputation of missing data at level 1 and 2 as well as imputation using random (residual) covariance matrices (Yucel, 2011).
 Imputations can be generated using \code{type} or \code{formula}, which offer different options for model specification.}
 
 \usage{
@@ -17,7 +18,7 @@ jomoImpute(data, type, formula, random.L1=c("none","mean","full"), n.burn=5000,
 
   \item{data}{A data frame containing incomplete and auxiliary variables, the cluster indicator variable, and any other variables that should be present in the imputed datasets.}
   \item{type}{An integer vector specifying the role of each variable in the imputation model or a list of two vectors specifying a two-level model (see details).}
-  \item{formula}{A formula specifying the role of each variable in the imputation model or a list of two formulas specifying a two-level model. The basic model is constructed by \code{model.matrix}, thus allowing to include derived variables in the imputation model using \code{I()} (see details and examples).}
+  \item{formula}{A formula specifying the role of each variable in the imputation model or a list of two formulas specifying a two-level model. The basic model is constructed by \code{model.matrix}, which allows including derived variables in the imputation model using \code{I()} (see details and examples).}
   \item{random.L1}{A character string denoting if the covariance matrix of residuals should vary across groups and how the values of these matrices are stored (see details). Default is to \code{"none"}, assuming a common covariance matrix across clusters.}
   \item{n.burn}{The number of burn-in iterations before any imputations are drawn. Default is to 5,000.}
   \item{n.iter}{The number of iterations between imputations. Default is to 100.}
@@ -33,7 +34,7 @@ jomoImpute(data, type, formula, random.L1=c("none","mean","full"), n.burn=5000,
 
 \details{
 
-This function serves as an interface to the \code{jomo} package and supports imputation of multilevel continuous and categorical data.
+This function serves as an interface to the \code{jomo} package and supports imputation of single-level and multilevel continuous and categorical data.
 In order for categorical variables to be detected correctly, these must be formatted as a \code{factor} variables (see examples).
 The imputation model can be specified using either the \code{type} or the \code{formula} argument.
 
@@ -46,7 +47,8 @@ The \code{type} interface is designed to provide quick-and-easy imputations usin
   \item{\code{-2}: cluster indicator variable}
   \item{\code{0}: variables not featured in the model}
 }
-At least one target variable and the cluster indicator must be specified.
+At least one target variable and, for multilevel imputation, the cluster indicator must be specified.
+If the cluster indicator is omitted, single-level imputation will be performed.
 The intercept is automatically included both as a fixed and random effect.
 If a variable of type \code{-1} is found, then separate imputations are performed within each level of that variable.
 
@@ -59,8 +61,10 @@ Given below is a list of operators that \code{jomoImpute} currently understands:
   \item{\code{|}: denotes cluster-specific random effects and specifies the cluster indicator (e.g., \code{1|ID})}
   \item{\code{I()}: defines functions to be interpreted by \code{model.matrix}}
 }
-Predictors are allowed to have fixed effects, random effects, or both on all target variables.
-The intercept is automatically included both as a fixed and a random effect, but it can be constrained if necessary (see \code{\link{panImpute}}).
+If the cluster indicator is omitted, single-level imputation will be run.
+For multilevel imputation, predictors are allowed to have fixed effects, random effects, or both on all target variables.
+The intercept is automatically included both as a fixed and, for multilevel imputation, a random effect.
+Both can be constrained if necessary (see \code{\link{panImpute}}).
 Note that, when specifying random effects other than the intercept, these will \emph{not} be automatically added as fixed effects and must be included explicitly.
 Any predictors defined by \code{I()} will be used for imputation but not included in the data set unless \code{save.pred=TRUE}.
 
@@ -88,6 +92,7 @@ These must be supplied as a list containing the following components:
 }
 Note that \code{jomo} does not allow for the degrees of freedom for the inverse-Wishart prior to be specified by the user.
 These are always set to the lowest value possible (largest dispersion) or determined iteratively if the residuals at level 1 are modeled as random (see above).
+For single-level imputation, only \code{Binv} is relevant.
 
 In imputation models with many parameters, the number of parameter chains being saved can be reduced with the \code{keep.chains} argument (see \code{\link{panImpute}}).
 This setting influences the storage mode of parameters (e.g., dimensions and indices of arrays) and should be used with caution.
@@ -168,6 +173,14 @@ type
 
 imp <- jomoImpute(leadership, type=type, n.burn=100, n.iter=10, m=5)
 
+# * Example 1.3 (studentratings): 'ReadDis', 'ReadAchiev', and 'SES' predicted
+# with empty model, groupwise for 'FedState' (single-level imputation)
+
+type <- c(0,-1,0,0,0,1,1,1,0,0)
+names(type) <- colnames(studentratings)
+type
+
+imp <- jomoImpute(studentratings, type=type, group="FedState", n.burn=100, n.iter=10, m=5)
 
 # *** ................................
 # the 'formula' interface
@@ -196,5 +209,11 @@ imp <- jomoImpute(studentratings, formula=fml, group="FedState", n.burn=100, n.i
 
 fml <- list( JOBSAT + NEGLEAD + WLOAD ~ 1 + (1|GRPID) , COHES ~ 1 )
 imp <- jomoImpute(leadership, formula=fml, n.burn=100, n.iter=10, m=5)
+
+# * Example 2.5 (studentratings): 'ReadDis', 'ReadAchiev', and 'SES' predicted
+# with empty model, groupwise for 'FedState' (single-level imputation)
+
+fml <- ReadDis + ReadAchiev + SES ~ 1
+imp <- jomoImpute(studentratings, formula=fml, group="FedState", n.burn=100, n.iter=10, m=5)
 }
 \keyword{models}

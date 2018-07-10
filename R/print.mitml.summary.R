@@ -7,6 +7,7 @@ print.mitml.summary <- function(x,...){
   ngr <- x$ngr
   mdr <- x$missing.rates
   conv <- x$conv
+  isML <- attr(x$model,"is.ML")
   isL2 <- attr(x$model,"is.L2")
 
   # print general information
@@ -14,10 +15,10 @@ print.mitml.summary <- function(x,...){
   cat("\n")
 
   if(isL2) cat("Level 1:\n", collapse="\n")
-  cat(formatC("Cluster variable:",width=-25), vrs$clus, sep=" ", collapse="\n")
+  if(isML) cat(formatC("Cluster variable:",width=-25), vrs$clus, sep=" ", collapse="\n")
   cat(formatC("Target variables:",width=-25), vrs$yvrs, collapse="\n")
   cat(formatC("Fixed effect predictors:",width=-25), vrs$pvrs, collapse="\n")
-  cat(formatC("Random effect predictors:",width=-25), vrs$qvrs, collapse="\n")
+  if(isML) cat(formatC("Random effect predictors:",width=-25), vrs$qvrs, collapse="\n")
 
   if(isL2){
     cat("\n")
@@ -50,7 +51,7 @@ print.mitml.summary <- function(x,...){
                   sapply(conv, function(z) median(z[,cc])),
                   sapply(conv, function(z) quantile(z[,cc],.75)),
                   sapply(conv, function(z) max(z[,cc])) ), ncol=6 )
-        rownames(cout) <- c("Beta:",if(isL2) "Beta2:","Psi:","Sigma:")
+        rownames(cout) <- c("Beta:",if(isL2) "Beta2:",if(isML) "Psi:","Sigma:")
         colnames(cout) <- c("Min","25%","Mean","Median","75%","Max")
         clab <- switch(cc, Rhat="\nPotential scale reduction (Rhat, imputation phase):\n",
                            SDprop="\nGoodness of approximation (imputation phase):\n")
@@ -63,7 +64,7 @@ print.mitml.summary <- function(x,...){
         maxval <- lapply(conv, function(a) a[which.max(a[,cc]),1:2])
         cat("Beta: [", paste(maxval$beta,collapse=",") ,"], ",
             if(isL2) paste0("Beta2: [", paste(maxval$beta2,collapse=",") ,"], "),
-            "Psi: [", paste(maxval$psi,collapse=",") ,"], ",
+            if(isML) paste0("Psi: [", paste(maxval$psi,collapse=",") ,"], "),
             "Sigma: [", paste(maxval$sigma,collapse=",") ,"]\n", sep="")
 
       }
@@ -81,9 +82,9 @@ print.mitml.summary <- function(x,...){
         cout <- sprintf(cout,fmt="%.3f")
         cout[neg] <- gsub("^-0","-",cout[neg])
         cout[!neg] <- gsub("^0"," ",cout[!neg])
-        cout <- matrix(cout, 3+isL2, 6)
+        cout <- matrix(cout, 2+isML+isL2, 6)
         cout <- rbind(c(" Lag1"," Lagk","Lag2k"," Lag1"," Lagk","Lag2k"), cout)
-        rownames(cout) <- c("","Beta:",if(isL2) "Beta2:","Psi:","Sigma:")
+        rownames(cout) <- c("","Beta:",if(isL2) "Beta2:",if(isML) "Psi:","Sigma:")
         colnames(cout) <- c(" Mean","",""," Max","","")
         cat("\nAutocorrelation (ACF, imputation phase):\n\n")
         print.table(cout)
@@ -92,7 +93,7 @@ print.mitml.summary <- function(x,...){
         maxval <- lapply(conv, function(a) a[which.max(abs(a[,"lag-k"])),1:2])
         cat("Beta: [", paste(maxval$beta,collapse=",") ,"], ",
             if(isL2) paste0("Beta2: [", paste(maxval$beta2,collapse=",") ,"], "),
-            "Psi: [", paste(maxval$psi,collapse=",") ,"], ",
+            if(isML) paste0("Psi: [", paste(maxval$psi,collapse=",") ,"], "),
             "Sigma: [", paste(maxval$sigma,collapse=",") ,"]\n", sep="")
 
       }
@@ -107,6 +108,6 @@ print.mitml.summary <- function(x,...){
 
   cat("\n")
 
-  invisible()
+  invisible(NULL)
 }
 

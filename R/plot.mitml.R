@@ -12,6 +12,7 @@ plot.mitml <- function(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group
   qvrs <- seq_along(attr(vrs,"full.names")$qvrs)
   names(pvrs) <- attr(vrs,"full.names")$pvrs
   names(qvrs) <- attr(vrs,"full.names")$qvrs
+  isML <- attr(x$model,"is.ML")
   isL2 <- attr(x$model,"is.L2")
   if(isL2){
     pvrs.L2 <- seq_along(attr(vrs,"full.names")$pvrs.L2)
@@ -368,7 +369,7 @@ plot.mitml <- function(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group
   # *** plots for random effects' variance components
   #
 
-  if("psi" %in% print){
+  if(isML & "psi" %in% print){
 
   # joint set of variables at level 1 and 2
   yvrs.comb <- c(yvrs, if(isL2) yvrs.L2+length(yvrs))

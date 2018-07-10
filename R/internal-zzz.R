@@ -31,25 +31,3 @@
 
 }
 
-.check.modelL2 <- function(x){
-# check number of model equations
-
-  if(is.list(x) & length(x)>2)
-    stop("Cannot determine the number of levels. The 'formula' or 'type' argument must indicate either a single model for responses at level 1, or two models for responses at level 1 and 2.")
-
-  if(is.list(x) & length(x)==1) x <- x[[1]] # unlist
-  isL2 <- is.list(x) & length(x)==2
-
-  attr(x,"is.L2") <- isL2
-  x
-
-}
-
-.check.variablesL2 <- function(x,clus){
-# check for variables at L2 (constant at L1)
-
-  apply(x, 2, function(a) all( abs(a-clusterMeans(a,clus)) < sqrt(.Machine$double.eps),
-                               na.rm=T))
-
-}
-

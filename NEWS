@@ -1,6 +1,31 @@
 # * RELEASE HISTORY OF THE 'mitml' PACKAGE:
 --
 
+# Version 0.3-6 (2018-07-10)
+--
+
+* confint:         new function, calculating confidence intervals for pooled
+                   estimates (applicable to testEstimates() objects)
+
+* jomoImpute,      added features (option to save fewer parameters with
+  panImpute:       'keep.chains')
+
+* jomoImpute,      added features (support for single-level imputation models)
+
+* testEstimates,   added features (support for Cox-PH models using 'survival'
+  testConstraints, package)
+  testModels:
+
+* testConstraints: added features (pooled estimates and SEs of specified
+                   constraints)
+
+* mitmlComplete:   bugfix (fixes row ordering issue)
+
+* jomoImpute,      bugfix (fixes erroneous removal of global seed)
+  panImpute:
+
+* other:           added vignettes (analysis, level-2 imputation)
+
 # Version 0.3-5 (2017-03-14)
 --
 

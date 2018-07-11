@@ -4,7 +4,7 @@ output:
   rmarkdown::html_vignette:
     css: "css/vignette.css"
 vignette: >
-  %\VignetteEngine{knitr::knitr}
+  %\VignetteEngine{knitr::rmarkdown}
   %\VignetteIndexEntry{Introduction}
   %\VignetteEncoding{UTF-8}
 ---

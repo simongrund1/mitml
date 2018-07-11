@@ -4,8 +4,8 @@ output:
   rmarkdown::html_vignette:
     css: "css/vignette.css"
 vignette: >
-  %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Imputation of missing data at level 2}
   %\VignetteEncoding{UTF-8}
 ---
 

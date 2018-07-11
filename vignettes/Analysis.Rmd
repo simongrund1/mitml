@@ -4,11 +4,9 @@ output:
   rmarkdown::html_vignette:
     css: "css/vignette.css"
 vignette: >
-  %\VignetteEngine{knitr::knitr}
-  %\VignetteIndexEntry{Introduction}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteIndexEntry{Analysis of multiply imputed data sets}
   %\VignetteEncoding{UTF-8}
----
-
 ---
 
 ```{r setup, include=FALSE, cache=FALSE}

@@ -35,7 +35,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -310,18 +310,18 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Example data</h2>
 <p>For purposes of this vignette, we make use of the <code>leadership</code> data set, which contains simulated data from 750 employees in 50 groups including ratings on job satisfaction, leadership style, and work load (Level 1) as well as cohesion (Level 2).</p>
 <p>The package and the data set can be loaded as follows.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(mitml)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">data</span>(leadership)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(mitml)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(leadership)</a></code></pre></div>
 <p>In the <code>summary</code> of the data, it becomes visible that all variables are affected by missing data.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">summary</span>(leadership)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">summary</span>(leadership)</a></code></pre></div>
 <pre><code>#      GRPID          JOBSAT             COHES            NEGLEAD          WLOAD    
 #  Min.   : 1.0   Min.   :-7.32934   Min.   :-3.4072   Min.   :-3.13213   low :416  
 #  1st Qu.:13.0   1st Qu.:-1.61932   1st Qu.:-0.4004   1st Qu.:-0.70299   high:248  
-#  Median :25.5   Median :-0.02637   Median : 0.2117   Median : 0.08027   NA's: 86  
+#  Median :25.5   Median :-0.02637   Median : 0.2117   Median : 0.08027   NA&#39;s: 86  
 #  Mean   :25.5   Mean   :-0.03168   Mean   : 0.1722   Mean   : 0.04024             
 #  3rd Qu.:38.0   3rd Qu.: 1.64571   3rd Qu.: 1.1497   3rd Qu.: 0.79111             
 #  Max.   :50.0   Max.   :10.19227   Max.   : 2.5794   Max.   : 3.16116             
-#                 NA's   :69         NA's   :30        NA's   :92</code></pre>
+#                 NA&#39;s   :69         NA&#39;s   :30        NA&#39;s   :92</code></pre>
 <p>The following data segment illustrates this fact, including cases with missing data at Level 1 (e.g., job satisfaction) and 2 (e.g., cohesion).</p>
 <pre><code>#    GRPID      JOBSAT     COHES     NEGLEAD WLOAD
 # 73     5 -1.72143400 0.9023198  0.83025589  high
@@ -337,8 +337,8 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <p>The specification of the two-level model, involves two components, one pertaining to the variables at each level of the sample (Goldstein, Carpenter, Kenward, &amp; Levin, 2009; for further discussion, see also Enders, Mister, &amp; Keller, 2016; Grund, Lüdtke, &amp; Robitzsch, in press).</p>
 <p>Specifically, the imputation model is specified as a list with two components, where the first component denotes the model for the variables at Level 1, and the second component denotes the model for the variables at Level 2.</p>
 <p>For example, using the <code>formula</code> interface, an imputation model targeting all variables in the data set can be written as follows.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">fml &lt;-<span class="st"> </span><span class="kw">list</span>( JOBSAT <span class="op">+</span><span class="st"> </span>NEGLEAD <span class="op">+</span><span class="st"> </span>WLOAD <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>GRPID) , <span class="co"># Level 1</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">             COHES <span class="op">~</span><span class="st"> </span><span class="dv">1</span> )                                <span class="co"># Level 2</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">fml &lt;-<span class="st"> </span><span class="kw">list</span>( JOBSAT <span class="op">+</span><span class="st"> </span>NEGLEAD <span class="op">+</span><span class="st"> </span>WLOAD <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>GRPID) , <span class="co"># Level 1</span></a>
+<a class="sourceLine" id="cb5-2" title="2">             COHES <span class="op">~</span><span class="st"> </span><span class="dv">1</span> )                                <span class="co"># Level 2</span></a></code></pre></div>
 <p>The first component of this list includes the three target variables at Level 1 and a fixed (<code>1</code>) as well as a random intercept (<code>1|GRPID</code>). The second component includes the target variable at Level 2 with a fixed intercept (<code>1</code>).</p>
 <p>From a statistical point of view, this specification corresponds to the following model <span class="math display">\[
 \begin{aligned}
@@ -352,9 +352,9 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Generating imputations</h2>
 <p>Because the data contain missing values at both levels, imputations will be generated with <code>jomoImpute</code> (and not <code>panImpute</code>). Except for the specification of the two-level model, the syntax is the same as in applications with missing data only at Level 1.</p>
 <p>Here, we will run 5,000 burn-in iterations and generate 20 imputations, each 250 iterations apart.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">imp &lt;-<span class="st"> </span><span class="kw">jomoImpute</span>(leadership, <span class="dt">formula=</span>fml, <span class="dt">n.burn=</span><span class="dv">5000</span>, <span class="dt">n.iter=</span><span class="dv">250</span>, <span class="dt">m=</span><span class="dv">20</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">imp &lt;-<span class="st"> </span><span class="kw">jomoImpute</span>(leadership, <span class="dt">formula=</span>fml, <span class="dt">n.burn=</span><span class="dv">5000</span>, <span class="dt">n.iter=</span><span class="dv">250</span>, <span class="dt">m=</span><span class="dv">20</span>)</a></code></pre></div>
 <p>By looking at the <code>summary</code>, we can then review the imputation procedure and verify that the imputation model converged.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">summary</span>(imp)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">summary</span>(imp)</a></code></pre></div>
 <pre><code># 
 # Call:
 # 
@@ -396,7 +396,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="completing-the-data" class="section level2">
 <h2>Completing the data</h2>
 <p>The completed data sets can then be extracted with <code>mitmlComplete</code>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1">implist &lt;-<span class="st"> </span><span class="kw">mitmlComplete</span>(imp, <span class="st">&quot;all&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1">implist &lt;-<span class="st"> </span><span class="kw">mitmlComplete</span>(imp, <span class="st">&quot;all&quot;</span>)</a></code></pre></div>
 <p>When inspecting the completed data, it is easy to verify that the imputations for variables at Level 2 are constant within groups as intended, thus preserving the two-level structure of the data.</p>
 <pre><code>#    GRPID      JOBSAT     NEGLEAD WLOAD      COHES
 # 73     5 -1.72143400  0.83025589  high  0.9023198
@@ -412,7 +412,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Grund, S., Lüdtke, O., &amp; Robitzsch, A. (in press). Multiple imputation of missing data for multilevel models: Simulations and recommendations. <em>Organizational Research Methods</em>. doi: 10.1177/1094428117703686 (<a href="https://doi.org/10.1177/1094428117703686">Link</a>)</p>
 <hr />
 <pre><code># Author: Simon Grund (grund@ipn.uni-kiel.de)
-# Date:   2018-07-11</code></pre>
+# Date:   2018-12-29</code></pre>
 </div>
 </div>
 

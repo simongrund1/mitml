@@ -35,7 +35,7 @@ a.sourceLine { text-indent: -1em; padding-left: 1em; }
 pre.numberSource a.sourceLine
   { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+  { content: attr(title);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
     border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
@@ -311,11 +311,11 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <h2>Example data (<code>studentratings</code>)</h2>
 <p>For the purposes of this vignette, we make use of the <code>studentratings</code> data set, which contains simulated data from 750 students in 50 schools including scores on reading and math achievement, socioeconomic status (SES), and ratings on school and classroom environment.</p>
 <p>The package and the data set can be loaded as follows.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(mitml)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">library</span>(lme4)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="kw">data</span>(studentratings)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(mitml)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(lme4)</a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="kw">data</span>(studentratings)</a></code></pre></div>
 <p>As evident from its <code>summary</code>, most variables in the data set contain missing values.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">summary</span>(studentratings)</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">summary</span>(studentratings)</a></code></pre></div>
 <pre><code>#        ID       FedState     Sex              MathAchiev       MathDis      
 #  Min.   :1001   B :375   Length:750         Min.   :225.0   Min.   :0.2987  
 #  1st Qu.:1013   SH:375   Class :character   1st Qu.:440.7   1st Qu.:1.9594  
@@ -323,7 +323,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 #  Mean   :1513                               Mean   :495.4   Mean   :2.4717  
 #  3rd Qu.:2013                               3rd Qu.:553.2   3rd Qu.:3.0113  
 #  Max.   :2025                               Max.   :808.1   Max.   :4.7888  
-#                                             NA's   :132     NA's   :466     
+#                                             NA&#39;s   :132     NA&#39;s   :466     
 #       SES          ReadAchiev       ReadDis        CognAbility      SchClimate     
 #  Min.   :-9.00   Min.   :191.1   Min.   :0.7637   Min.   :28.89   Min.   :0.02449  
 #  1st Qu.:35.00   1st Qu.:427.4   1st Qu.:2.1249   1st Qu.:43.80   1st Qu.:1.15338  
@@ -331,7 +331,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 #  Mean   :46.55   Mean   :489.9   Mean   :2.5899   Mean   :48.82   Mean   :1.73196  
 #  3rd Qu.:59.00   3rd Qu.:558.4   3rd Qu.:3.0663   3rd Qu.:53.94   3rd Qu.:2.24018  
 #  Max.   :93.00   Max.   :818.5   Max.   :4.8554   Max.   :71.29   Max.   :4.19316  
-#  NA's   :281                     NA's   :153                      NA's   :140</code></pre>
+#  NA&#39;s   :281                     NA&#39;s   :153                      NA&#39;s   :140</code></pre>
 <p>In the present example, we investigate the differences in mathematics achievement that can be attributed to differences in SES when controlling for students’ sex. Specifically, we are interested in the following model.</p>
 <p><span class="math display">\[
 \mathit{MA}_{ij} = \gamma_{00} + \gamma_{10} \mathit{Sex}_{ij} + \gamma_{20} (\mathit{SES}_{ij}-\overline{\mathit{SES}}_{\bullet j}) + \gamma_{01} \overline{\mathit{SES}}_{\bullet j} + u_{0j} + e_{ij}
@@ -341,37 +341,37 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="generating-imputations" class="section level2">
 <h2>Generating imputations</h2>
 <p>In the present example, we generate 20 imputations from the following imputation model.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">fml &lt;-<span class="st"> </span>ReadDis <span class="op">+</span><span class="st"> </span>SES <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2">imp &lt;-<span class="st"> </span><span class="kw">panImpute</span>(studentratings, <span class="dt">formula=</span>fml, <span class="dt">n.burn=</span><span class="dv">5000</span>, <span class="dt">n.iter=</span><span class="dv">200</span>, <span class="dt">m=</span><span class="dv">20</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">fml &lt;-<span class="st"> </span>ReadDis <span class="op">+</span><span class="st"> </span>SES <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID)</a>
+<a class="sourceLine" id="cb4-2" title="2">imp &lt;-<span class="st"> </span><span class="kw">panImpute</span>(studentratings, <span class="dt">formula=</span>fml, <span class="dt">n.burn=</span><span class="dv">5000</span>, <span class="dt">n.iter=</span><span class="dv">200</span>, <span class="dt">m=</span><span class="dv">20</span>)</a></code></pre></div>
 <p>The completed data are then extracted with <code>mitmlComplete</code>.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">implist &lt;-<span class="st"> </span><span class="kw">mitmlComplete</span>(imp, <span class="st">&quot;all&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">implist &lt;-<span class="st"> </span><span class="kw">mitmlComplete</span>(imp, <span class="st">&quot;all&quot;</span>)</a></code></pre></div>
 </div>
 <div id="transforming-the-imputed-data-sets" class="section level2">
 <h2>Transforming the imputed data sets</h2>
 <p>In empirical research, the raw data rarely enter the analyses but often require to be transformed beforehand. For this purpose, the <code>mitml</code> package provides the <code>within</code> function, which applies a given transformation directly to each data set.</p>
 <p>In the following, we use this to (a) calculate the group means of SES and (b) center the individual scores around their group means.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">implist &lt;-<span class="st"> </span><span class="kw">within</span>(implist,{</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">  G.SES &lt;-<span class="st"> </span><span class="kw">clusterMeans</span>(SES,ID) <span class="co"># calculate group means</span></a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">  I.SES &lt;-<span class="st"> </span>SES <span class="op">-</span><span class="st"> </span>G.SES          <span class="co"># center around group means</span></a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">})</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">implist &lt;-<span class="st"> </span><span class="kw">within</span>(implist,{</a>
+<a class="sourceLine" id="cb6-2" title="2">  G.SES &lt;-<span class="st"> </span><span class="kw">clusterMeans</span>(SES,ID) <span class="co"># calculate group means</span></a>
+<a class="sourceLine" id="cb6-3" title="3">  I.SES &lt;-<span class="st"> </span>SES <span class="op">-</span><span class="st"> </span>G.SES          <span class="co"># center around group means</span></a>
+<a class="sourceLine" id="cb6-4" title="4">})</a></code></pre></div>
 <p>This method can be used to apply arbitrary transformations to all of the completed data sets simultaneously.</p>
 <blockquote>
 <p><strong>Note regarding</strong> <code>dplyr</code><strong>:</strong> Due to how it is implemented, <code>within</code> cannot be used directly with <code>dplyr</code>. Instead, users may use <code>with</code> instead of <code>within</code> with the following workaround.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">implist &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{</a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">  df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">as.list</span>(<span class="kw">environment</span>()))</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">  df &lt;-<span class="st"> </span>... <span class="co"># dplyr commands</span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">  df</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">})</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(implist)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">implist &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{</a>
+<a class="sourceLine" id="cb7-2" title="2">  df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="kw">as.list</span>(<span class="kw">environment</span>()))</a>
+<a class="sourceLine" id="cb7-3" title="3">  df &lt;-<span class="st"> </span>... <span class="co"># dplyr commands</span></a>
+<a class="sourceLine" id="cb7-4" title="4">  df</a>
+<a class="sourceLine" id="cb7-5" title="5">})</a>
+<a class="sourceLine" id="cb7-6" title="6">implist &lt;-<span class="st"> </span><span class="kw">as.mitml.list</span>(implist)</a></code></pre></div>
 <p>Advanced users may also consider using <code>lapply</code> for a similar workaround.<span style="color:white">`</span></p>
 </blockquote>
 </div>
 <div id="fitting-the-analysis-model" class="section level2">
 <h2>Fitting the analysis model</h2>
 <p>In order to analyze the imputed data, each data set is analyzed using regular complete-data techniques. For this purpose, <code>mitml</code> offers the <code>with</code> function. In the present example, we use it to fit the model of interest with the R package <code>lme4</code>.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">fit &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="kw">lmer</span>(MathAchiev <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>I.SES <span class="op">+</span><span class="st"> </span>G.SES <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID))</a>
-<a class="sourceLine" id="cb8-3" data-line-number="3">})</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">fit &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{</a>
+<a class="sourceLine" id="cb8-2" title="2">  <span class="kw">lmer</span>(MathAchiev <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>I.SES <span class="op">+</span><span class="st"> </span>G.SES <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID))</a>
+<a class="sourceLine" id="cb8-3" title="3">})</a></code></pre></div>
 <p>This results in a list of fitted models, one for each of the imputed data sets.</p>
 </div>
 <div id="pooling" class="section level2">
@@ -380,7 +380,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <div id="parameter-estimates" class="section level4">
 <h4>Parameter estimates</h4>
 <p>Individual parameters are commonly pooled with the rules developed by Rubin (1987). In <code>mitml</code>, Rubin’s rules are implemented in the <code>testEstimates</code> function.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">testEstimates</span>(fit)</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">testEstimates</span>(fit)</a></code></pre></div>
 <pre><code># 
 # Call:
 # 
@@ -397,7 +397,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 # Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
 <p>In addition, the argument <code>var.comp=TRUE</code> can be used to obtain pooled estimates of variance components, and <code>df.com</code> can be used to specify the complete-data degrees of freedom, which provides more appropriate (i.e., conservative) inferences in smaller samples.</p>
 <p>For example, using a conservative value for the complete-data degrees of freedom for the fixed effects in the model of interest (Snijders &amp; Bosker, 2012), the output changes as follows.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">testEstimates</span>(fit, <span class="dt">var.comp=</span><span class="ot">TRUE</span>, <span class="dt">df.com=</span><span class="dv">46</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="kw">testEstimates</span>(fit, <span class="dt">var.comp=</span><span class="ot">TRUE</span>, <span class="dt">df.com=</span><span class="dv">46</span>)</a></code></pre></div>
 <pre><code># 
 # Call:
 # 
@@ -424,11 +424,11 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Oftentimes, statistical inference concerns more than one parameter at a time. For example, the combined influence of SES (within and between groups) on mathematics achievement is represented by two parameters in the model of interest.</p>
 <p>Multiple pooling methods for Wald and likelihood ratio tests (LRTs) are implemented in the <code>testModels</code> function. This function requires the specification of a full model and a restricted model, which are then compared using (pooled) Wald tests or LRTs. Specifically, <code>testModels</code> allows users to pool Wald tests (<span class="math inline">\(D_1\)</span>), <span class="math inline">\(\chi^2\)</span> test statistics (<span class="math inline">\(D_2\)</span>), and LRTs (<span class="math inline">\(D_3\)</span>; for a comparison of these methods, see also Grund, Lüdtke, &amp; Robitzsch, 2016b).</p>
 <p>To examine the combined influence of SES on mathematics achievement, the following restricted model can be specified and compared with the model of interest (using <span class="math inline">\(D_1\)</span>).</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" data-line-number="1">fit.null &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{</a>
-<a class="sourceLine" id="cb13-2" data-line-number="2">  <span class="kw">lmer</span>(MathAchiev <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID))</a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">})</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb13-5" data-line-number="5"><span class="kw">testModels</span>(fit, fit.null)</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">fit.null &lt;-<span class="st"> </span><span class="kw">with</span>(implist,{</a>
+<a class="sourceLine" id="cb13-2" title="2">  <span class="kw">lmer</span>(MathAchiev <span class="op">~</span><span class="st"> </span><span class="dv">1</span> <span class="op">+</span><span class="st"> </span>Sex <span class="op">+</span><span class="st"> </span>(<span class="dv">1</span><span class="op">|</span>ID))</a>
+<a class="sourceLine" id="cb13-3" title="3">})</a>
+<a class="sourceLine" id="cb13-4" title="4"></a>
+<a class="sourceLine" id="cb13-5" title="5"><span class="kw">testModels</span>(fit, fit.null)</a></code></pre></div>
 <pre><code># 
 # Call:
 # 
@@ -445,7 +445,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <p><strong>Note regarding the order of arguments:</strong> Please note that <code>testModels</code> expects that the first argument contains the full model, and the second argument contains the restricted model. If the order of the arguments is reversed, the results will not be interpretable.</p>
 </blockquote>
 <p>Similar to the test for individual parameters, smaller samples can be accommodated with <code>testModels</code> (with method <span class="math inline">\(D_1\)</span>) by specifying the complete-data degrees of freedom for the denominator of the <span class="math inline">\(F\)</span> statistic.</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">testModels</span>(fit, fit.null, <span class="dt">df.com=</span><span class="dv">46</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">testModels</span>(fit, fit.null, <span class="dt">df.com=</span><span class="dv">46</span>)</a></code></pre></div>
 <pre><code># 
 # Call:
 # 
@@ -460,7 +460,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 # Hypothesis test adjusted for small samples with df=[46]
 # complete-data degrees of freedom.</code></pre>
 <p>The pooling method used by <code>testModels</code> is determined by the <code>method</code> argument. For example, to calculate the pooled LRT corresponding to the Wald test above (i.e., <span class="math inline">\(D_3\)</span>), the following command can be issued.</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">testModels</span>(fit, fit.null, <span class="dt">method=</span><span class="st">&quot;D3&quot;</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">testModels</span>(fit, fit.null, <span class="dt">method=</span><span class="st">&quot;D3&quot;</span>)</a></code></pre></div>
 <pre><code># 
 # Call:
 # 
@@ -478,8 +478,8 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <h4>Constraints on parameters</h4>
 <p>Finally, it is often useful to investigate functions (or constraints) of the parameters in the model of interest. In complete data sets, this can be achieved with a test of linear hypotheses or the delta method. The <code>mitml</code> package implements a pooled version of the delta method in the <code>testConstraints</code> function.</p>
 <p>For example, the combined influence of SES on mathematics achievement can also be tested without model comparisons by testing the constraint that the parameters pertaining to <code>I.SES</code> and <code>G.SES</code> are both zero. This constraint is defined and tested as follows.</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" data-line-number="1">c1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;I.SES&quot;</span>, <span class="st">&quot;G.SES&quot;</span>)</a>
-<a class="sourceLine" id="cb19-2" data-line-number="2"><span class="kw">testConstraints</span>(fit, <span class="dt">constraints=</span>c1)</a></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">c1 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;I.SES&quot;</span>, <span class="st">&quot;G.SES&quot;</span>)</a>
+<a class="sourceLine" id="cb19-2" title="2"><span class="kw">testConstraints</span>(fit, <span class="dt">constraints=</span>c1)</a></code></pre></div>
 <pre><code># 
 # Call:
 # 
@@ -500,8 +500,8 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 # Unadjusted hypothesis test as appropriate in larger samples.</code></pre>
 <p>This test is identical to the Wald test given in the previous section. Arbitrary constraints on the parameters can be specified and tested in this manner, where each character string denotes an expression to be tested against zero.</p>
 <p>In the present example, we are also interested in the <em>contextual</em> effect of SES on mathematics achievement (e.g., Snijders &amp; Bosker, 2012). The contextual effect is simply the difference between the coefficients pertaining to <code>G.SES</code> and <code>I.SES</code> and can be tested as follows.</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" data-line-number="1">c2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;G.SES - I.SES&quot;</span>)</a>
-<a class="sourceLine" id="cb21-2" data-line-number="2"><span class="kw">testConstraints</span>(fit, <span class="dt">constraints=</span>c2)</a></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">c2 &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;G.SES - I.SES&quot;</span>)</a>
+<a class="sourceLine" id="cb21-2" title="2"><span class="kw">testConstraints</span>(fit, <span class="dt">constraints=</span>c2)</a></code></pre></div>
 <pre><code># 
 # Call:
 # 
@@ -529,7 +529,7 @@ code span.er { color: #a61717; background-color: #e3d2d2; }
 <p>Snijders, T. A. B., &amp; Bosker, R. J. (2012). <em>Multilevel analysis: An introduction to basic and advanced multilevel modeling</em>. Thousand Oaks, CA: Sage.</p>
 <hr />
 <pre><code># Author: Simon Grund (grund@ipn.uni-kiel.de)
-# Date:   2018-07-11</code></pre>
+# Date:   2018-12-29</code></pre>
 </div>
 </div>
 </div>

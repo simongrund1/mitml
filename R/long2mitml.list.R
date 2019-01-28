@@ -3,11 +3,14 @@ long2mitml.list <- function(x, split, exclude=NULL){
 
   i1 <-  which(colnames(x)==split)
   f <- x[,i1]
+
   if(!is.null(exclude)){
     i2 <- if(length(exclude)==1) f!=exclude else !f%in%exclude
     x <- x[i2,,drop=F]
     f <- f[i2]
+    if(is.factor(f)) f <- droplevels(f)
   }
+
   out <- split(x[,-i1,drop=F], f=f)
   names(out) <- NULL
 

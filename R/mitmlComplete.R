@@ -82,3 +82,5 @@ mitmlComplete <- function(x, print="all", force.list=FALSE){
   x
 
 }
+
+complete.mitml <- mitmlComplete

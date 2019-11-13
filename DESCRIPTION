@@ -6,7 +6,7 @@ Date: 2019-01-02
 Author:  Simon Grund [aut,cre], Alexander Robitzsch [aut], Oliver Luedtke [aut]
 Maintainer: Simon Grund <grund@ipn.uni-kiel.de>
 BugReports: https://github.com/simongrund1/mitml/issues
-Imports: pan, jomo, haven, grDevices, graphics, stats, utils
+Imports: pan, jomo, haven, grDevices, graphics, stats, utils, dplyr
 Suggests: mice, miceadds, Amelia, lme4, nlme, geepack, survival, knitr, rmarkdown
 LazyData: true
 LazyLoad: true

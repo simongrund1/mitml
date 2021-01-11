@@ -1,50 +1,71 @@
-print.mitml.testModels <- function(x,...){
+print.mitml.testModels <- function(x, digits = 3, sci.limit = 5, ...){
 # print method for MI estimates
 
-  cl <- x$call
+  cll <- x$call
   test <- x$test
-  mth <- x$method
+  method <- x$method
   use <- x$use
   reml <- x$reml
   m <- x$m
-  adj <- x$adj.df
-  dfc <- x$df.com
+  data <- x$data
+  robust <- x$robust
+  adj.df <- x$adj.df
+  df.com <- x$df.com
 
-  # header
-  cat("\nCall:\n", paste(deparse(cl)), sep="\n")
+  # print header
+  cat("\nCall:\n", paste(deparse(cll)), sep = "\n")
+  cat("\nModel comparison calculated from", m, "imputed data sets.")
 
-  cat("\nModel comparison calculated from",m,"imputed data sets.")
-  cat("\nCombination method:",mth,
-    if(mth=="D2"){paste("(",use,")",sep="")},"\n")
+  # print method
+  cat("\nCombination method:", method)
+  if(method == "D2") cat(" (", use, ")", sep = "")
+  if(method == "D4" && robust) cat(" (robust)", sep = "")
+  cat("\n\n")
 
-  # check for large values
-  fmt <- c("%.3f","%.0f","%.3f","%.3f","%.3f")
-  fmt[test>=10^5] <- "%.3e"
-  out <- sprintf(fmt,test)
+  # print test results
+  test.digits <- c(digits, 0, rep(digits, ncol(test)-2))
+  out <- .formatTable(test, digits = test.digits, sci.limit = sci.limit)
+  for(i in seq_len(nrow(out))) cat("  ", out[i,], "\n")
 
-  # print table
   cat("\n")
-  w <- max(sapply(c(out,colnames(test)),nchar))
-  cat("  ",format(colnames(test),justify="right",width=w),"\n")
-  cat("  ",format(out,justify="right",width=w),"\n")
 
-  if(mth=="D1"){
-  cat(if(adj){c("\nHypothesis test adjusted for small samples with",
-              paste("df=[",paste(dfc,collapse=","),"]\ncomplete-data degrees of freedom.",sep=""))
-      }else{"\nUnadjusted hypothesis test as appropriate in larger samples."},"\n")
+  # print footer (if any)
+  footer <- FALSE
+
+  if(method == "D1"){
+    footer <- TRUE
+    if(adj.df){
+      cat("Hypothesis test adjusted for small samples with",
+          paste0("df=[",paste(df.com, collapse = ","), "]\ncomplete-data degrees of freedom."),
+          "\n", sep = "")
+    }else{
+      cat("Unadjusted hypothesis test as appropriate in larger samples.\n")
+    }
   }
+
+  if(method == "D4"){
+    footer <- TRUE
+    if(data){
+      cat("Data for stacking were extracted from the `data` argument.\n")
+    }else{
+      cat("Data for stacking were automatically extracted from the fitted models.\n")
+    }
+  }
+
   if(reml){
-  cat("\nModels originally fit with REML were automatically refit using ML.\n")
+    footer <- TRUE
+    cat("Models originally fit with REML were automatically refit using ML.\n")
   }
 
-  cat("\n")
+  if(footer) cat("\n")
 
   invisible()
+
 }
 
-summary.mitml.testModels <- function(object,...){
+summary.mitml.testModels <- function(object, ...){
 # summary method for objects of class mitml.testModels
 
-  print.mitml.testModels(object,...)
+  print.mitml.testModels(object, ...)
 
 }

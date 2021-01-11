@@ -1,189 +1,147 @@
-testEstimates <- function(model, qhat, uhat, var.comp=FALSE, df.com=NULL){
+testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ...){
 # combine scalar estimates from the analysis of multiply imputed data
 
-  if(missing(model)==(missing(qhat)|missing(uhat))) stop("Either 'model' or both 'qhat' and 'uhat' must be supplied.")
+  # ***
+  # check input
+  #
+
+  # check model specification
+  if(missing(model) == (missing(qhat) || missing(uhat))){
+    stop("Either 'model' or both 'qhat' and 'uhat' must be supplied.")
+  }
+
+  # check misc. parameters
+  if(!var.comp) vc.out <- NULL
 
   # ***
-  # combine from matrix or list
+  # process matrix, array or list arguments
   #
+
   if(!missing(qhat)){
 
-    coef.method <- "default"
+    # check input
     if(missing(uhat)) stop("Either 'model' or both 'qhat' and 'uhat' must be supplied.")
+    if(!is.matrix(qhat) && is.array(qhat)) stop("The 'qhat' argument must be either a matrix or a list.")
 
-    if(is.list(qhat)){
-      Qhat <- sapply(qhat, identity)
-      Uhat <- sapply(uhat, identity)
-    }else{
-      Qhat <- qhat
-      Uhat <- uhat
+    # convert point estimates
+    if(is.matrix(qhat)){
+      qhat <- lapply(seq_len(ncol(qhat)), function(i, Q) Q[,i], Q = qhat)
     }
-    if(is.null(dim(Qhat))){
-      dim(Qhat) <- c(1,length(qhat))
-      nms <- if(is.list(qhat)) names(qhat[[1]]) else if(is.matrix(qhat)) rownames(qhat) else NULL
-      dimnames(Qhat) <- list(nms, NULL)
-    }
-    if(is.null(dim(Uhat))) dim(Uhat) <- dim(Qhat)
-    m <- ncol(Qhat)
-    if(is.null(rownames(Qhat))) rownames(Qhat) <- paste0("Parameter.",1:nrow(Qhat))
-
-    Qbar <- apply(Qhat,1,mean)
-    Ubar <- apply(Uhat,1,mean)
-    B <- apply(Qhat,1,var)
-    T <- Ubar + (1+m^(-1)) * B
-
-    r <- (1+m^(-1))*B/Ubar
-    v <- vm <- (m-1)*(1+r^(-1))^2
-    fmi <- (r+2/(v+3))/(r+1)
-
-    se <- sqrt(T)
-    t <- Qbar/se
-
-    if(!is.null(df.com)){
-      lam <- r/(r+1)
-      vobs <- (1-lam)*((df.com+1)/(df.com+3))*df.com
-      v <- (vm^(-1)+vobs^(-1))^(-1)
+ 
+    # convert variance estimates
+    if(is.matrix(uhat)){
+      uhat <- lapply(seq_len(ncol(uhat)), function(i, U) U[,i], U = uhat)
+    }else
+    if(is.array(uhat)){
+      uhat <- lapply(seq_len(dim(uhat)[3]), function(i, U) diag(as.matrix(U[,,i])), U = uhat)
     }
 
-    p <- 2*(1-pt(abs(t),df=v))   # two-tailed p-value, SiG 2017-02-09
-    out <- matrix(c(Qbar,se,t,v,p,r,fmi),ncol=7)
-    colnames(out) <- c("Estimate","Std.Error","t.value","df","P(>|t|)","RIV","FMI")   # two-tailed p-value, SiG 2017-02-09
-    rownames(out) <- names(Qbar)
+    # ensure proper format
+    m <- length(qhat)
+    if(m != length(uhat)) stop("Dimensions of 'qhat' and 'uhat' do not match.")
 
-    # print vout for missing U
-    uind <- is.na(Ubar)
-    vout <- if(any(uind)) out[uind,1,drop=FALSE] else NULL
-    out <- if(all(uind)) NULL else out[!uind,,drop=FALSE]
+    Qhat <- matrix(unlist(qhat), ncol = m)
+    Uhat <- matrix(unlist(uhat), ncol = m)
+    if(any(!is.finite(Uhat))) stop("Missing values in 'uhat' are not allowed.")
+
+    nms <- names(qhat[[1]])
+    if(is.null(nms)) nms <- paste0("Parameter.", 1:nrow(Qhat))
+
+    cls <- NULL
+    vc.out <- NULL
+    if(var.comp) warning("The 'var.comp' argument is ignored when 'qhat' and 'uhat' are used.")
 
   }
 
   # ***
-  # combine through model recognition
+  # process fitted models
   #
+
   if(!missing(model)){
 
-    # * identify procedures for model class
-    cls <- class(model[[1]])
-    coef.method <- vc.method <- "default"
-
-    if(cls[1]=="lm") vc.method <- "lm"
-
-    # merMod (lme4)
-    if(any(grepl("merMod",cls)) & coef.method=="default"){
-      if(!requireNamespace("lme4", quietly=TRUE)) stop("The 'lme4' package must be installed in order to handle 'merMod' class objects.")
-      coef.method <- vc.method <- "lmer"
-    }
-
-    # lme (nlme)
-    if(any(grepl("^.?lme$",cls)) & coef.method=="default"){
-      if(!requireNamespace("nlme", quietly=TRUE)) stop("The 'nlme' package must be installed in order to handle 'lme' class objects.")
-      coef.method <- vc.method <- "nlme"
-    }
-
-    # geeglm (geepack)
-    if(any(grepl("geeglm",cls)) & coef.method=="default"){
-      if(!requireNamespace("geepack", quietly=TRUE)) stop("The 'geepack' package must be installed in order to handle 'geeglm' class objects.")
-      coef.method <- vc.method <- "geeglm"
-    }
- 
-    # * combine fixed coefficients
-    fe <- switch(coef.method,
-      lmer=.getCOEF.lmer(model,diagonal=TRUE),
-      nlme=.getCOEF.nlme(model,diagonal=TRUE),
-      geeglm=.getCOEF.geeglm(model,diagonal=TRUE),
-      default=.getCOEF.default(model,diagonal=TRUE)
-    )
-
+    if(!is.list(model)) stop("The 'model' argument must be a list of fitted statistical models.")
     m <- length(model)
-    Qhat <- fe$Qhat
-    Uhat <- fe$Uhat
-    if(is.null(dim(Qhat))){
-      dim(Qhat) <- c(1,m)
-      dim(Uhat) <- c(1,m)
-      dimnames(Qhat) <- dimnames(Uhat) <- list(fe$nms, NULL)
-    }
 
-    Qbar <- apply(Qhat,1,mean)
-    Ubar <- apply(Uhat,1,mean)
-    B <- apply(Qhat,1,var)
-    T <- Ubar + (1+m^(-1)) * B
+    # get class (check required packages)
+    cls <- class(model[[1]])
+    .checkNamespace(cls)
 
-    r <- (1+m^(-1))*B/Ubar
-    v <- vm <- (m-1)*(1+r^(-1))^2
-    fmi <- (r+2/(v+3))/(r+1)
+    # extract parameter estimates
+    est <- .extractParameters(model, diagonal = TRUE, include.extra.pars = TRUE)
 
-    se <- sqrt(T)
-    t <- Qbar/se
+    Qhat <- est$Qhat
+    Uhat <- est$Uhat
+    nms <- est$nms
 
-    if(!is.null(df.com)){
-      lam <- r/(r+1)
-      vobs <- (1-lam)*((df.com+1)/(df.com+3))*df.com
-      v <- (vm^(-1)+vobs^(-1))^(-1)
-    }
-
-    p <- 2*(1-pt(abs(t),df=v))   # two-tailed p-value, SiG 2017-02-09
-    out <- matrix(c(Qbar,se,t,v,p,r,fmi),ncol=7)
-    colnames(out) <- c("Estimate","Std.Error","t.value","df","P(>|t|)","RIV","FMI")   # two-tailed p-value, SiG 2017-02-09
-
-    rownames(out) <- names(Qbar)
-
-    # * combine variance components
-    vout <- NULL
     if(var.comp){
 
-      vc <- switch(vc.method,
-        lmer=.getVC.lmer(model),
-        nlme=.getVC.nlme(model),
-        geeglm=.getVC.geeglm(model),
-        lm=.getVC.lm(model),
-        default=list(vlist=NULL,addp=NULL)
-      )
-      if(vc.method=="default") warning("Computation of variance components not supported for objects of class '", cls[1], "' (see ?with.mitml.list for manual calculation).")
+      vc.est <- .extractMiscParameters(model)
+      vc.Qhat <- vc.est$Qhat
+      vc.nms <- vc.est$nms
 
-      vlist <- vc$vlist
-      addp <- vc$addp
+    }else{
 
-      if(!is.null(vlist)){
-        vlist <- lapply(vlist, function(z) apply(z,1:2,mean) )
-        ln <- names(vlist)
-        nms <- vout <- c()
-        for(vv in 1:length(vlist)){
-          vc <- vlist[[vv]]
-          rn <- rownames(vc)
-          cn <- colnames(vc)
-          for(rr in 1:nrow(vc)){
-          for(cc in 1:ncol(vc)){
-            if(cc>=rr){
-              vout <- c(vout, vc[rr,cc])
-              nms <- c(nms, paste(rn[rr],"~~",cn[cc],ln[vv],sep=""))
-            }
-          }}
-        }
-      }
-      if(!is.null(vout)){
-        vout <- matrix(vout,ncol=1)
-        rownames(vout) <- nms
-        colnames(vout) <- "Estimate"
-      }
-      if(!is.null(addp)){
-        vout <- rbind(vout, as.matrix(addp))
-        colnames(vout) <- "Estimate"
-      }
+      vc.Qhat <- vc.nms <- NULL
+
+    }
+
+  }
+
+  # ***
+  # pool results
+  #
+
+  Qbar <- apply(Qhat, 1, mean)
+  Ubar <- apply(Uhat, 1, mean)
+  B <- apply(Qhat, 1, var)
+  T <- Ubar + (1+m^(-1)) * B
+
+  r <- (1+m^(-1))*B/Ubar
+  v <- vm <- (m-1)*(1+r^(-1))^2
+  fmi <- (r+2/(v+3))/(r+1)
+
+  se <- sqrt(T)
+  t <- Qbar/se
+
+  if(!is.null(df.com)){
+    lam <- r/(r+1)
+    vobs <- (1-lam)*((df.com+1)/(df.com+3))*df.com
+    v <- (vm^(-1)+vobs^(-1))^(-1)
+  }
+
+  # create output for parameter estimates
+  pval <- 2 * (1 - pt(abs(t), df = v))   # two-tailed p-value, SiG 2017-02-09
+  out <- matrix(c(Qbar, se, t, v, pval, r, fmi), ncol = 7)
+  colnames(out) <- c("Estimate", "Std.Error", "t.value", "df", "P(>|t|)", "RIV", "FMI") # two-tailed p-value, SiG 2017-02-09
+  rownames(out) <- nms
+
+  # create output for other parameter estimates
+  if(var.comp && !missing(model)){
+
+    if(is.null(vc.Qhat)){
+      vc.out <- NULL
+      warning("Computation of variance components not supported for objects of class '", paste(cls, collapse = "|"), "' (see ?with.mitml.list for manual calculation).")
+    }else{
+      vc.Qbar <- apply(vc.Qhat, 1, mean)
+      vc.out <- matrix(vc.Qbar, ncol = 1)
+      colnames(vc.out) <- "Estimate"
+      rownames(vc.out) <- vc.nms
     }
 
   }
 
   out <- list(
-    call=match.call(),
-    estimates=out,
-    var.comp=vout,
-    m=m,
-    adj.df=!is.null(df.com),
-    df.com=df.com,
-    cls.method=coef.method
+    call = match.call(),
+    estimates = out,
+    var.comp = vc.out,
+    m = m,
+    adj.df = !is.null(df.com),
+    df.com = df.com,
+    cls.method = cls
   )
+
   class(out) <- "mitml.testEstimates"
-  out
+  return(out)
 
 }
 

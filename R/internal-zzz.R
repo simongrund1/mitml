@@ -1,3 +1,76 @@
+.localUpdate <- function(object, ...){
+# update call in parent frame
+
+  cll <- getCall(object)
+  if (is.null(call)) stop("Need an object with a call component.")
+
+  # update call components based on additional arguments (...)
+  extras <- match.call(expand.dots = FALSE)$...
+  for(i in names(extras)) cll[[i]] <- extras[[i]]
+
+  eval(cll, parent.frame())
+
+}
+
+.checkNamespace <- function(x){
+# check required packages for supported object types
+
+  # specify class-package pairs
+  cls.pkg <- list(
+    "lme4" = "^g?l?merMod$",
+    "nlme" = "^n?lme$",
+    "geepack" = "^geeglm$",
+    "survival" = "^coxph$"
+  )
+
+  # match class to package names
+  req.pkg <- lapply(cls.pkg, function(p, x) grep(pattern = p, x = x, value = TRUE), x = x)
+  req.pkg <- req.pkg[sapply(req.pkg, length) > 0]
+
+  for(i in seq_along(req.pkg)){
+    pkg.name <- names(req.pkg)[i]
+    pkg.cls <- paste(req.pkg[[i]], collapse = "|")
+    if(!requireNamespace(pkg.name, quietly = TRUE)) stop("The '", pkg.name, "' package must be installed in order to use this function with objects of class '", pkg.cls, "'.")
+  }
+
+  invisible(NULL)
+
+}
+
+.formatTable <- function(x, prefix = "%.", postfix = "f", digits = 3, sci.limit = 5, width, col.names, row.names){
+# format table with common format and fixed width
+
+  # row and column names
+  if(missing(col.names)) col.names <- colnames(x)
+  if(missing(row.names)) row.names <- rownames(x)
+
+  # fotmat
+  fmt <- paste0(prefix, digits, postfix)
+  if(ncol(x) %% length(fmt)) stop("Format and table dimensions do not match.")
+  fmt <- rep_len(fmt, length.out = ncol(x))
+
+  # format for large values
+  isLarge <- apply(x, 2, function(z, a) any(z >= 10^a), a = sci.limit)
+  fmt[isLarge] <- sub(paste0(postfix, "$"), "e", fmt[isLarge])
+
+  # make formatted matrix
+  y <- matrix("", nrow(x), ncol(x))
+  for(i in seq_len(ncol(x))) y[,i] <- sprintf(fmt[i], x[,i] + 0)
+
+  # find width
+  if(missing(width)) width <- max(sapply(c(colnames(x), y), nchar))
+
+  # fill table
+  out <- matrix("", nrow(x)+1, ncol(x)+1)
+  out[,1] <- format(c("", row.names), justify = "left")
+  out[1,-1] <- format(col.names, justify = "right", width = width)
+  out[-1,-1] <- format(y, justify = "right", width = width)
+
+  return(out)
+
+}
+
+
 .extractMatrix <- function(x, ...){
 # extract submatrix from array (indexed by ...)
 

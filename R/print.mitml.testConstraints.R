@@ -1,66 +1,56 @@
-print.mitml.testConstraints <- function(x,...){
+print.mitml.testConstraints <- function(x, digits = 3, sci.limit = 5, ...){
 # print method for MI estimates
 
-  cl <- x$call
+  cll <- x$call
   test <- x$test
-  cons <- x$constraints
-  mth <- x$method
+  constraints <- x$constraints
+  method <- x$method
   m <- x$m
-  adj <- x$adj.df
-  dfc <- x$df.com
+  adj.df <- x$adj.df
+  df.com <- x$df.com
 
-  # header
-  cat("\nCall:\n", paste(deparse(cl)), sep="\n")
-  cat("\nHypothesis test calculated from",m,"imputed data sets. The following\nconstraints were specified:\n\n")
+  # print header
+  cat("\nCall:\n", paste(deparse(cll)), sep = "\n")
+  cat("\nHypothesis test calculated from", m, "imputed data sets. The following\nconstraints were specified:\n\n")
 
-  # print constraint table
-  est <- matrix(c(x$Qbar, sqrt(diag(x$T))), ncol=2)
+  # print constrained estimates
+  est <- cbind(x$Qbar, sqrt(diag(x$T)))
   colnames(est) <- c("Estimate", "Std. Error")
-  rownames(est) <- paste0(cons, ":")
+  rownames(est) <- paste0(constraints, ":")
 
-  out <- .formatTable.helper(est)
-  for(i in 1:nrow(out)) cat("  ", out[i,],"\n")
+  out <- .formatTable(est, digits = digits, sci.limit = sci.limit)
+  for(i in seq_len(nrow(out))) cat("  ", out[i,], "\n")
 
-  cat("\nCombination method:",mth,"\n")
+  # print method
+  cat("\nCombination method:", method, "\n\n")
 
-  # print test table
-  fmt <- c("%.3f","%.0f","%.3f","%.3f","%.3f")
-  fmt[test>=10^5] <- "%.3e" # large values
-  out <- sprintf(fmt,test)
+  # print test results
+  test.digits <- c(digits, 0, rep(digits, ncol(test)-2))
+  out <- .formatTable(test, digits = test.digits, sci.limit = sci.limit)
+  for(i in seq_len(nrow(out))) cat("  ", out[i,], "\n")
 
-  # table
+  # print footer
+  if(method == "D1"){
+    cat("\n")
+    if(adj.df){
+      cat(c("Hypothesis test adjusted for small samples with",
+            paste0("df=[", paste(df.com, collapse = ","), "]\ncomplete-data degrees of freedom.")))
+    }else{
+      cat("Unadjusted hypothesis test as appropriate in larger samples.")
+    }
   cat("\n")
-  w <- max(sapply(c(out,colnames(test)),nchar))
-  cat("  ",format(colnames(test),justify="right",width=w),"\n")
-  cat("  ",format(out,justify="right",width=w),"\n")
-
-  if(mth=="D1"){
-  cat(if(adj){c("\nHypothesis test adjusted for small samples with",
-              paste("df=[",paste(dfc,collapse=","),"]\ncomplete-data degrees of freedom.",sep=""))
-      }else{"\nUnadjusted hypothesis test as appropriate in larger samples."},"\n")
   }
 
   cat("\n")
 
   invisible()
+
 }
 
-summary.mitml.testConstraints <- function(object,...){
+summary.mitml.testConstraints <- function(object, ...){
 # summary method for objects of class mitml.testConstraints
 
-  print.mitml.testConstraints(object,...)
+  print.mitml.testConstraints(object, ...)
 
-}
-
-.formatTable.helper <- function(x){
-
-  f <- sprintf("%.3f",x)
-  w <- max(sapply(c(colnames(x),f),nchar))
-  out <- matrix("",nrow(x)+1,ncol(x)+1)
-  out[,1] <- format(c("",rownames(x)))
-  out[1,-1] <- format(colnames(x),justify="right",width=w)
-  out[-1,-1] <- format(f,justify="right",width=w)
-
-  return(out)
 }
 

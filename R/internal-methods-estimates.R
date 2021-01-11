@@ -23,6 +23,7 @@
   # extract diagonal
   if(diagonal){
     Uhat <- apply(Uhat, 3, diag)
+    if(is.null(dim(Uhat))) dim(Uhat) <- dim(Qhat)
   }
 
   out <- list(Qhat = Qhat, Uhat = Uhat, nms = nms)

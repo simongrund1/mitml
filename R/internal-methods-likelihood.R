@@ -188,12 +188,12 @@
 
 .getArgsLL.lmerMod <- function(object){
 
-  beta <- getME(object, "fixef")
-  theta <- getME(object, "theta")
+  beta <- lme4::getME(object, "fixef")
+  theta <- lme4::getME(object, "theta")
   sig <- sigma(object)
 
   # split theta by clustering variables
-  cl <- getME(object, "cnms")
+  cl <- lme4::getME(object, "cnms")
   ncl <- length(cl)
   nvc <- lengths(cl)
   theta.cl <- split(theta, rep.int(seq_along(cl), (nvc * (nvc + 1))/2))
@@ -216,9 +216,9 @@
 
 .getUserLL.lmerMod <- function(object, parameters, force.update = TRUE, ...){
 
-  if(any(abs(getME(object, "offset") - 0) > .Machine$double.eps)) stop("The 'D3' method cannot be used for 'lmerMod' objects fitted with an offset.")
+  if(any(abs(lme4::getME(object, "offset") - 0) > .Machine$double.eps)) stop("The 'D3' method cannot be used for 'lmerMod' objects fitted with an offset.")
 
-  cl <- getME(object, "cnms")
+  cl <- lme4::getME(object, "cnms")
   ncl <- length(cl)
 
   # evaluate standard logLik
@@ -228,7 +228,7 @@
   if(force.update){
 
     # get fixed-effects linear predictor
-    X <- getME(object, "X")
+    X <- lme4::getME(object, "X")
     beta <- parameters$beta
     linpred <- X %*% beta
 
@@ -253,7 +253,7 @@
     theta <- c(do.call(c, theta.cl), sig)
 
     # evaluate (profiled) deviance with fixed theta
-    dev.fun <- devfun2(newobj)
+    dev.fun <- lme4::devfun2(newobj)
     ll <- -dev.fun(pars = theta) / 2
     attr(ll, "df") <- df
 

@@ -106,7 +106,7 @@
 .getMisc.merMod <- function(object){
 
   # check if model uses scale
-  useSc <- getME(object, "devcomp")$dims["useSc"] == 1
+  useSc <- lme4::getME(object, "devcomp")$dims["useSc"] == 1
 
   # variance components by cluster variable
   vc <- lme4::VarCorr(object)

@@ -1,4 +1,4 @@
-testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), use = c("wald", "likelihood"), df.com = NULL, data = NULL, robust = FALSE){
+testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), use = c("wald", "likelihood"), ariv = c("default", "positive", "robust"), df.com = NULL, data = NULL){
 # model comparison and hypothesis tests for k-dimensional estimands
 
   # ***
@@ -13,12 +13,14 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
   # match methods
   method <- match.arg(method)
   use <- match.arg(use)
+  ariv <- match.arg(ariv)
 
   # check for incompatible arguments
-  if(!is.null(df.com) && method != "D1") warning("Complete-data degrees of freedom are not available for use with '", method, "', and thus were ignored.")
-  if(use == "likelihood" && method != "D2") warning("The 'likelihood' option is not available with method '", method ,"', and thus was ignored.")
-  if(!is.null(data) && method != "D4") warning("The 'data' argument is not used with method '", method ,"', and thus was ignored.")
-  if(robust && method != "D4") warning("The 'robust' option is not available with method '", method ,"', and thus was ignored.")
+  if(!is.null(df.com) && method != "D1") warning("Complete-data degrees of freedom are not available for use with '", method, "' and were ignored.")
+  if(use == "likelihood" && method != "D2") warning("The 'likelihood' option is not available with method '", method ,"' and was ignored.")
+  if(!is.null(data) && method != "D4") warning("The 'data' argument is not used with method '", method ,"' and was ignored.")
+  if(ariv == "positive" && method == "D1") warning("The 'positive' option is not available with method 'D1' and was ignored.")
+  if(ariv == "robust" && method != "D4") warning("The 'robust' option is not available with method '", method ,"' and was ignored.")
 
   # check model classes
   cls <- class(model[[1]])
@@ -135,6 +137,7 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
     # D2 (Li, Meng et al., 1991)
     dWbar <- mean(dW)
     r <- (1+m^(-1)) * var(sqrt(dW))
+    if(ariv == "positive") r <- max(0, r)
     val <- (dWbar/k - (m+1)/(m-1) * r) / (1+r)
 
     v <- k^(-3/m) * (m-1) * (1+r^(-1))^2
@@ -158,6 +161,7 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
     dL.tilde <- mean(-2 * (ll.null$LL.pooled - ll$LL.pooled))
 
     r <- (m+1) * (k*(m-1))^(-1) * (dL.bar - dL.tilde)
+    if(ariv == "positive") r <- max(0, r)
     val <- dL.tilde / (k*(1+r))
 
     t <- k*(m-1)
@@ -196,7 +200,7 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
     dbar <- mean(-2 * ll.diff)
     dhat <- -2 * ll.stacked.diff
 
-    if(robust){
+    if(ariv == "robust"){
 
       deltabar <- 2 * mean(ll$LL)
       deltahat <- 2 * ll$LL.stacked
@@ -205,8 +209,8 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
 
     }else{
 
-      rhat <- (m+1) / (k*(m-1)) * (dbar - dhat)
-      r <- max(0, rhat)
+      r <- (m+1) / (k*(m-1)) * (dbar - dhat)
+      if(ariv == "positive") r <- max(0, r)
       v <- (k*(m-1)) * (1 + r^(-1))^2
 
     }
@@ -225,12 +229,12 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
     call = match.call(),
     test = out,
     m = m,
+    method = method,
     adj.df = !is.null(df.com),
     df.com = df.com,
-    method = method,
-    data = !is.null(data),
-    robust = robust,
     use = use,
+    ariv = ariv,
+    data = !is.null(data),
     reml = reml
   )
 

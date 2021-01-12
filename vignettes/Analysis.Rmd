@@ -5,7 +5,7 @@ output:
     css: "css/vignette.css"
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Analysis of multiply imputed data sets}
+  %\VignetteIndexEntry{Analysis of Multiply Imputed Data Sets}
   %\VignetteEncoding{UTF-8}
 ---
 

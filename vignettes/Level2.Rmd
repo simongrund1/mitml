@@ -5,7 +5,7 @@ output:
     css: "css/vignette.css"
 vignette: >
   %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteIndexEntry{Imputation of missing data at level 2}
+  %\VignetteIndexEntry{Imputation of Missing Data at Level 2}
   %\VignetteEncoding{UTF-8}
 ---
 

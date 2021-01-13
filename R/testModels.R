@@ -60,28 +60,12 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
     Qhat <- est$Qhat[par.ind,, drop = FALSE]
     Uhat <- est$Uhat[par.ind, par.ind,, drop = FALSE]
 
-    Qbar <- apply(Qhat, 1, mean)
-    Ubar <- apply(Uhat, c(1,2), mean)
-    B <- cov(t(Qhat))
-    r <- (1+m^(-1))*sum(diag(B%*%solve(Ubar)))/k
-    Ttilde <- (1 + r)*Ubar
+    # D1 (Li et al., 1991)
+    D <- .D1(Qhat = Qhat, Uhat = Uhat, df.com = df.com)
 
-    # D1 (Li, Raghunathan and Rubin, 1991)
-    val <- t(Qbar) %*% solve(Ttilde) %*% Qbar / k
-
-    t <- k*(m-1)
-    if(!is.null(df.com)){
-      a <- r*t/(t-2)
-      vstar <- ( (df.com+1) / (df.com+3) ) * df.com
-      v <- 4 + ( (vstar-4*(1+a))^(-1) + (t-4)^(-1) * ((a^2*(vstar-2*(1+a))) /
-           ((1+a)^2*(vstar-4*(1+a)))) )^(-1)
-    }else{
-      if (t>4){
-        v <- 4 + (t-4) * (1 + (1 - 2*t^(-1)) * (r^(-1)))^2
-      }else{
-        v <- t * (1 + k^(-1)) * ((1 + r^(-1))^2) / 2
-      }
-    }
+    r <- D$r
+    val <- D$F
+    v <- D$v
 
   }
 
@@ -135,12 +119,12 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
     }
 
     # D2 (Li, Meng et al., 1991)
-    dWbar <- mean(dW)
-    r <- (1+m^(-1)) * var(sqrt(dW))
-    if(ariv == "positive") r <- max(0, r)
-    val <- (dWbar/k - (m+1)/(m-1) * r) / (1+r)
+    D <- .D2(d = dW, k = k)
 
-    v <- k^(-3/m) * (m-1) * (1+r^(-1))^2
+    r <- D$r
+    if(ariv == "positive") r <- max(0, r)
+    val <- D$F
+    v <- D$v
 
   }
 

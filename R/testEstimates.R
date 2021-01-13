@@ -96,18 +96,20 @@ testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ..
   B <- apply(Qhat, 1, var)
   T <- Ubar + (1+m^(-1)) * B
 
-  r <- (1+m^(-1))*B/Ubar
-  v <- vm <- (m-1)*(1+r^(-1))^2
-  fmi <- (r+2/(v+3))/(r+1)
-
   se <- sqrt(T)
   t <- Qbar/se
 
+  r <- (1+m^(-1))*B/Ubar
+
+  # compute degrees of freedom
+  v <- vm <- (m-1)*(1+r^(-1))^2
   if(!is.null(df.com)){
     lam <- r/(r+1)
     vobs <- (1-lam)*((df.com+1)/(df.com+3))*df.com
     v <- (vm^(-1)+vobs^(-1))^(-1)
   }
+
+  fmi <- (r+2/(v+3))/(r+1)
 
   # create output for parameter estimates
   pval <- 2 * (1 - pt(abs(t), df = v))   # two-tailed p-value, SiG 2017-02-09

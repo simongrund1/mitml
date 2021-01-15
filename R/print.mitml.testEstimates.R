@@ -3,7 +3,7 @@ print.mitml.testEstimates <- function(x, digits = 3, sci.limit = 5, ...){
 
   cll <- x$call
   est <- x$estimates
-  vc <- x$var.comp
+  ep <- x$extra.pars
   m <- x$m
   adj.df <- x$adj.df
   df.com <- x$df.com
@@ -24,13 +24,13 @@ print.mitml.testEstimates <- function(x, digits = 3, sci.limit = 5, ...){
   }
 
   # print other results
-  if(!is.null(vc)){
+  if(!is.null(ep)){
 
     if(!is.null(est)) cat("\n")
 
     # format numeric results
-    pl <- attr(vc, "par.labels")
-    out <- .formatTable(vc, digits = digits, sci.limit = sci.limit, labels = pl)
+    pl <- attr(ep, "par.labels")
+    out <- .formatTable(ep, digits = digits, sci.limit = sci.limit, labels = pl)
     for(i in seq_len(nrow(out))) cat(out[i,], "\n")
 
   }

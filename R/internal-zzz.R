@@ -12,6 +12,32 @@
 
 }
 
+.checkDeprecated <- function(x, arg.list, name){
+# match argument list (arg.list, usually ...) by name against deprecated (name)
+# and return matching value if match is found, otherwise return original value
+# (x)
+
+  cll <- match.call()
+
+  nms <- names(arg.list)
+  m <- sapply(nms, function(n, o){
+    m <- try(match.arg(n, o), silent = TRUE)
+    return(if(inherits(m, "try-error")) NA else m)
+  }, o = name)
+
+  # if match is found, print message and assign value to new name
+  if(any(!is.na(m))){
+    ans <- arg.list[[nms[1]]]
+    msg <- paste0("The '", name, "' argument is deprecated. Please use '", as.character(cll[[2]]), "' instead.")
+    warning(msg)
+  }else{
+    ans <- x
+  }
+
+  return(ans)
+
+}
+
 .checkNamespace <- function(x){
 # check required packages for supported object types
 

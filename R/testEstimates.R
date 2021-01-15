@@ -1,9 +1,13 @@
-testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ...){
+testEstimates <- function(model, qhat, uhat, extra.pars = FALSE, df.com = NULL, ...){
 # combine scalar estimates from the analysis of multiply imputed data
 
   # ***
   # check input
   #
+
+  # handle deprecated arguments
+  dots <- list(...)
+  extra.pars <- .checkDeprecated(extra.pars, arg.list = dots, name = "var.comp")
 
   # check model specification
   if(missing(model) == (missing(qhat) || missing(uhat))){
@@ -11,7 +15,7 @@ testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ..
   }
 
   # check misc. parameters
-  if(!var.comp) vc.out <- NULL
+  if(!extra.pars) ep.out <- NULL
 
   # ***
   # process matrix, array or list arguments
@@ -48,8 +52,8 @@ testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ..
     if(is.null(nms)) nms <- paste0("Parameter.", 1:nrow(Qhat))
 
     cls <- NULL
-    vc.out <- NULL
-    if(var.comp) warning("The 'var.comp' argument is ignored when 'qhat' and 'uhat' are used.")
+    ep.out <- NULL
+    if(extra.pars) warning("The 'extra.pars' argument is ignored when 'qhat' and 'uhat' are used.")
 
   }
 
@@ -73,15 +77,15 @@ testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ..
     Uhat <- est$Uhat
     nms <- est$nms
 
-    if(var.comp){
+    if(extra.pars){
 
-      vc.est <- .extractMiscParameters(model)
-      vc.Qhat <- vc.est$Qhat
-      vc.nms <- vc.est$nms
+      ep.est <- .extractMiscParameters(model)
+      ep.Qhat <- ep.est$Qhat
+      ep.nms <- ep.est$nms
 
     }else{
 
-      vc.Qhat <- vc.nms <- NULL
+      ep.Qhat <- ep.nms <- NULL
 
     }
 
@@ -121,22 +125,22 @@ testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ..
   attr(out, "par.labels") <- attr(nms, "par.labels")
 
   # create output for other parameter estimates
-  if(var.comp && !missing(model)){
+  if(extra.pars && !missing(model)){
 
-    if(is.null(vc.Qhat)){
+    if(is.null(ep.Qhat)){
 
-      vc.out <- NULL
+      ep.out <- NULL
       warning("Computation of variance components not supported for objects of class '", paste(cls, collapse = "|"), "' (see ?with.mitml.list for manual calculation).")
 
     }else{
 
-      vc.Qbar <- apply(vc.Qhat, 1, mean)
-      vc.out <- matrix(vc.Qbar, ncol = 1)
-      colnames(vc.out) <- "Estimate"
-      rownames(vc.out) <- vc.nms
+      ep.Qbar <- apply(ep.Qhat, 1, mean)
+      ep.out <- matrix(ep.Qbar, ncol = 1)
+      colnames(ep.out) <- "Estimate"
+      rownames(ep.out) <- ep.nms
 
       # parameter labales
-      attr(vc.out, "par.labels") <- attr(vc.nms, "par.labels")
+      attr(ep.out, "par.labels") <- attr(ep.nms, "par.labels")
 
     }
 
@@ -145,7 +149,7 @@ testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ..
   out <- list(
     call = match.call(),
     estimates = out,
-    var.comp = vc.out,
+    extra.pars = ep.out,
     m = m,
     adj.df = !is.null(df.com),
     df.com = df.com,

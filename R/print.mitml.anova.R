@@ -6,7 +6,7 @@ print.mitml.anova <- function(x, digits = 3, sci.limit = 5, ...){
   fml <- x$formula
   method <- x$method
   data <- x$data
-  robust <- x$robust
+  ariv <- x$ariv
   order.method <- x$order.method
   use <- x$use
   reml <- x$reml
@@ -19,7 +19,7 @@ print.mitml.anova <- function(x, digits = 3, sci.limit = 5, ...){
   # print method
   cat("\nCombination method:", method)
   if(method == "D2") cat(" (", use, ")", sep = "")
-  if(method == "D4" && robust) cat(" (robust)", sep = "")
+  if(method == "D4" && ariv == "robust") cat(" (robust)", sep = "")
   cat("\n")
 
   # print model formulas

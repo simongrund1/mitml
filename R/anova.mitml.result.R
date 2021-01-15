@@ -1,4 +1,4 @@
-anova.mitml.result <- function(object, ..., method = "D3", data = NULL, robust = FALSE){
+anova.mitml.result <- function(object, ..., method = "D3", data = NULL, ariv = c("default", "positive", "robust")){
 
   # create list of models
   mod.list <- c(list(object), list(...))
@@ -128,7 +128,7 @@ anova.mitml.result <- function(object, ..., method = "D3", data = NULL, robust =
     if(method == "D2") cll[["use"]] <- "likelihood"
     if(method == "D4"){
       if(!is.null(data)) cll[["data"]] <- data
-      cll[["robust"]] <- robust
+      cll[["ariv"]] <- ariv
     }
 
     # evaluate call
@@ -148,12 +148,13 @@ anova.mitml.result <- function(object, ..., method = "D3", data = NULL, robust =
   out <- list(
     call = match.call(),
     test = out.list,
+    m = m,
     method = method,
-    robust = robust,
+    use = "likelihood",
+    ariv = ariv,
     data = !is.null(data),
     formula = fml,
     order.method = ifelse(reorderModels, df.method[1], NULL),
-    use = "likelihood",
     reml = reml
   )
 

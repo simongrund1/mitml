@@ -402,7 +402,32 @@
 
 # * lavaan::lavaan
 
+.getLL.lavaan <- function(object){
+
+  # FIXME: catch scaled LRT statistics (currently not supported)
+  # see lavaan::lavTestLRT
+  tests <- unlist(sapply(slot(object, "test"), "[", "test"))
+  isScaled <- c("satorra.bentler", "yuan.bentler", "yuan.bentler.mplus", "mean.var.adjusted",
+                "scaled.shifted") %in% tests
+  if(any(isScaled)){
+    return(NULL)
+  }
+
+  ll <- lavaan::logLik(object)
+  return(ll)
+
+}
+
 .getArgsLL.lavaan <- function(object){
+
+  # FIXME: catch scaled LRT statistics (currently not supported)
+  # see lavaan::lavTestLRT
+  tests <- unlist(sapply(slot(object, "test"), "[", "test"))
+  isScaled <- c("satorra.bentler", "yuan.bentler", "yuan.bentler.mplus", "mean.var.adjusted",
+                "scaled.shifted") %in% tests
+  if(any(isScaled)){
+    return(NULL)
+  }
 
   # get parameter table
   pt <- lavaan::parTable(object)
@@ -415,7 +440,7 @@
 
 .getUserLL.lavaan <- function(object, parameters, force.update = TRUE, ...){
 
-  ll0 <- logLik(object)
+  ll0 <- lavaan::logLik(object)
   df <- attr(ll0, "df")
 
   if(force.update){
@@ -439,7 +464,7 @@
 
     # update model with fixed parameters
     newobj <- .localUpdate(object, model = pt, data = data)
-    ll <- logLik(newobj)[1]
+    ll <- lavaan::logLik(newobj)[1]
 
   }else{
 

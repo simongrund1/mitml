@@ -15,6 +15,9 @@
   p <- length(Qhat[[1]])
   nms <- names(Qhat[[1]])
 
+  # preserve parameter labels (if any)
+  attr(nms, "par.labels") <- attr(Qhat[[1]], "par.labels")
+
   # ensure proper dimensions
   stopifnot(all(p == dim(Uhat[[1]])))
   Qhat <- matrix(unlist(Qhat), nrow = p, ncol = m)
@@ -42,6 +45,9 @@
   Qhat <- lapply(model, .getMisc)
   p <- length(Qhat[[1]])
   nms <- names(Qhat[[1]])
+
+  # preserve parameter labels (if any)
+  attr(nms, "par.labels") <- attr(Qhat[[1]], "par.labels")
 
   # ensure proper dimensions
   if(is.null(Qhat[[1]])){
@@ -313,12 +319,12 @@
   isDefined <- pt[["op"]] == ":="
   isCoef <- if(include.extra.pars) isFree | isDefined else isFree
   
-  hasLevels <- length(lavaan::lavInspect(object, "cluster")) > 0
-  hasGroups <- length(lavaan::lavInspect(object, "group")) > 0
+  hasGroups <- lavaan::lavInspect(object, "ngroups") > 1
+  hasLevels <- lavaan::lavInspect(object, "nlevels") > 1
 
   # parameter names
-  # NOTE: replaces names in coef() with names that are independent of labels
-  # assigned to parameters (can be inconsistent across models)
+  # NOTE: replaces names in coef() with names that are independent of the user-
+  # assigned parameter labels (can be inconsistent across models)
   nms <- pt[, c("lhs", "op", "rhs")]
   if(hasLevels) nms[["level"]] <- paste0(".l", pt[, "level"])
   if(hasGroups) nms[["group"]] <- paste0(".g", pt[, "group"])
@@ -326,6 +332,11 @@
 
   out <- pt[isCoef, "est"]
   names(out) <- nms[isCoef]
+
+  # preserve user-defined parameter labels
+  hasLabels <- any(nchar(pt[isCoef, "label"]) > 0)
+  if(hasLabels) attr(out, "par.labels") <- pt[isCoef, "label"]
+
   return(out)
 
 }
@@ -353,9 +364,9 @@
   isFree <- pt[["free"]] > 0 & !duplicated(pt[["free"]]) # see lavaan:::lav_object_inspect_coef
   isDefined <- pt[["op"]] == ":="
   isCoef <- isFree | isDefined
-  
-  hasLevels <- length(lavaan::lavInspect(object, "cluster")) > 0
-  hasGroups <- length(lavaan::lavInspect(object, "group")) > 0
+ 
+  hasGroups <- lavaan::lavInspect(object, "ngroups") > 1
+  hasLevels <- lavaan::lavInspect(object, "nlevels") > 1
 
   # parameter names
   nms <- pt[, c("lhs", "op", "rhs")]
@@ -365,6 +376,11 @@
 
   out <- pt[!isCoef, "est"]
   names(out) <- nms[!isCoef]
+
+  # preserve user-defined parameter labels
+  hasLabels <- any(nchar(pt[!isCoef, "label"]) > 0)
+  if(hasLabels) attr(out, "par.labels") <- pt[!isCoef, "label"]
+
   return(out)
 
 }

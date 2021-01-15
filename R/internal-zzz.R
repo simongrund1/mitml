@@ -37,7 +37,8 @@
 
 }
 
-.formatTable <- function(x, prefix = "%.", postfix = "f", digits = 3, sci.limit = 5, width, col.names, row.names){
+.formatTable <- function(x, prefix = "%.", postfix = "f", digits = 3, sci.limit = 5, width,
+                         col.names, row.names, labels = NULL, labels.sep = 3){
 # format table with common format and fixed width
 
   # row and column names
@@ -65,6 +66,15 @@
   out[,1] <- format(c("", row.names), justify = "left")
   out[1,-1] <- format(col.names, justify = "right", width = width)
   out[-1,-1] <- format(y, justify = "right", width = width)
+
+  # add labels (if any)
+  if(!is.null(labels)){
+    labels[nchar(labels) > 0] <- paste0("(", labels[nchar(labels) > 0], ")")
+    pl <- format(labels, justify = "left")
+    nc <- max(nchar(pl))
+    out[-1,1] <- paste0(out[-1,1], paste0(rep(" ", labels.sep), collapse = ""), pl)
+    out[1,1] <- paste0(out[1,1], paste0(rep(" ", nc + labels.sep), collapse = ""))
+  }
 
   return(out)
 

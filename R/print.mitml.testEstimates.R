@@ -17,7 +17,8 @@ print.mitml.testEstimates <- function(x, digits = 3, sci.limit = 5, ...){
   if(!is.null(est)){
 
     # format numeric results
-    out <- .formatTable(est, digits = digits, sci.limit = sci.limit)
+    pl <- attr(est, "par.labels")
+    out <- .formatTable(est, digits = digits, sci.limit = sci.limit, labels = pl)
     for(i in seq_len(nrow(out))) cat(out[i,], "\n")
 
   }
@@ -28,7 +29,8 @@ print.mitml.testEstimates <- function(x, digits = 3, sci.limit = 5, ...){
     if(!is.null(est)) cat("\n")
 
     # format numeric results
-    out <- .formatTable(vc, digits = digits, sci.limit = sci.limit)
+    pl <- attr(vc, "par.labels")
+    out <- .formatTable(vc, digits = digits, sci.limit = sci.limit, labels = pl)
     for(i in seq_len(nrow(out))) cat(out[i,], "\n")
 
   }

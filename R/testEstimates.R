@@ -117,17 +117,27 @@ testEstimates <- function(model, qhat, uhat, var.comp = FALSE, df.com = NULL, ..
   colnames(out) <- c("Estimate", "Std.Error", "t.value", "df", "P(>|t|)", "RIV", "FMI") # two-tailed p-value, SiG 2017-02-09
   rownames(out) <- nms
 
+  # preserve parameter labels (if any)
+  attr(out, "par.labels") <- attr(nms, "par.labels")
+
   # create output for other parameter estimates
   if(var.comp && !missing(model)){
 
     if(is.null(vc.Qhat)){
+
       vc.out <- NULL
       warning("Computation of variance components not supported for objects of class '", paste(cls, collapse = "|"), "' (see ?with.mitml.list for manual calculation).")
+
     }else{
+
       vc.Qbar <- apply(vc.Qhat, 1, mean)
       vc.out <- matrix(vc.Qbar, ncol = 1)
       colnames(vc.out) <- "Estimate"
       rownames(vc.out) <- vc.nms
+
+      # parameter labales
+      attr(vc.out, "par.labels") <- attr(vc.nms, "par.labels")
+
     }
 
   }

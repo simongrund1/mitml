@@ -1,4 +1,4 @@
-testConstraints <- function(model, qhat, uhat, constraints, method = c("D1", "D2"), df.com = NULL){
+testConstraints <- function(model, qhat, uhat, constraints, method = c("D1", "D2"), ariv = c("default", "positive"), df.com = NULL){
 # test constraints with multiply imputed data
 
   # ***
@@ -11,9 +11,11 @@ testConstraints <- function(model, qhat, uhat, constraints, method = c("D1", "D2
 
   # match methods
   method <- match.arg(method)
+  ariv <- match.arg(ariv)
 
   # warnings for ignored arguments
   if(!is.null(df.com) && method == "D2") warning("Complete-data degrees of freedom are not available for use with 'D2', and thus were ignored.")
+  if(ariv == "positive" && method == "D1") warning("The 'positive' option is not available with method 'D1' and was ignored.")
 
   # clean names in constraints
   constraints <- gsub("\\(Intercept\\)", "Intercept", constraints)

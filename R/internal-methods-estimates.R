@@ -363,6 +363,9 @@
   pt <- lavaan::parTable(object)
   isFree <- pt[["free"]] > 0 & !duplicated(pt[["free"]]) # see lavaan:::lav_object_inspect_coef
   isDefined <- pt[["op"]] == ":="
+  # NOTE: for now, exclude parameters referring to exogenous variables
+  # (can be included in misc.)
+  isExo <- pt[["exo"]] == 1
   isCoef <- isFree | isDefined
  
   hasGroups <- lavaan::lavInspect(object, "ngroups") > 1
@@ -374,12 +377,12 @@
   if(hasGroups) nms[["group"]] <- paste0(".g", pt[, "group"])
   nms <- do.call(mapply, c(as.list(nms), list(FUN = paste0)))
 
-  out <- pt[!isCoef, "est"]
-  names(out) <- nms[!isCoef]
+  out <- pt[!isCoef & !isExo, "est"]
+  names(out) <- nms[!isCoef & !isExo]
 
   # preserve user-defined parameter labels
-  hasLabels <- any(nchar(pt[!isCoef, "label"]) > 0)
-  if(hasLabels) attr(out, "par.labels") <- pt[!isCoef, "label"]
+  hasLabels <- any(nchar(pt[!isCoef & !isExo, "label"]) > 0)
+  if(hasLabels) attr(out, "par.labels") <- pt[!isCoef & !isExo, "label"]
 
   return(out)
 

@@ -42,7 +42,7 @@ data(studentratings)
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
 imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, "all")
+implist <- mitmlComplete(imp)
 
 # * Example 1: subset by SES, select variables by name
 subset(implist, SES < 25, select = c(ID, FedState, Sex, SES, ReadAchiev, ReadDis))

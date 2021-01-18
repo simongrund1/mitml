@@ -39,7 +39,7 @@ data(studentratings)
 fml <- ReadDis ~ ReadAchiev + (1|ID)
 imp <- panImpute(studentratings, formula = fml, n.burn = 500, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print = 1:5)
+implist <- mitmlComplete(imp)
 
 # fit regression model
 fit <- with(implist, lm(ReadDis ~ 1 + ReadAchiev))

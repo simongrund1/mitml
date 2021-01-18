@@ -42,7 +42,7 @@ data(studentratings)
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
 imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp,"all")
+implist <- mitmlComplete(imp)
 
 # * Example 1: sort by ID
 sort(implist, by = ID)

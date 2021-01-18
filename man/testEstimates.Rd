@@ -62,7 +62,7 @@ data(studentratings)
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
 imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print = 1:5)
+implist <- mitmlComplete(imp)
 
 # fit multilevel model using lme4
 require(lme4)

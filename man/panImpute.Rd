@@ -181,6 +181,6 @@ fml <- ReadDis ~ ReadAchiev + I(clusterMeans(ReadAchiev, ID)) + (1|ID)
 imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5,
                  save.pred = TRUE)
 
-head(mitmlComplete(imp, 1))
+head(mitmlComplete(imp, print = 1))
 }
 \keyword{models}

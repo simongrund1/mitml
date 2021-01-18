@@ -49,15 +49,15 @@ imp1 <- panImpute(subset(studentratings, FedState == "SH"), formula = fml,
 imp2 <- panImpute(subset(studentratings, FedState == "B"), formula = fml,
                   n.burn = 1000, n.iter = 100, m = 5)
 
-implist1 <- mitmlComplete(imp1, print = "all")
-implist2 <- mitmlComplete(imp2, print = "all")
+implist1 <- mitmlComplete(imp1)
+implist2 <- mitmlComplete(imp2)
 
 rbind(implist1, implist2)
 
 # Example 2: predicted values from linear model
 
 imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
-implist <- mitmlComplete(imp, print = "all")
+implist <- mitmlComplete(imp)
 
 pred <- with(implist1, predict(lm(ReadDis ~ ReadAchiev)))
 cbind(implist, pred.ReadDis = pred)

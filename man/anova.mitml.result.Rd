@@ -55,7 +55,7 @@ data(studentratings)
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
 imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print = 1:5)
+implist <- mitmlComplete(imp)
 
 # simple comparison (same as testModels)
 fit0 <- with(implist, lmer(ReadAchiev ~ (1|ID), REML = FALSE))

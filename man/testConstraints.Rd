@@ -69,7 +69,7 @@ data(studentratings)
 fml <- MathDis + ReadDis + SchClimate ~ (1|ID)
 imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print = 1:5)
+implist <- mitmlComplete(imp)
 
 # fit simple regression model
 fit.lm <- with(implist, lm(SchClimate ~ ReadDis + MathDis))

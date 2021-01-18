@@ -22,7 +22,7 @@ A warning message is displayed if the contents of \code{x} do not appear to be d
 \seealso{\code{\link{as.mitml.list}}}
 
 \examples{
-l <- list(data.frame(x=rnorm(20)))
+l <- list(data.frame(x = rnorm(20)))
 l <- as.mitml.list(l)
 is.mitml.list(l)
 # TRUE

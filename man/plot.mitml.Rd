@@ -7,9 +7,9 @@ Generates diagnostic plots for assessing the convergence and autocorrelation beh
 
 \usage{
 
-\method{plot}{mitml}(x, print=c("beta","beta2","psi","sigma"), pos=NULL, group="all",
-  trace=c("imputation","burnin","all"), thin=1, smooth=3, n.Rhat=3,
-  export=c("none","png","pdf"), dev.args=list(), ...)
+\method{plot}{mitml}(x, print = c("beta", "beta2", "psi", "sigma"), pos = NULL, group = "all",
+  trace = c("imputation", "burnin", "all"), thin = 1, smooth = 3, n.Rhat = 3,
+  export = c("none", "png", "pdf"), dev.args = list(), ...)
 
 }
 
@@ -54,8 +54,8 @@ Further aguments to the graphics device are supplied using the \code{dev.args} a
 
 The \code{plot} function calculates and displays diagnostic information primarily for the imputation phase (i.e., for iterations after burn-in).
 This is the default in the \code{plot} function and the recommended method for most users.
-However, note that, when overriding the default using \code{trace="burnin"}, the posterior summary and the trace plots do not convey the necessary information to establish convergence.
-When \code{trace="all"}, the full chain is displayed with emphasis on the imputation phase, and the posterior summary is calculated based only on iterations after burn-in as recommended.
+However, note that, when overriding the default using \code{trace = "burnin"}, the posterior summary and the trace plots do not convey the necessary information to establish convergence.
+When \code{trace = "all"}, the full chain is displayed with emphasis on the imputation phase, and the posterior summary is calculated based only on iterations after burn-in as recommended.
 
 }
 \note{
@@ -81,28 +81,28 @@ data(studentratings)
 # * Example 1: simple imputation
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # plot all parameters (default)
 plot(imp)
 
 # plot fixed effects only
-plot(imp, print="beta")
+plot(imp, print = "beta")
 
 # export plots to file (using pdf device)
-plot(imp, export="pdf", dev.args=list(width=9, height=4, pointsize=12))
+plot(imp, export = "pdf", dev.args = list(width = 9, height = 4, pointsize = 12))
 
 # * Example 2: groupwise imputation
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, group=FedState, n.burn=1000,
-       n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, group = FedState, n.burn = 1000,
+       n.iter = 100, m = 5)
 
 # plot fixed effects for all groups (default for 'group')
-plot(imp, print="beta", group="all")
+plot(imp, print = "beta", group = "all")
 
 # plot fixed effects for first group only
-plot(imp, print="beta", group=1)
+plot(imp, print = "beta", group = 1)
 }
 }
 \keyword{methods}

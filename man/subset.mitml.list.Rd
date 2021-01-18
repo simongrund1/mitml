@@ -40,15 +40,15 @@ A list of imputed data sets with an additional class attribute \code{mitml.list}
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp,"all")
+implist <- mitmlComplete(imp, "all")
 
 # * Example 1: subset by SES, select variables by name
 subset(implist, SES < 25, select = c(ID, FedState, Sex, SES, ReadAchiev, ReadDis))
 
 # * Example 2: subset by FedState, select variables by column number
-subset(implist, FedState == "SH", select = -c(6:7,9:10))
+subset(implist, FedState == "SH", select = -c(6:7, 9:10))
 
 \dontrun{
 # * Example 3: subset by ID and Sex

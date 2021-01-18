@@ -23,7 +23,7 @@ The list entries are converted to \code{data.frame} if necessary, in which case 
 
 \examples{
 # data frame with 'imputation' indicator
-dat <- data.frame(imputation=rep(1:10,each=20), x=rnorm(200))
+dat <- data.frame(imputation = rep(1:10, each = 20), x = rnorm(200))
 
 # split into a list and convert to 'mitml.list'
 l <- split(dat, dat$imputation)

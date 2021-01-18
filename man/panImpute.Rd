@@ -6,9 +6,9 @@ Imputations can be generated using \code{type} or \code{formula}, which offer di
 
 \usage{
 
-panImpute(data, type, formula, n.burn=5000, n.iter=100, m=10, group=NULL, 
-  prior=NULL, seed=NULL, save.pred=FALSE, keep.chains=c("full","diagonal"),
-  silent=FALSE)
+panImpute(data, type, formula, n.burn = 5000, n.iter = 100, m = 10, group = NULL, 
+  prior = NULL, seed = NULL, save.pred = FALSE, keep.chains = c("full", "diagonal"),
+  silent = FALSE)
 
 }
 
@@ -60,7 +60,7 @@ Given below is a list of operators that \code{panImpute} currently understands:
 Predictors are allowed to have fixed effects, random effects, or both on all target variables.
 The intercept is automatically included both as a fixed and a random effect, but it can be constrained if necessary (see examples).
 Note that, when specifying random effects other than the intercept, these will \emph{not} be automatically added as fixed effects and must be included explicitly.
-Any predictors defined by \code{I()} will be used for imputation but not included in the data set unless \code{save.pred=TRUE}.
+Any predictors defined by \code{I()} will be used for imputation but not included in the data set unless \code{save.pred = TRUE}.
 
 In order to run separate imputations for each level of an additional grouping variable, the \code{group} argument may be used.
 The name of the grouping variable must be given in quotes.
@@ -128,20 +128,20 @@ data(studentratings)
 # * Example 1.1: 'ReadDis' and 'SES', predicted by 'ReadAchiev' and 
 # 'CognAbility', with random slope for 'ReadAchiev'
 
-type <- c(-2,0,0,0,0,0,3,1,2,0)
+type <- c(-2, 0, 0, 0, 0, 0, 3, 1, 2, 0)
 names(type) <- colnames(studentratings)
 type
 
-imp <- panImpute(studentratings, type=type, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, type = type, n.burn = 1000, n.iter = 100, m = 5)
 
 # * Example 1.2: 'ReadDis' and 'SES' groupwise for 'FedState',
 # and predicted by 'ReadAchiev'
 
-type <- c(-2,-1,0,0,0,0,2,1,0,0)
+type <- c(-2, -1, 0, 0, 0, 0, 2, 1, 0, 0)
 names(type) <- colnames(studentratings)
 type
 
-imp <- panImpute(studentratings, type=type, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, type = type, n.burn = 1000, n.iter = 100, m = 5)
 
 # *** ................................
 # the 'formula' interface
@@ -151,36 +151,36 @@ imp <- panImpute(studentratings, type=type, n.burn=1000, n.iter=100, m=5)
 # (random intercept)
 
 fml <- ReadDis ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # ... the intercept can be suppressed using '0' or '-1' (here for fixed intercept)
 fml <- ReadDis ~ 0 + ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # * Example 2.2: imputation of 'ReadDis', predicted by 'ReadAchiev'
 # (random slope)
 
 fml <- ReadDis ~ ReadAchiev + (1+ReadAchiev|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # * Example 2.3: imputation of 'ReadDis', predicted by 'ReadAchiev',
 # groupwise for 'FedState'
 
 fml <- ReadDis ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, group="FedState", n.burn=1000,
-n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, group = "FedState", n.burn = 1000,
+                 n.iter = 100, m = 5)
 
 # * Example 2.4: imputation of 'ReadDis', predicted by 'ReadAchiev'
 # including the cluster mean of 'ReadAchiev' as an additional predictor
 
-fml <- ReadDis ~ ReadAchiev + I(clusterMeans(ReadAchiev,ID)) + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+fml <- ReadDis ~ ReadAchiev + I(clusterMeans(ReadAchiev, ID)) + (1|ID)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # ... using 'save.pred' to save the calculated cluster means in the data set
-fml <- ReadDis ~ ReadAchiev + I(clusterMeans(ReadAchiev,ID)) + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5,
-save.pred=TRUE)
+fml <- ReadDis ~ ReadAchiev + I(clusterMeans(ReadAchiev, ID)) + (1|ID)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5,
+                 save.pred = TRUE)
 
-head(mitmlComplete(imp,1))
+head(mitmlComplete(imp, 1))
 }
 \keyword{models}

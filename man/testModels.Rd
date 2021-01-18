@@ -7,8 +7,9 @@ Performs multi-parameter hypothesis tests for a vector of statistical parameters
 
 \usage{
 
-testModels(model, null.model, method=c("D1","D2","D3","D4"), 
-  use=c("wald","likelihood"), ariv=c("default","positive","robust"), df.com=NULL, data=NULL)
+testModels(model, null.model, method = c("D1", "D2", "D3", "D4"), 
+  use = c("wald", "likelihood"), ariv = c("default", "positive", "robust"),
+  df.com = NULL, data = NULL)
 
 }
 \arguments{
@@ -16,9 +17,9 @@ testModels(model, null.model, method=c("D1","D2","D3","D4"),
   \item{model}{A list of fitted statistical models (see examples).}
   \item{null.model}{A list of fitted (more restrictive) statistical models.}
   \item{method}{A character string denoting the method by which the test is performed. Can be either \code{"D1"}, \code{"D2"}, \code{"D3"}, or \code{"D4"} (see details). Default is \code{"D1"}.}
-  \item{use}{A character string denoting Wald- or likelihood-based based tests. Can be either \code{"wald"} or \code{"likelihood"}. Only used if \code{method="D2"}.}
+  \item{use}{A character string denoting Wald- or likelihood-based based tests. Can be either \code{"wald"} or \code{"likelihood"}. Only used if \code{method = "D2"}.}
   \item{ariv}{A character string denoting how the ARIV is calculated. Can be either \code{"default"}, \code{"positive"}, or \code{"robust"} (see details).}
-  \item{df.com}{(optional) A single number or a numeric vector denoting the complete-data degrees of freedom for the hypothesis test. Only used if \code{method="D1"}.}
+  \item{df.com}{(optional) A single number or a numeric vector denoting the complete-data degrees of freedom for the hypothesis test. Only used if \code{method = "D1"}.}
   \item{data}{(optional) A list of imputed data sets (see details).}
 
 }
@@ -28,39 +29,39 @@ This function compares two nested statistical models which differ by one or more
 In other words, the function performs Wald-like and likelihood-ratio hypothesis tests for the statistical parameters by which the two models differ.
 
 The general approach to Wald-like inference for multi-dimensional estimands was introduced Rubin (1987) and further developed by Li, Raghunathan and Rubin (1991).
-This procedure is commonly referred to as \eqn{D_1} and can be used by setting \code{method="D1"}.
+This procedure is commonly referred to as \eqn{D_1} and can be used by setting \code{method = "D1"}.
 \eqn{D_1} is the multi-parameter equivalent of \code{\link{testEstimates}}, that is, it tests multiple parameters simultaneously.
 For \eqn{D_1}, the complete-data degrees of freedom are assumed to be infinite, but they can be adjusted for smaller samples by supplying \code{df.com} (Reiter, 2007).
 
 An alternative method for Wald-like hypothesis tests was suggested by Li, Meng, Raghunathan and Rubin (1991).
-The procedure is often called \eqn{D_2} and can be used by setting \code{method="D2"}.
+The procedure is often called \eqn{D_2} and can be used by setting \code{method = "D2"}.
 \eqn{D_2} calculates the Wald-test directly for each data set and then aggregates the resulting \eqn{\chi^2} values.
 The source of these values is specified by the \code{use} argument.
-If \code{use="wald"} (the default), then a Wald-like hypothesis test similar to \eqn{D_1} is performed.
-If \code{use="likelihood"}, then the two models are compared through their likelihood.
+If \code{use = "wald"} (the default), then a Wald-like hypothesis test similar to \eqn{D_1} is performed.
+If \code{use = "likelihood"}, then the two models are compared through their likelihood.
 
 A third method relying on likelihood-based comparisons was suggested by Meng and Rubin (1992).
-This procedure is referred to as \eqn{D_3} and can be used by setting \code{method="D3"}.
+This procedure is referred to as \eqn{D_3} and can be used by setting \code{method = "D3"}.
 \eqn{D_3} compares the two models by aggregating the likelihood-ratio test across multiply imputed data sets.
 
 Finally, an improved method for likelihood-ratio tests was recommended by Chan & Meng (2019).
-This method is referred to as \eqn{D_4} and can be used by setting \code{method="D4"}.
+This method is referred to as \eqn{D_4} and can be used by setting \code{method = "D4"}.
 \eqn{D_4} also compares models by pooling the likelihood-ratio test but does so in a more general and efficient manner.
 Note that the \eqn{D_4} method can fail if the data to which the model was fitted cannot be found.
 In such a case, users can either specify the list of imputed data sets directly by specifying the \code{data} argument or refit the model by setting the \code{include.data} argument in \code{\link{with.mitml.list}}.
 
 The function supports different classes of statistical models depending on which \code{method} is chosen.
 \eqn{D_1} supports models that define \code{coef} and \code{vcov} methods (or similar) for extracting the parameter estimates and their estimated covariance matrix. 
-\eqn{D_2} can be used for the same models (if \code{use="wald"} and models that define a \code{logLik} method (if \code{use="likelihood"}).
+\eqn{D_2} can be used for the same models (if \code{use = "wald"} and models that define a \code{logLik} method (if \code{use = "likelihood"}).
 \eqn{D_3} supports linear models, linear mixed-effects models (see Laird, Lange, & Stram, 1987) with an arbitrary cluster structed if estimated with \code{lme4} or a single cluster if estimated by \code{nlme}, and structural equation models estimated with \code{lavaan}.
 Finally, \eqn{D_4} supports models that define a \code{logLik} method.
 Support for other statistical models may be added in future releases.
 
 The \eqn{D_4}, \eqn{D_3}, and \eqn{D_2} methods support different estimators of the relative increase in variance (ARIV), which can be specified with the \code{ariv} argument.
-If \code{ariv="default"}, the default estimators are used.
-If \code{ariv="positive"}, the default estimators are used but constrained to take on strictly positive values.
+If \code{ariv = "default"}, the default estimators are used.
+If \code{ariv = "positive"}, the default estimators are used but constrained to take on strictly positive values.
 This is useful if the estimated ARIV is negative.
-If \code{ariv="robust"}, which is available only for \eqn{D_4}, the "robust" estimator proposed by Chan & Meng (2019) is used.
+If \code{ariv = "robust"}, which is available only for \eqn{D_4}, the "robust" estimator proposed by Chan & Meng (2019) is used.
 This method should be used with caution, because it requires much stronger assumptions and may result in liberal inferences if they are violated.
 
 }
@@ -101,16 +102,16 @@ Rubin, D. B. (1987). \emph{Multiple imputation for nonresponse in surveys}. Hobo
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print=1:5)
+implist <- mitmlComplete(imp, print = 1:5)
 
 # * Example 1: multiparameter hypothesis test for 'ReadDis' and 'SES'
 # This tests the hypothesis that both effects are zero.
 
 require(lme4)
-fit0 <- with(implist, lmer(ReadAchiev ~ (1|ID), REML=FALSE))
-fit1 <- with(implist, lmer(ReadAchiev ~ ReadDis + (1|ID), REML=FALSE))
+fit0 <- with(implist, lmer(ReadAchiev ~ (1|ID), REML = FALSE))
+fit1 <- with(implist, lmer(ReadAchiev ~ ReadDis + (1|ID), REML = FALSE))
 
 # apply Rubin's rules
 testEstimates(fit1)
@@ -119,17 +120,17 @@ testEstimates(fit1)
 testModels(fit1, fit0)
 
 # ... adjusting for finite samples
-testModels(fit1, fit0, df.com=47)
+testModels(fit1, fit0, df.com = 47)
 
 # ... using D2 ("wald", using estimates and covariance-matrix)
-testModels(fit1, fit0, method="D2")
+testModels(fit1, fit0, method = "D2")
 
 # ... using D2 ("likelihood", using likelihood-ratio test)
-testModels(fit1, fit0, method="D2", use="likelihood")
+testModels(fit1, fit0, method = "D2", use = "likelihood")
 
 # ... using D3 (likelihood-ratio test, requires ML fit)
-testModels(fit1, fit0, method="D3")
+testModels(fit1, fit0, method = "D3")
 
 # ... using D4 (likelihood-ratio test, requires ML fit)
-testModels(fit1, fit0, method="D4")
+testModels(fit1, fit0, method = "D4")
 }

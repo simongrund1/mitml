@@ -29,10 +29,10 @@ Returns the saved \code{mitml} class object.
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # write 'mitml' object
-write.mitml(imp, filename="imputation.R")
+write.mitml(imp, filename = "imputation.R")
 
 # read previously saved 'mitml' object
 previous.imp <- read.mitml("imputation.R")

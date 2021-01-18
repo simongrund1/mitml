@@ -7,8 +7,8 @@ Saves objects of class \code{mitml} as a text and a syntax file which can be pro
 
 \usage{
 
-write.mitmlSPSS(x, filename, sep="\t", dec=".", na.value=-999, syntax=TRUE,
-  locale=NULL)
+write.mitmlSPSS(x, filename, sep = "\t", dec = ".", na.value = -999, syntax = TRUE,
+  locale = NULL)
 
 }
 
@@ -55,9 +55,9 @@ IBM Corp. (2013). \emph{IBM SPSS Statistics for Windows, Version 22.0}. Armonk, 
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # write data file and SPSS syntax
-write.mitmlSPSS(imp, filename="imputation", sep="\t", dec=".", na.value=-999,
-locale="en_US")
+write.mitmlSPSS(imp, filename = "imputation", sep = "\t", dec = ".",
+                na.value = -999, locale = "en_US")
 }

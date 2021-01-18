@@ -7,7 +7,8 @@ Saves objects of class \code{mitml} as a series of text files which can be proce
 
 \usage{
 
-write.mitmlMplus(x, filename, suffix="list", sep="\t", dec=".", na.value=-999)
+write.mitmlMplus(x, filename, suffix = "list", sep = "\t", dec = ".",
+  na.value = -999)
 
 }
 
@@ -48,8 +49,8 @@ Muthen, L. K., & Muthen, B. O. (2012). \emph{Mplus User's Guide. Seventh Edition
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # write imputation files, index file, and log file
-write.mitmlMplus(imp, filename="imputation", suffix="list", na.value=-999)
+write.mitmlMplus(imp, filename = "imputation", suffix = "list", na.value = -999)
 }

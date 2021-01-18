@@ -7,7 +7,7 @@ Provides summary statistics and additional information on imputations in objects
 
 \usage{
 
-\method{summary}{mitml}(object, n.Rhat=3, goodness.of.appr=FALSE, autocorrelation=FALSE, ...)
+\method{summary}{mitml}(object, n.Rhat = 3, goodness.of.appr = FALSE, autocorrelation = FALSE, ...)
 
 }
 
@@ -27,7 +27,7 @@ The \code{summary} method calculates summary statistics for objects of class \co
 The output includes the potential scale reduction factor (PSRF, or \eqn{\hat{R}}) and (optionally) the goodness of approximation and autocorrelation. 
 
 The PSRF is calculated for each parameter of the imputation model and may be interpreted as a measure of convergence (Gelman and Rubin, 1992).
-Calculation of the PSRFs can be suppressed by setting \code{n.Rhat=NULL}.
+Calculation of the PSRFs can be suppressed by setting \code{n.Rhat = NULL}.
 The PSRFs are not computed from different chains, but by dividing each chain from the imputation phase into a number of sequences as denoted by \code{n.Rhat}.
 This is slightly different from the original method proposed by Gelman and Rubin.
 
@@ -57,7 +57,7 @@ Hoff, P. D. (2009). \emph{A first course in Bayesian statistical methods}. New Y
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # print summary
 summary(imp)

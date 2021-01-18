@@ -8,8 +8,8 @@ The functions \code{with} and \code{within} evaluate R expressions in a list of 
 
 \usage{
 
-\method{with}{mitml.list}(data, expr, include.data=FALSE, ...)
-\method{within}{mitml.list}(data, expr, ignore=NULL, ...)
+\method{with}{mitml.list}(data, expr, include.data = FALSE, ...)
+\method{within}{mitml.list}(data, expr, ignore = NULL, ...)
 
 }
 
@@ -52,9 +52,9 @@ The \code{ignore} argument can be used to declare objects that are not to be sav
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print=1:5)
+implist <- mitmlComplete(imp, print = 1:5)
 
 # * Example 1: data manipulation
 
@@ -62,13 +62,13 @@ implist <- mitmlComplete(imp, print=1:5)
 new1.implist <- within(implist, Means.ReadAchiev <- clusterMeans(ReadAchiev, ID))
 
 # center variables, calculate interaction terms, ignore byproducts
-new2.implist <- within(implist,{
+new2.implist <- within(implist, {
   M.SES <- mean(SES)
   M.CognAbility <- mean(CognAbility)
   C.SES <- SES - M.SES
   C.CognAbility <- CognAbility - M.CognAbility
   SES.CognAbility <- C.SES * C.CognAbility
-}, ignore=c("M.SES", "M.CognAbility"))
+}, ignore = c("M.SES", "M.CognAbility"))
 
 # * Example 2: fitting statistical models
 

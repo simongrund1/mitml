@@ -7,7 +7,9 @@ Performs model comparisons for a series of nested statistical models fitted usin
 
 \usage{
 
-\method{anova}{mitml.result}(object, ..., method=c("D3","D4","D2"), ariv=c("default","positive","robust"), data=NULL)
+\method{anova}{mitml.result}(object, ..., method = c("D3", "D4", "D2"),
+  ariv = c("default", "positive", "robust"),
+  data = NULL)
 
 }
 
@@ -51,19 +53,19 @@ require(lme4)
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print=1:5)
+implist <- mitmlComplete(imp, print = 1:5)
 
 # simple comparison (same as testModels)
-fit0 <- with(implist, lmer(ReadAchiev ~ (1|ID), REML=FALSE))
-fit1 <- with(implist, lmer(ReadAchiev ~ ReadDis + (1|ID), REML=FALSE))
+fit0 <- with(implist, lmer(ReadAchiev ~ (1|ID), REML = FALSE))
+fit1 <- with(implist, lmer(ReadAchiev ~ ReadDis + (1|ID), REML = FALSE))
 anova(fit1,fit0)
 
 \dontrun{
 # multiple comparisons
-fit2 <- with(implist, lmer(ReadAchiev ~ ReadDis + (1+ReadDis|ID), REML=FALSE))
-anova(fit2,fit1,fit0)
+fit2 <- with(implist, lmer(ReadAchiev ~ ReadDis + (1 + ReadDis|ID), REML = FALSE))
+anova(fit2, fit1, fit0)
 }
 }
 

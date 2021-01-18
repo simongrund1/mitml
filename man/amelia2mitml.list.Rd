@@ -24,7 +24,7 @@ A list of imputed data sets with an additional class attribute \code{mitml.list}
 data(studentratings)
 
 require(Amelia)
-imp <- amelia(x=studentratings[,c("ID","MathAchiev","ReadAchiev")], cs="ID")
+imp <- amelia(x = studentratings[, c("ID", "MathAchiev", "ReadAchiev")], cs = "ID")
 
 implist <- amelia2mitml.list(imp)
 }

@@ -7,7 +7,7 @@ Computes final parameter estimates and inferences from multiply imputed data set
 
 \usage{
 
-testEstimates(model, qhat, uhat, extra.pars=FALSE, df.com=NULL, ...)
+testEstimates(model, qhat, uhat, extra.pars = FALSE, df.com = NULL, ...)
 
 }
 \arguments{
@@ -60,9 +60,9 @@ Rubin, D. B. (1987). \emph{Multiple imputation for nonresponse in surveys}. Hobo
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print=1:5)
+implist <- mitmlComplete(imp, print = 1:5)
 
 # fit multilevel model using lme4
 require(lme4)
@@ -73,15 +73,15 @@ fit.lmer <- with(implist, lmer(SES ~ (1|ID)))
 testEstimates(fit.lmer)
 
 # ... adjusted df for finite samples
-testEstimates(fit.lmer, df.com=49)
+testEstimates(fit.lmer, df.com = 49)
 
 # ... with additional table for variance components and ICCs
-testEstimates(fit.lmer, extra.pars=TRUE)
+testEstimates(fit.lmer, extra.pars = TRUE)
 
 # * Example 2: combine estimates using matrices or lists
 fit.lmer <- with(implist, lmer(SES ~ ReadAchiev + (1|ID)))
 
 qhat <- sapply(fit.lmer, fixef)
 uhat <- sapply(fit.lmer, function(x) diag(vcov(x)))
-testEstimates(qhat=qhat, uhat=uhat)
+testEstimates(qhat = qhat, uhat = uhat)
 }

@@ -43,17 +43,23 @@ A list of imputed data sets with an additional class attribute \code{mitml.list}
 data(studentratings)
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
 
-imp <- panImpute(subset(studentratings, FedState=="SH"), formula=fml, n.burn=1000, n.iter=100, m=5)
-implist <- mitmlComplete(imp, print="all")
+imp1 <- panImpute(subset(studentratings, FedState == "SH"), formula = fml,
+                 n.burn = 1000, n.iter = 100, m = 5)
 
-imp2 <- panImpute(subset(studentratings, FedState=="B"), formula=fml, n.burn=1000, n.iter=100, m=5)
-implist2 <- mitmlComplete(imp2, print="all")
+imp2 <- panImpute(subset(studentratings, FedState == "B"), formula = fml,
+                  n.burn = 1000, n.iter = 100, m = 5)
 
-rbind(implist, implist2)
+implist1 <- mitmlComplete(imp1, print = "all")
+implist2 <- mitmlComplete(imp2, print = "all")
+
+rbind(implist1, implist2)
 
 # Example 2: predicted values from linear model
 
-pred <- with(implist, predict(lm(ReadDis~ReadAchiev)))
-cbind(implist, pred.ReadDis=pred)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
+implist <- mitmlComplete(imp, print = "all")
+
+pred <- with(implist1, predict(lm(ReadDis ~ ReadAchiev)))
+cbind(implist, pred.ReadDis = pred)
 }
 \keyword{methods}

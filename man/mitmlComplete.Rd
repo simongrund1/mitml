@@ -4,7 +4,7 @@
 \description{This function extracts imputed data sets from \code{mitml} class objects as produced by \code{panImpute} and \code{jomoImpute}.}
 \usage{
 
-mitmlComplete(x, print="all", force.list=FALSE)
+mitmlComplete(x, print = "all", force.list = FALSE)
 
 }
 \arguments{
@@ -16,7 +16,7 @@ mitmlComplete(x, print="all", force.list=FALSE)
 }
 \value{
 
-Single data sets are returned as a data frame unless \code{force.list=TRUE}.
+Single data sets are returned as a data frame unless \code{force.list = TRUE}.
 If several data sets are extracted, the result is always a list of data sets with an additional class attribute \code{mitml.list}.
 
 }
@@ -27,20 +27,20 @@ If several data sets are extracted, the result is always a list of data sets wit
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # extract original (incomplete) data set
-mitmlComplete(imp, print=0)
+mitmlComplete(imp, print = 0)
 
 # extract first imputed data set (returned as mitml.list)
-mitmlComplete(imp, print=1, force.list=TRUE)
+mitmlComplete(imp, print = 1, force.list = TRUE)
 
 # extract all imputed data sets at once
-implist <- mitmlComplete(imp, print="all")
+implist <- mitmlComplete(imp, print = "all")
 
 \dontrun{
 # ... alternatives with same results
-implist <- mitmlComplete(imp, print=1:5)
-implist <- mitmlComplete(imp, print="list")
+implist <- mitmlComplete(imp, print = 1:5)
+implist <- mitmlComplete(imp, print = "list")
 }
 }

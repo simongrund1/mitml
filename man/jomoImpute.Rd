@@ -8,9 +8,10 @@ Imputations can be generated using \code{type} or \code{formula}, which offer di
 
 \usage{
 
-jomoImpute(data, type, formula, random.L1=c("none","mean","full"), n.burn=5000,
-  n.iter=100, m=10, group=NULL, prior=NULL, seed=NULL, save.pred=FALSE,
-  keep.chains=c("full","diagonal"), silent=FALSE)
+jomoImpute(data, type, formula, random.L1 = c("none", "mean", "full"),
+  n.burn = 5000, n.iter = 100, m = 10, group = NULL, prior = NULL,
+  seed = NULL, save.pred = FALSE, keep.chains = c("full", "diagonal"),
+  silent = FALSE)
 
 }
 
@@ -66,7 +67,7 @@ For multilevel imputation, predictors are allowed to have fixed effects, random 
 The intercept is automatically included both as a fixed and, for multilevel imputation, a random effect.
 Both can be constrained if necessary (see \code{\link{panImpute}}).
 Note that, when specifying random effects other than the intercept, these will \emph{not} be automatically added as fixed effects and must be included explicitly.
-Any predictors defined by \code{I()} will be used for imputation but not included in the data set unless \code{save.pred=TRUE}.
+Any predictors defined by \code{I()} will be used for imputation but not included in the data set unless \code{save.pred = TRUE}.
 
 If missing data occur at both levels of the sample (level 1 and level 2), then a list of two \code{formula}s or \code{type}s may be provided.
 The first element of this list denotes the imputation model for variables at level 1.
@@ -88,7 +89,7 @@ These must be supplied as a list containing the following components:
 \itemize{
   \item{\code{Binv}: scale matrix for the covariance matrix of residuals at level 1}
   \item{\code{Dinv}: scale matrix for the covariance matrix of random effects and residuals at level 2}
-  \item{\code{a}: starting value for the degrees of freedom of random covariance matrices of residuals (only used with \code{random.L1="mean"} or \code{random.L1="full"})}
+  \item{\code{a}: starting value for the degrees of freedom of random covariance matrices of residuals (only used with \code{random.L1 = "mean"} or \code{random.L1 = "full"})}
 }
 Note that \code{jomo} does not allow for the degrees of freedom for the inverse-Wishart prior to be specified by the user.
 These are always set to the lowest value possible (largest dispersion) or determined iteratively if the residuals at level 1 are modeled as random (see above).
@@ -155,32 +156,33 @@ data(leadership)
 # * Example 1.1 (studentratings): 'ReadDis' and 'SES', predicted by 'ReadAchiev'
 # (random slope)
 
-type <- c(-2,0,0,0,0,1,3,1,0,0)
+type <- c(-2, 0, 0, 0, 0, 1, 3, 1, 0, 0)
 names(type) <- colnames(studentratings)
 type
 
-imp <- jomoImpute(studentratings, type=type, n.burn=100, n.iter=10, m=5)
+imp <- jomoImpute(studentratings, type = type, n.burn = 100, n.iter = 10, m = 5)
 
 # * Example 1.2 (leadership): all variables (mixed continuous and categorical
 # data with missing values at level 1 and level 2)
 
-type.L1 <- c(-2,1,0,1,1)   # imputation model at level 1
-type.L2 <- c(-2,0,1,0,0)   # imputation model at level 2
+type.L1 <- c(-2, 1, 0, 1, 1)   # imputation model at level 1
+type.L2 <- c(-2, 0, 1, 0, 0)   # imputation model at level 2
 names(type.L1) <- names(type.L2) <- colnames(leadership)
 
 type <- list(type.L1, type.L2)
 type
 
-imp <- jomoImpute(leadership, type=type, n.burn=100, n.iter=10, m=5)
+imp <- jomoImpute(leadership, type = type, n.burn = 100, n.iter = 10, m = 5)
 
 # * Example 1.3 (studentratings): 'ReadDis', 'ReadAchiev', and 'SES' predicted
 # with empty model, groupwise for 'FedState' (single-level imputation)
 
-type <- c(0,-1,0,0,0,1,1,1,0,0)
+type <- c(0, -1, 0, 0, 0, 1, 1, 1, 0, 0)
 names(type) <- colnames(studentratings)
 type
 
-imp <- jomoImpute(studentratings, type=type, group="FedState", n.burn=100, n.iter=10, m=5)
+imp <- jomoImpute(studentratings, type = type, group = "FedState", n.burn = 100,
+                  n.iter = 10, m = 5)
 
 # *** ................................
 # the 'formula' interface
@@ -190,30 +192,32 @@ imp <- jomoImpute(studentratings, type=type, group="FedState", n.burn=100, n.ite
 # (random slope)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- jomoImpute(studentratings, formula=fml, n.burn=100, n.iter=10, m=5)
+imp <- jomoImpute(studentratings, formula = fml, n.burn = 100, n.iter = 10, m = 5)
 
 # * Example 2.2 (studentratings): 'ReadDis' predicted by 'ReadAchiev' and the
 # the cluster mean of 'ReadAchiev'
 
-fml <- ReadDis ~ ReadAchiev + I(clusterMeans(ReadAchiev,ID)) + (1|ID)
-imp <- jomoImpute(studentratings, formula=fml, n.burn=100, n.iter=10, m=5)
+fml <- ReadDis ~ ReadAchiev + I(clusterMeans(ReadAchiev, ID)) + (1|ID)
+imp <- jomoImpute(studentratings, formula = fml, n.burn = 100, n.iter = 10, m = 5)
 
 # * Example 2.3 (studentratings): 'ReadDis' predicted by 'ReadAchiev', groupwise
 # for 'FedState'
 
 fml <- ReadDis ~ ReadAchiev + (1|ID)
-imp <- jomoImpute(studentratings, formula=fml, group="FedState", n.burn=100, n.iter=10, m=5)
+imp <- jomoImpute(studentratings, formula = fml, group = "FedState", n.burn = 100,
+                  n.iter = 10, m = 5)
 
 # * Example 2.4 (leadership): all variables (mixed continuous and categorical
 # data with missing values at level 1 and level 2)
 
 fml <- list( JOBSAT + NEGLEAD + WLOAD ~ 1 + (1|GRPID) , COHES ~ 1 )
-imp <- jomoImpute(leadership, formula=fml, n.burn=100, n.iter=10, m=5)
+imp <- jomoImpute(leadership, formula = fml, n.burn = 100, n.iter = 10, m = 5)
 
 # * Example 2.5 (studentratings): 'ReadDis', 'ReadAchiev', and 'SES' predicted
 # with empty model, groupwise for 'FedState' (single-level imputation)
 
 fml <- ReadDis + ReadAchiev + SES ~ 1
-imp <- jomoImpute(studentratings, formula=fml, group="FedState", n.burn=100, n.iter=10, m=5)
+imp <- jomoImpute(studentratings, formula = fml, group = "FedState", n.burn = 100,
+                  n.iter = 10, m = 5)
 }
 \keyword{models}

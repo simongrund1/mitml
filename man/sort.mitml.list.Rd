@@ -7,7 +7,7 @@ The functions sorts a list of multiply imputed data sets according to an R expre
 
 \usage{
 
-\method{sort}{mitml.list}(x, decreasing=FALSE, by, ...)
+\method{sort}{mitml.list}(x, decreasing = FALSE, by, ...)
 
 }
 
@@ -40,14 +40,14 @@ A list of imputed data sets with an additional class attribute \code{mitml.list}
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 implist <- mitmlComplete(imp,"all")
 
 # * Example 1: sort by ID
-sort(implist, by=ID)
+sort(implist, by = ID)
 
 # * Example 2: sort by combination of variables
-sort(implist, by=list(FedState,ID,-SES))
+sort(implist, by = list(FedState,ID,-SES))
 }
 \keyword{methods}

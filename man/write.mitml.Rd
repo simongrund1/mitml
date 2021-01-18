@@ -7,7 +7,7 @@ This function saves objects of class \code{mitml} in R binary formats (similar t
 
 \usage{
 
-write.mitml(x, filename, drop=FALSE)
+write.mitml(x, filename, drop = FALSE)
 
 }
 
@@ -31,11 +31,11 @@ None (invisible \code{NULL}).
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # write full 'mitml' object (default)
-write.mitml(imp, filename="imputation.R")
+write.mitml(imp, filename = "imputation.R")
 
 # drop parameters of the imputation model
-write.mitml(imp, filename="imputation.R", drop=TRUE)
+write.mitml(imp, filename = "imputation.R", drop = TRUE)
 }

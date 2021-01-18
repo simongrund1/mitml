@@ -2,12 +2,12 @@
 \alias{multilevelR2}
 \title{Calculate R-squared measures for multilevel models}
 \description{
-Calculates several measures for the proportion of explained variance in a fitted linear mixed-effects (i.e.,) multilevel model (or a list of fitted models).
+Calculates several measures for the proportion of explained variance in a fitted linear mixed-effects (i.e., ) multilevel model (or a list of fitted models).
 }
 
 \usage{
 
-multilevelR2(model, print=c("RB1","RB2","SB","MVP"))
+multilevelR2(model, print = c("RB1", "RB2", "SB", "MVP"))
 
 }
 
@@ -56,9 +56,9 @@ require(lme4)
 data(studentratings)
 
 fml <- MathAchiev + ReadAchiev + CognAbility ~ 1 + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print=1:5)
+implist <- mitmlComplete(imp, print = 1:5)
 
 fit <- with(implist, lmer(MathAchiev ~ 1 + CognAbility + (1|ID)))
 multilevelR2(fit)

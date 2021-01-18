@@ -7,7 +7,8 @@ Performs hypothesis tests for arbitrary functions of a parameter vector using th
 
 \usage{
 
-testConstraints(model, qhat, uhat, constraints, method=c("D1","D2"), ariv=c("default","positive"), df.com=NULL)
+testConstraints(model, qhat, uhat, constraints, method = c("D1", "D2"),
+  ariv = c("default", "positive"), df.com = NULL)
 
 }
 \arguments{
@@ -17,7 +18,7 @@ testConstraints(model, qhat, uhat, constraints, method=c("D1","D2"), ariv=c("def
   \item{constraints}{A character vector specifying constraints or functions of the vector of model parameters to be tested.}
   \item{method}{A character string denoting the method by which the test is performed. Can be either \code{"D1"} or \code{"D2"} (see details). Default is to \code{"D1"}.}
   \item{ariv}{A character string denoting how the ARIV is calculated. Can be either \code{"default"} or \code{"positive"} (see details).}
-  \item{df.com}{(optional) A single number or a numeric vector denoting the complete-data degrees of freedom for the hypothesis test. Only used if \code{method="D1"}.}
+  \item{df.com}{(optional) A single number or a numeric vector denoting the complete-data degrees of freedom for the hypothesis test. Only used if \code{method = "D1"}.}
 
 }
 \details{
@@ -40,8 +41,8 @@ The arguments \code{qhat} and \code{uhat} allow for more general hypothesis test
 Support for further models may be added in future releases.
 
 The \code{ariv} argument determines how the average relative increase in variance (ARIV) is calculated.
-If \code{ariv="default"}, the default estimators are used.
-If \code{ariv="positive"}, the default estimators are used but constrained to take on strictly positive values (for additional details, see \code{\link{testModels}}.
+If \code{ariv = "default"}, the default estimators are used.
+If \code{ariv = "positive"}, the default estimators are used but constrained to take on strictly positive values (for additional details, see \code{\link{testModels}}.
 
 }
 \value{
@@ -66,9 +67,9 @@ Li, K. H., Raghunathan, T. E., & Rubin, D. B. (1991). Large-sample significance 
 data(studentratings)
 
 fml <- MathDis + ReadDis + SchClimate ~ (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=1000, n.iter=100, m=5)
+imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
-implist <- mitmlComplete(imp, print=1:5)
+implist <- mitmlComplete(imp, print = 1:5)
 
 # fit simple regression model
 fit.lm <- with(implist, lm(SchClimate ~ ReadDis + MathDis))
@@ -79,34 +80,34 @@ testEstimates(fit.lm)
 # * Example 1: test 'identity' function of two parameters
 # multi-parameter hypothesis test, equivalent to model comparison
 
-cons <- c("ReadDis","MathDis")
-testConstraints(fit.lm, constraints=cons)
+cons <- c("ReadDis", "MathDis")
+testConstraints(fit.lm, constraints = cons)
 
 # ... adjusting for finite samples
-testConstraints(fit.lm, constraints=cons, df.com=749)
+testConstraints(fit.lm, constraints = cons, df.com = 749)
 
 # ... using D2
-testConstraints(fit.lm, constraints=cons, method="D2")
+testConstraints(fit.lm, constraints = cons, method = "D2")
 
 # * Example 2: test for equality of two effects
 # tests the hypothesis that the effects of 'ReadDis' and 'MathDis'
-# are equal (ReadDis=MathDis)
+# are equal (ReadDis = MathDis)
 
 cons <- c("ReadDis-MathDis")
-testConstraints(fit.lm, constraints=cons)
+testConstraints(fit.lm, constraints = cons)
 
 # * Example 3: test against a fixed value
-# tests the hypothesis that the effect of "ReadDis" is one (ReadDis=1)
+# tests the hypothesis that the effect of "ReadDis" is one (ReadDis = 1)
 
 cons <- c("ReadDis-1")
-testConstraints(fit.lm, constraints=cons)
+testConstraints(fit.lm, constraints = cons)
 
 # * Example 4: test 'identity' using arrays and list
 
 fit.lm <- with(implist, lm(SchClimate ~ ReadDis + MathDis))
 
-cons <- c("ReadDis","MathDis")
+cons <- c("ReadDis", "MathDis")
 qhat <- sapply(fit.lm, coef)
-uhat <- sapply(fit.lm, function(x) vcov(x), simplify="array")
-testConstraints(qhat=qhat, uhat=uhat, constraints=cons)
+uhat <- sapply(fit.lm, function(x) vcov(x), simplify = "array")
+testConstraints(qhat = qhat, uhat = uhat, constraints = cons)
 }

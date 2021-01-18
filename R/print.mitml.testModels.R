@@ -8,7 +8,7 @@ print.mitml.testModels <- function(x, digits = 3, sci.limit = 5, ...){
   reml <- x$reml
   m <- x$m
   data <- x$data
-  robust <- x$robust
+  ariv <- x$ariv
   adj.df <- x$adj.df
   df.com <- x$df.com
 
@@ -19,7 +19,7 @@ print.mitml.testModels <- function(x, digits = 3, sci.limit = 5, ...){
   # print method
   cat("\nCombination method:", method)
   if(method == "D2") cat(" (", use, ")", sep = "")
-  if(method == "D4" && robust) cat(" (robust)", sep = "")
+  if(method == "D4" && ariv == "robust") cat(" (robust)", sep = "")
   cat("\n\n")
 
   # print test results

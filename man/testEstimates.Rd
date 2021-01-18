@@ -7,15 +7,16 @@ Computes final parameter estimates and inferences from multiply imputed data set
 
 \usage{
 
-testEstimates(model, qhat, uhat, var.comp=FALSE, df.com=NULL)
+testEstimates(model, qhat, uhat, extra.pars=FALSE, df.com=NULL, ...)
 
 }
 \arguments{
 
   \item{model}{A list of fitted statistical models (see examples).}
   \item{qhat, uhat}{Two matrices or lists containing point and variances estimates, respectively, for each imputed data set (see examples).}
-  \item{var.comp}{A logical flag indicating if estimates for variance components should be calculated. Default is to \code{FALSE}.}
+  \item{extra.pars}{A logical flag indicating if estimates for additional parameters (e.g., variance components) should be calculated. Default is to \code{FALSE}.}
   \item{df.com}{(optional) A numeric vector denoting the complete-data degrees of freedom for the hypothesis test.}
+  \item{\dots}{Not used.}
 
 }
 \details{
@@ -28,13 +29,12 @@ Rubin's original method assumes that the complete-data degrees of freedom are in
 Alternatively, the degrees of freedom can be adjusted for smaller samples by specifying \code{df.com} (Barnard & Rubin, 1999).
 The \code{df.com} argument can either be a single number if the degrees of freedom are equal for all tests, or a numeric vector with one element per test.
 
-Using the \code{var.comp} argument, final estimates for variance components and related parameters can be requested.
-These will be shown as a separate table within the console output.
-Accessing variance components is highly dependent on the model being estimated and not implemented for all models. 
-Users may prefer calculating these estimates manually using \code{\link{with.mitml.list}} (see Example 3).
-No inferences are calculated for variance components.
+Using the \code{extra.pars} argument, pooled estimates for additional parameters can be requested (e.g., variance components).
+This option is available for a number of models but may fail for certain model types.
+In such a case, users may extract the estimates of additional parameters by hand and pool them with the \code{qhat} argument (see examples).
+No inferences are calculated for pooled additional parameters.
 
-Currently, the procedure supports statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}), multilevel models estimated with \code{lme4} or \code{nlme}, and GEEs estimated with \code{geepack}.
+Currently, the procedure supports statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}, \code{glm}, \code{lavaan} and others) as well as multilevel models estimated with \code{lme4} or \code{nlme} and GEEs estimated with \code{geepack}.
 The arguments \code{qhat} and \code{uhat} allow for more general aggregation of parameter estimates regardless of model class.
 Support for further models may be added in future releases.
 
@@ -76,7 +76,7 @@ testEstimates(fit.lmer)
 testEstimates(fit.lmer, df.com=49)
 
 # ... with additional table for variance components and ICCs
-testEstimates(fit.lmer, var.comp=TRUE)
+testEstimates(fit.lmer, extra.pars=TRUE)
 
 # * Example 2: combine estimates using matrices or lists
 fit.lmer <- with(implist, lmer(SES ~ ReadAchiev + (1|ID)))

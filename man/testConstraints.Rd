@@ -7,7 +7,7 @@ Performs hypothesis tests for arbitrary functions of a parameter vector using th
 
 \usage{
 
-testConstraints(model, qhat, uhat, constraints, method=c("D1","D2"), df.com=NULL)
+testConstraints(model, qhat, uhat, constraints, method=c("D1","D2"), ariv=c("default","positive"), df.com=NULL)
 
 }
 \arguments{
@@ -16,6 +16,7 @@ testConstraints(model, qhat, uhat, constraints, method=c("D1","D2"), df.com=NULL
   \item{qhat, uhat}{Two matrices/arrays or lists containing estimates of the parameter vector and its covariance matrix, respectively, for each imputed data set (see examples).}
   \item{constraints}{A character vector specifying constraints or functions of the vector of model parameters to be tested.}
   \item{method}{A character string denoting the method by which the test is performed. Can be either \code{"D1"} or \code{"D2"} (see details). Default is to \code{"D1"}.}
+  \item{ariv}{A character string denoting how the ARIV is calculated. Can be either \code{"default"} or \code{"positive"} (see details).}
   \item{df.com}{(optional) A single number or a numeric vector denoting the complete-data degrees of freedom for the hypothesis test. Only used if \code{method="D1"}.}
 
 }
@@ -34,9 +35,13 @@ The pooled estimates and standard errors reported in the output are always based
 
 For \eqn{D_1}, the complete-data degrees of freedom can be adjusted for smaller samples by specifying \code{df.com}.
 
-Currently, the procedure supports statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}), multilevel models estimated with \code{lme4} or \code{nlme}, and GEEs estimated with \code{geepack}.
+This function supports general statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}, \code{glm}, \code{lavaan} and others) as well as multilevel models estimated with \code{lme4} or \code{nlme} and GEEs estimated with \code{geepack}.
 The arguments \code{qhat} and \code{uhat} allow for more general hypothesis tests regardless of model class.
 Support for further models may be added in future releases.
+
+The \code{ariv} argument determines how the average relative increase in variance (ARIV) is calculated.
+If \code{ariv="default"}, the default estimators are used.
+If \code{ariv="positive"}, the default estimators are used but constrained to take on strictly positive values (for additional details, see \code{\link{testModels}}.
 
 }
 \value{

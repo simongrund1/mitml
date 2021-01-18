@@ -8,7 +8,7 @@ The functions \code{with} and \code{within} evaluate R expressions in a list of 
 
 \usage{
 
-\method{with}{mitml.list}(data, expr, ...)
+\method{with}{mitml.list}(data, expr, include.data=FALSE, ...)
 \method{within}{mitml.list}(data, expr, ignore=NULL, ...)
 
 }
@@ -17,30 +17,32 @@ The functions \code{with} and \code{within} evaluate R expressions in a list of 
 
   \item{data}{A list of imputed data sets with class \code{mitml.list} as produced by \code{mitmlComplete}.}
   \item{expr}{An R expression to be evaluated for each data set.}
-  \item{ignore}{A character vector denoting objects not to be saved.}
+  \item{include.data}{A logical flag indicating whether the imputed data sets should be included in the call that evaluates \code{expr} (see Details). If set to \code{FALSE} (the default), an environment is created from \code{data}, and \code{expr} is evaluated therein. If set to \code{TRUE}, a call is constructed from \code{expr} and evaluated with \code{data} in the data slot.}
+  \item{ignore}{A character vector naming objects that are created but should not be saved.}
   \item{\dots}{Not being used.}
 
 }
 
 \details{
 
-The two functions are defined as \code{with} and \code{within} methods for objects of class \code{mitml.list}. Both \code{with} and \code{within} evaluate an R expression in each of the imputed data sets.
-However, the two functions return different values:
-\code{with} returns the evaluated expression, whereas \code{within} returns the resuling data sets.
-The \code{ignore} argument may be used to declare objects that are not to be saved within \code{within}.
+The two functions provide \code{with} and \code{within} methods for objects of class \code{mitml.list}. They evaluate an R expression repeatedly for each of the imputed data sets but return different values:
+\code{with} returns the result of the evaluated expression; \code{within} returns the resulting data sets.
+
+The \code{within} function is useful for transforming and computing variables in the imputed data (e.g., centering, calculating cluster means, etc.).
+The \code{with} function is useful, for example, for fitting statistical models.
+The list of fitted models can be analyzed using \code{\link{testEstimates}}, \code{\link{testModels}}, \code{\link{testConstraints}}, or \code{\link{anova}}.
+
+The \code{include.data} argument can be used to include the imputed data set in the call that evaluates \code{expr}.
+This is useful when fitting statistical models that require a data slot in the fitted model objects for subsequent analyses (e.g., for models fitted with \code{nlme} or \code{lavaan}; see Examples). 
+The \code{ignore} argument can be used to declare objects that are not to be saved in the data sets created by \code{within}.
 
 }
 
 \value{
 
-% \itemize{
-%   \item{\code{with}}{: Returns the evaluated expression from each data set as a list (class \code{mitml.result}. This is useful for fitting statistical models to multiply imputed data. The list of fitted models can be analyzed using \code{testEstimates}, \code{testModels}, \code{testConstraints}, or \code{anova}.}
-%   \item{\code{within}}{: Evaluates the R expression for each data set and returns the altered data sets as a list \code{mitml.list}. This is useful for manipulating the data prior to data analysis (e.g., centering, calculating cluster means, etc.).}
-% }
+\code{with}: Returns the evaluated expression from each data set as a list (class \code{mitml.result}). 
 
-\code{with}: Returns the evaluated expression from each data set as a list (class \code{mitml.result}). This is useful for fitting statistical models to multiply imputed data. The list of fitted models can be analyzed using \code{\link{testEstimates}}, \code{\link{testModels}}, \code{\link{testConstraints}}, or \code{\link{anova}}.
-
-\code{within}: Evaluates the R expression for each data set and returns the altered data sets as a list \code{mitml.list}. This is useful for manipulating the data prior to data analysis (e.g., centering, calculating cluster means, etc.).
+\code{within}: Evaluates the R expression for each data set and returns the altered data sets as a list \code{mitml.list}.
 
 }
 
@@ -73,19 +75,15 @@ new2.implist <- within(implist,{
 # fit regression model
 fit.lm <- with(implist, lm(ReadAchiev ~ ReadDis))
 
-# fit multilevel model using lme4
+# fit multilevel model with lme4
 require(lme4)
 fit.lmer <- with(implist, lmer(ReadAchiev ~ ReadDis + (1|ID)))
 
-# * Example 3: manual extraction of variance estimates
-require(lme4)
-fit.lmer <- with(implist, lmer(SES ~ (1|ID)))
-
-# extract level-1 and level-2 variances
-var.l1 <- sapply(fit.lmer, function(z) attr(VarCorr(z),"sc")^2)
-var.l2 <- sapply(fit.lmer, function(z) VarCorr(z)$ID[1,1])
-
-# calculate final estimate of the intraclass correlation
-ICC <- mean( var.l2 / (var.l2+var.l1) )
+# fit path model with lavaan (and include.data = TRUE)
+require(lavaan)
+mod <- "ReadAchiev ~ ReadDis"
+fit.sem <- with(implist,
+                sem(model = mod, cluster = "ID", estimator = "MLR"),
+                include.data = TRUE)
 }
 \keyword{methods}

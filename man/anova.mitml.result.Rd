@@ -7,7 +7,7 @@ Performs model comparisons for a series of nested statistical models fitted usin
 
 \usage{
 
-\method{anova}{mitml.result}(object, ...)
+\method{anova}{mitml.result}(object, ..., method=c("D3","D4","D2"), ariv=c("default","positive","robust"), data=NULL)
 
 }
 
@@ -15,26 +15,31 @@ Performs model comparisons for a series of nested statistical models fitted usin
 
   \item{object}{An object of class \code{mitml.result} as produced by \code{with.mitml.list}.}
   \item{\dots}{Additional objects of class \code{mitml.result} to be included in the comparison.}
+  \item{method}{A character string denoting the method used for the model comparisons. Can be either \code{"D3"}, \code{"D4"} or \code{"D2"} (see details). Default is \code{"D3"}.}
+  \item{ariv}{A character string denoting how the ARIV is calculated. Can be either \code{"default"}, \code{"positive"}, or \code{"robust"} (see details).}
+  \item{data}{(optional) A list of imputed data sets (see details).}
 
 }
 
 \details{
 
-  This function performs several model comparisons between models fitted using \code{with.mitml.list}.
+  This function performs likelihood-based comparisons between multiple statistical models fitted with \code{with.mitml.list}.
   If possible, the models are compared using the \eqn{D_3} statistic (Meng & Rubin, 1992).
-  If this method is unavailable, the \eqn{D_2} statistic is used instead (Li, Meng, Raghunathan, & Rubin, 1991).
-  The \eqn{D_3} method currently supports linear models and linear mixed-effects models with a single cluster variable as estimated by \code{lme4} or \code{nlme} (see Laird, Lange, & Stram, 1987).
+  If this method is unavailable, the \eqn{D_4} or \eqn{D_2} statistic is used instead (Chan & Meng, 2019; Li, Meng, Raghunathan, & Rubin, 1991).
 
   This function is essentially a wrapper for \code{\link{testModels}} with the advantage that several models can be compared simultaneously.
-  All model comparisons are likelihood-based.
-  For further options for model comparisons (e.g., Wald-based procedures) and finer control, see \code{testModels}.
+  For a list of supported models and further options for more specific model comparisons, see \code{\link{testModels}}.
+
+  The \code{ariv} argument affects how the average relative increase in variance is calculated (see also \code{\link{testModels}}).
+  Note that the \eqn{D_4} method can fail if the data to which the model was fitted cannot be found.
+  In such a case, the \code{data} argument can be used to specify the list of imputed data sets directly (see also \code{\link{testModels}}).
 
 }
 
 \value{
 
   Returns a list containing the results of each model comparison.
-  A \code{print} method is used for better readable console output. 
+  A \code{print} method is used for better readable output.
 
 }
 

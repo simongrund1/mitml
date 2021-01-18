@@ -1,4 +1,6 @@
-anova.mitml.result <- function(object, ..., method = "D3", data = NULL, ariv = c("default", "positive", "robust")){
+anova.mitml.result <- function(object, ..., method = c("D3", "D4", "D2"),
+                               ariv = c("default", "positive", "robust"),
+                               data = NULL){
 
   # create list of models
   mod.list <- c(list(object), list(...))

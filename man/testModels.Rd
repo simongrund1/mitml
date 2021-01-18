@@ -7,17 +7,19 @@ Performs multi-parameter hypothesis tests for a vector of statistical parameters
 
 \usage{
 
-testModels(model, null.model, method=c("D1","D2","D3"), 
-  use=c("wald","likelihood"), df.com=NULL)
+testModels(model, null.model, method=c("D1","D2","D3","D4"), 
+  use=c("wald","likelihood"), ariv=c("default","positive","robust"), df.com=NULL, data=NULL)
 
 }
 \arguments{
 
   \item{model}{A list of fitted statistical models (see examples).}
   \item{null.model}{A list of fitted (more restrictive) statistical models.}
-  \item{method}{A character string denoting the method by which the test is performed. Can be either \code{"D1"}, \code{"D2"} or \code{"D3"} (see details). Default is \code{"D1"}.}
+  \item{method}{A character string denoting the method by which the test is performed. Can be either \code{"D1"}, \code{"D2"}, \code{"D3"}, or \code{"D4"} (see details). Default is \code{"D1"}.}
   \item{use}{A character string denoting Wald- or likelihood-based based tests. Can be either \code{"wald"} or \code{"likelihood"}. Only used if \code{method="D2"}.}
+  \item{ariv}{A character string denoting how the ARIV is calculated. Can be either \code{"default"}, \code{"positive"}, or \code{"robust"} (see details).}
   \item{df.com}{(optional) A single number or a numeric vector denoting the complete-data degrees of freedom for the hypothesis test. Only used if \code{method="D1"}.}
+  \item{data}{(optional) A list of imputed data sets (see details).}
 
 }
 \details{
@@ -41,14 +43,25 @@ A third method relying on likelihood-based comparisons was suggested by Meng and
 This procedure is referred to as \eqn{D_3} and can be used by setting \code{method="D3"}.
 \eqn{D_3} compares the two models by aggregating the likelihood-ratio test across multiply imputed data sets.
 
-In general, Wald-like hypothesis tests (\eqn{D_1} and \eqn{D_2}) are appropriate if the parameters can be assumed to follow a multivariate normal distribution (e.g., regression coefficients, fixed effects in multilevel models).
-Likelihood-based comparisons (\eqn{D_2} and \eqn{D_3}) are also appropriate in such cases and may also be used for variance components.
+Finally, an improved method for likelihood-ratio tests was recommended by Chan & Meng (2019).
+This method is referred to as \eqn{D_4} and can be used by setting \code{method="D4"}.
+\eqn{D_4} also compares models by pooling the likelihood-ratio test but does so in a more general and efficient manner.
+Note that the \eqn{D_4} method can fail if the data to which the model was fitted cannot be found.
+In such a case, users can either specify the list of imputed data sets directly by specifying the \code{data} argument or refit the model by setting the \code{include.data} argument in \code{\link{with.mitml.list}}.
 
 The function supports different classes of statistical models depending on which \code{method} is chosen.
-\eqn{D_1} supports quite general models as long as they define \code{coef} and \code{vcov} methods (or similar) for extracting the parameter estimates and their estimated covariance matrix. 
-\eqn{D_2} can be used for the same models (if \code{use="wald"}, or alternatively, for models that define a \code{logLik} method (if \code{use="likelihood"}).
-Finally, \eqn{D_3} supports linear models and linear mixed-effects models with a single cluster variable as estimated by \code{lme4} or \code{nlme} (see Laird, Lange, & Stram, 1987).
+\eqn{D_1} supports models that define \code{coef} and \code{vcov} methods (or similar) for extracting the parameter estimates and their estimated covariance matrix. 
+\eqn{D_2} can be used for the same models (if \code{use="wald"} and models that define a \code{logLik} method (if \code{use="likelihood"}).
+\eqn{D_3} supports linear models, linear mixed-effects models (see Laird, Lange, & Stram, 1987) with an arbitrary cluster structed if estimated with \code{lme4} or a single cluster if estimated by \code{nlme}, and structural equation models estimated with \code{lavaan}.
+Finally, \eqn{D_4} supports models that define a \code{logLik} method.
 Support for other statistical models may be added in future releases.
+
+The \eqn{D_4}, \eqn{D_3}, and \eqn{D_2} methods support different estimators of the relative increase in variance (ARIV), which can be specified with the \code{ariv} argument.
+If \code{ariv="default"}, the default estimators are used.
+If \code{ariv="positive"}, the default estimators are used but constrained to take on strictly positive values.
+This is useful if the estimated ARIV is negative.
+If \code{ariv="robust"}, which is available only for \eqn{D_4}, the "robust" estimator proposed by Chan & Meng (2019) is used.
+This method should be used with caution, because it requires much stronger assumptions and may result in liberal inferences if they are violated.
 
 }
 \value{
@@ -60,19 +73,21 @@ A \code{print} method is used for better readable console output.
 
 \note{
 
-The \eqn{D_3} method and the likelihood-based \eqn{D_2} assume that models were fit using maximum likelihood (ML).
+The methods \eqn{D_4}, \eqn{D_3}, and the likelihood-based \eqn{D_2} assume that models were fit using maximum likelihood (ML).
 Models fit using REML are automatically refit using ML.
 
 }
 
 \references{
-Meng, X.-L., & Rubin, D. B. (1992). Performing likelihood ratio tests with multiply-imputed data sets. \emph{Biometrika, 79}, 103-111. 
+Chan, K. W., & Meng, X.-L. (2019). Multiple improvements of multiple imputation likelihood ratio tests. ArXiv:1711.08822 [Math, Stat]. \url{http://arxiv.org/abs/1711.08822}
 
 Laird, N., Lange, N., & Stram, D. (1987). Maximum likelihood computations with repeated measures: Application of the em algorithm. \emph{Journal of the American Statistical Association, 82}, 97-105.
 
 Li, K.-H., Meng, X.-L., Raghunathan, T. E., & Rubin, D. B. (1991). Significance levels from repeated p-values with multiply-imputed data. \emph{Statistica Sinica, 1}, 65-92.
 
 Li, K. H., Raghunathan, T. E., & Rubin, D. B. (1991). Large-sample significance levels from multiply imputed data using moment-based statistics and an F reference distribution. \emph{Journal of the American Statistical Association, 86}, 1065-1073.
+
+Meng, X.-L., & Rubin, D. B. (1992). Performing likelihood ratio tests with multiply-imputed data sets. \emph{Biometrika, 79}, 103-111. 
 
 Reiter, J. P. (2007). Small-sample degrees of freedom for multi-component significance tests with multiple imputation for missing data. \emph{Biometrika, 94}, 502-508.
 
@@ -115,19 +130,6 @@ testModels(fit1, fit0, method="D2", use="likelihood")
 # ... using D3 (likelihood-ratio test, requires ML fit)
 testModels(fit1, fit0, method="D3")
 
-\dontrun{
-# * Example 2: multiparameter test using D3 with nlme
-
-# for D3 to be calculable, the 'data' argument for 'lme' must be
-# can be constructed manually
-
-require(nlme)
-fit0 <- with(implist, lme(ReadAchiev~1, random=~1|ID,
-  data=data.frame(ReadAchiev,ID), method="ML"))
-fit1 <- with(implist, lme(ReadAchiev ~ 1 + ReadDis, random=~ 1|ID,
-  data=data.frame(ReadAchiev,ReadDis,ID), method="ML"))
-
-# multiparameter hypothesis test using D3
-testModels(fit1, fit0, method="D3")
-}
+# ... using D4 (likelihood-ratio test, requires ML fit)
+testModels(fit1, fit0, method="D4")
 }

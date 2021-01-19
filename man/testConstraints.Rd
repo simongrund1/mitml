@@ -47,8 +47,8 @@ If \code{ariv = "positive"}, the default estimators are used but constrained to 
 }
 \value{
 
-Returns a list containing the results of the model comparison, the constrained estimates and standard errors, and the relative increase in variance due to nonresponse (Rubin, 1987).
-A \code{print} method is used for better readable console output. 
+A list containing the results of the model comparison.
+A \code{print} method is used for more readable output. 
 
 }
 

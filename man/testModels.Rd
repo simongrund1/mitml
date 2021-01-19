@@ -65,8 +65,8 @@ This method should be used with caution, because it requires much stronger assum
 }
 \value{
 
-A list containing the results of the model comparison, and the relative increase in variance due to nonresponse (Rubin, 1987).
-A \code{print} method is used for better readable console output. 
+A list containing the results of the model comparison.
+A \code{print} method is used for more readable output. 
 
 }
 

@@ -41,7 +41,7 @@ Support for further models may be added in future releases.
 }
 \value{
 
-A list containing the pooled parameter and inferences, the relative increase in variance due to nonresponse, and the fraction of missing information (Rubin, 1987).
+A list containing the pooled parameter and inferences.
 A \code{print} method is used for more readable output. 
 
 }

@@ -4,23 +4,20 @@ write.mitmlMplus <- function(x, filename, suffix="list", sep="\t", dec=".", na.v
   if(!"mitml"%in%class(x) & !"mitml.list"%in%class(x)) stop("'x' must be of class 'mitml' or 'mitml.list'.")
 
   if("mitml"%in%class(x)){
-    il <- mitmlComplete(x,1:x$iter$m)
-    m <- x$iter$m
-  }else{
-    il <- x
-    m <- length(x)
+    x <- mitmlComplete(x, "all", force.list = TRUE)
   }
+  m <- length(x)
 
-  if(!"list"%in%class(il)) il <- list(il)
+  if(!is.list(x)) x <- list(x)
 
   dnames <- paste(filename, 1:m, ".dat", sep="")
   lname <- paste(filename, suffix, ".dat", sep="")
 
   write.table(dnames, file=lname, col.names=FALSE, row.names=FALSE, quote=FALSE)
 
-  for(ii in 1:length(il)){
+  for(ii in 1:m){
 
-    out <- il[[ii]]
+    out <- x[[ii]]
     # convert factors
     notnum <- which(sapply(out, function(z) !is.numeric(z)))
     conv <- as.list(notnum)

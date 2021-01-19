@@ -5,16 +5,14 @@ write.mitmlSPSS <- function(x, filename, sep="\t", dec=".", na.value=-999, synta
   if(!dec%in%c(",",".")) stop("Only a dot '.' or a comma ',' may be specified as decimal separator.")
 
   if("mitml"%in%class(x)){
-    il <- mitmlComplete(x,0:x$iter$m)
-  }else{
-    il <- x
+    x <- mitmlComplete(x, "all", force.list = TRUE)
   }
 
-  for(ii in 1:length(il)){
-    il[[ii]] <- cbind(ii-1,il[[ii]])
-    colnames(il[[ii]])[1] <- "Imputation_"
+  for(ii in 1:length(x)){
+    x[[ii]] <- cbind(ii-1, x[[ii]])
+    colnames(x[[ii]])[1] <- "Imputation_"
   }
-  out <- do.call(rbind,il)
+  out <- do.call(rbind,x)
   num <- sapply(out,is.numeric)
   chr <- sapply(out,is.character)
   fac <- sapply(out,is.factor)

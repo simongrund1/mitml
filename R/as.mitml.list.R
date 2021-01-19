@@ -3,11 +3,12 @@ as.mitml.list <- function(x){
 
   if(!is.list(x)) stop("Argument must be a 'list'.")
 
-  if(any(!sapply(x,is.data.frame))){
-    x <- lapply(x,as.data.frame)
+  if(any(!sapply(x, is.data.frame))){
+    x <- lapply(x, as.data.frame)
     cat("Note: List entries were converted to class 'data.frame'.\n")
   }
-  class(x) <- c("mitml.list",class(x))
-  x
+
+  class(x) <- c("mitml.list", class(x))
+  return(x)
     
 }

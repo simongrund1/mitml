@@ -124,7 +124,7 @@ testConstraints <- function(model, qhat, uhat, constraints, method = c("D1", "D2
 
   # calculate pooled estimates and covariance matrix (for output)
   Qbar <- apply(newQhat, 1, mean)
-  Ubar <- apply(newUhat, c(1,2), mean)
+  Ubar <- apply(newUhat, c(1, 2), mean)
 
   B <- cov(t(newQhat))
   r <- (1+m^(-1)) * sum(diag(B%*%solve(Ubar))) / k

@@ -23,7 +23,7 @@ subset.mitml.list <- function(x, subset, select, ...){
     lapply(nl, function(i) eval(se, i, parent.frame()))
   }
 
-  res <- lapply(seq_along(x), function(i) x[[i]][rind[[i]], cind[[i]], drop=FALSE])
+  res <- lapply(seq_along(x), function(i) x[[i]][rind[[i]], cind[[i]], drop = FALSE])
   as.mitml.list(res)
   
 }

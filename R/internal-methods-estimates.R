@@ -131,8 +131,8 @@
 
     vc.ind <- which(upper.tri(vc.cc), arr.ind = TRUE)
     for(ii in seq_len(nrow(vc.ind))){
-      vc.ii <- vc.cc[vc.ind[ii, , drop=FALSE]]
-      names(vc.ii) <- paste0(nms[vc.ind[ii,1]], "~~", nms[vc.ind[ii,2]], "|", cc)
+      vc.ii <- vc.cc[vc.ind[ii, , drop = FALSE]]
+      names(vc.ii) <- paste0(nms[vc.ind[ii, 1]], "~~", nms[vc.ind[ii, 2]], "|", cc)
       vc.out <- c(vc.out, vc.ii)
     }
 
@@ -192,8 +192,8 @@
 
     vc.ind <- which(upper.tri(vc.cc), arr.ind = TRUE)
     for(ii in seq_len(nrow(vc.ind))){
-      vc.ii <- vc.cc[vc.ind[ii, , drop=FALSE]]
-      names(vc.ii) <- paste0(nms[vc.ind[ii,1]], "~~", nms[vc.ind[ii,2]], "|", cc)
+      vc.ii <- vc.cc[vc.ind[ii, , drop = FALSE]]
+      names(vc.ii) <- paste0(nms[vc.ind[ii, 1]], "~~", nms[vc.ind[ii, 2]], "|", cc)
       vc.out <- c(vc.out, vc.ii)
     }
 

@@ -1,21 +1,21 @@
-long2mitml.list <- function(x, split, exclude=NULL){
+long2mitml.list <- function(x, split, exclude = NULL){
 # convert data set in "long" format to mitml.list
 
-  i1 <-  which(colnames(x)==split)
+  i1 <-  which(colnames(x) == split)
   f <- x[,i1]
 
   if(!is.null(exclude)){
-    i2 <- if(length(exclude)==1) f!=exclude else !f%in%exclude
-    x <- x[i2,,drop=F]
+    i2 <- if(length(exclude) == 1) f != exclude else !f %in% exclude
+    x <- x[i2, , drop = F]
     f <- f[i2]
     if(is.factor(f)) f <- droplevels(f)
   }
 
-  out <- split(x[,-i1,drop=F], f=f)
+  out <- split(x[, -i1, drop = F], f = f)
   names(out) <- NULL
 
-  class(out) <- c("mitml.list","list")
-  out
+  class(out) <- c("mitml.list", "list")
+  return(out)
 
 }
 

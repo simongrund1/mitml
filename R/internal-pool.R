@@ -6,7 +6,7 @@
 
   # D1
   Qbar <- apply(Qhat, 1, mean)
-  Ubar <- apply(Uhat, c(1,2), mean)
+  Ubar <- apply(Uhat, c(1, 2), mean)
 
   B <- cov(t(Qhat))
   r <- (1+m^(-1))*sum(diag(B%*%solve(Ubar)))/k

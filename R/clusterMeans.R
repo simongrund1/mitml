@@ -1,14 +1,14 @@
-clusterMeans <- function(x, cluster, adj=FALSE, group=NULL){
+clusterMeans <- function(x, cluster, adj = FALSE, group = NULL){
 # calculate cluster means
 
   # get objects if names are given
-  isname <- c(length(x)==1, length(cluster)==1, length(group)==1) &
+  isname <- c(length(x) == 1, length(cluster) == 1, length(group) == 1) &
     c(is.character(x), is.character(cluster), is.character(group))
   if(any(isname)){
     parent <- parent.frame()
-    if(isname[1]) x <- eval(parse(text=x),parent)
-    if(isname[2]) cluster <- eval(parse(text=cluster),parent)
-    if(isname[3]) group <- eval(parse(text=group),parent)
+    if(isname[1]) x <- eval(parse(text = x), parent)
+    if(isname[2]) cluster <- eval(parse(text = cluster), parent)
+    if(isname[3]) group <- eval(parse(text = group), parent)
   }
 
   # prepare group

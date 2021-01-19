@@ -90,16 +90,16 @@
   # fill table
   out <- matrix("", nrow(x)+1, ncol(x)+1)
   out[,1] <- format(c("", row.names), justify = "left")
-  out[1,-1] <- format(col.names, justify = "right", width = width)
-  out[-1,-1] <- format(y, justify = "right", width = width)
+  out[1, -1] <- format(col.names, justify = "right", width = width)
+  out[-1, -1] <- format(y, justify = "right", width = width)
 
   # add labels (if any)
   if(!is.null(labels)){
     labels[nchar(labels) > 0] <- paste0("(", labels[nchar(labels) > 0], ")")
     pl <- format(labels, justify = "left")
     nc <- max(nchar(pl))
-    out[-1,1] <- paste0(out[-1,1], paste0(rep(" ", labels.sep), collapse = ""), pl)
-    out[1,1] <- paste0(out[1,1], paste0(rep(" ", nc + labels.sep), collapse = ""))
+    out[-1, 1] <- paste0(out[-1, 1], paste0(rep(" ", labels.sep), collapse = ""), pl)
+    out[1, 1] <- paste0(out[1, 1], paste0(rep(" ", nc + labels.sep), collapse = ""))
   }
 
   return(out)
@@ -112,7 +112,7 @@
 
   if(is.null(dim(x))) return(x)
 
-  out <- `[`(x,,,...)
+  out <- `[`(x, , , ...)
   dim(out) <- dim(x)[1:2]
   dimnames(out) <- dimnames(x)[1:2]
 
@@ -120,7 +120,7 @@
 
 }
 
-.adiag <- function(x, stacked=FALSE){
+.adiag <- function(x, stacked = FALSE){
 # extract diagonal elements of first two dimensions in three-dimensional array
 # containing either square (default) or stacked matrices
 
@@ -129,11 +129,11 @@
   # indices for diagonal entries (square or stacked-square)
   if(stacked){
     i <- seq_len(d[2]) + d[1]*(seq_len(d[2])-1)
-    i <- outer(i,(seq_len(d[1]/d[2])-1)*d[2],`+`)
-    i <- outer(i,(seq_len(d[3])-1)*d[1]*d[2],`+`)
+    i <- outer(i, (seq_len(d[1]/d[2])-1)*d[2], `+`)
+    i <- outer(i, (seq_len(d[3])-1)*d[1]*d[2], `+`)
   }else{
     i <- seq_len(d[1]) + d[1]*(seq_len(d[1])-1)
-    i <- outer(i,(seq_len(d[3])-1)*d[1]^2,`+`)
+    i <- outer(i, (seq_len(d[3])-1)*d[1]^2, `+`)
   }
 
   x[as.vector(i)]

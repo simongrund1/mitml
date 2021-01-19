@@ -52,7 +52,7 @@
     if(isMatrix){
       q <- nrow(psi[[1]])
       pp <- array(unlist(psi), dim = c(q, q, m))
-      pp <- apply(pp, c(1,2), mean)
+      pp <- apply(pp, c(1, 2), mean)
       rownames(pp) <- colnames(pp) <- names(psi[[1]])
       psi.bar[[i]] <- pp
     }else{
@@ -448,10 +448,10 @@
     # get parameter table
     pt <- lavaan::parTable(object)
     isFree <- pt[["free"]] > 0
-    isConstraint <- pt[["op"]] %in% c(":=","==","<",">")
+    isConstraint <- pt[["op"]] %in% c(":=", "==", "<", ">")
 
     # fix free parameters to user-defined values
-    pt[isFree, c("est","se","start")] <- NA
+    pt[isFree, c("est", "se", "start")] <- NA
     pt[isFree, "ustart"] <- parameters$free[pt[isFree, "free"]]
     pt[["free"]] <- 0
     pt[["user"]] <- 1

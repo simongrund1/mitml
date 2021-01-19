@@ -161,7 +161,7 @@ anova.mitml.result <- function(object, ..., method = c("D3", "D4", "D2"),
   )
 
   class(out) <- "mitml.anova"
-  out
+  return(out)
 
 }
 

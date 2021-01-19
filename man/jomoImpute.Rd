@@ -1,10 +1,11 @@
 \name{jomoImpute}
 \alias{jomoImpute}
 \title{Impute single-level and multilevel missing data using \code{jomo}}
-\description{This function provides an interface to the \code{jomo} package, which uses the MCMC algorithms presented in Carpenter & Kenward (2013).
-Through this wrapper function, single-level and multilevel imputations can be generated for (mixed) categorical and continuous variables (Goldstein et al., 2009).
-The multilevel procedures support imputation of missing data at level 1 and 2 as well as imputation using random (residual) covariance matrices (Yucel, 2011).
-Imputations can be generated using \code{type} or \code{formula}, which offer different options for model specification.}
+\description{
+Performs single- and multilevel imputation for (mixed) continuous and categorical data using the \code{jomo} package
+Supports imputation of missing data at level 1 and 2 as well as imputation using random (residual) covariance matrices.
+See 'Details' for further information.
+}
 
 \usage{
 
@@ -17,26 +18,26 @@ jomoImpute(data, type, formula, random.L1 = c("none", "mean", "full"),
 
 \arguments{
 
-  \item{data}{A data frame containing incomplete and auxiliary variables, the cluster indicator variable, and any other variables that should be present in the imputed datasets.}
-  \item{type}{An integer vector specifying the role of each variable in the imputation model or a list of two vectors specifying a two-level model (see details).}
-  \item{formula}{A formula specifying the role of each variable in the imputation model or a list of two formulas specifying a two-level model. The basic model is constructed by \code{model.matrix}, which allows including derived variables in the imputation model using \code{I()} (see details and examples).}
-  \item{random.L1}{A character string denoting if the covariance matrix of residuals should vary across groups and how the values of these matrices are stored (see details). Default is to \code{"none"}, assuming a common covariance matrix across clusters.}
-  \item{n.burn}{The number of burn-in iterations before any imputations are drawn. Default is to 5,000.}
-  \item{n.iter}{The number of iterations between imputations. Default is to 100.}
-  \item{m}{The number of imputed data sets to generate. Default is to 10.}
-  \item{group}{(optional) A character string denoting the name of an additional grouping variable to be used with the \code{formula} argument. When specified, the imputation model is run separately within each of these groups.}
-  \item{prior}{(optional) A list with components \code{Binv}, \code{Dinv}, and \code{a} for specifying prior distributions for the covariance matrix of random effects and the covariance matrix of residuals (see details). Default is to using least-informative priors.}
-  \item{seed}{(optional) An integer value initializing R's random number generator for reproducible results. Default is to using the global seed.}
-  \item{save.pred}{(optional) Logical flag indicating if variables derived using \code{formula} should be included in the imputed data sets. Default is to \code{FALSE}.}
-  \item{keep.chains}{(optional) A character string denoting which parameter chains to save. Default is to save all chains (see details).}
-  \item{silent}{(optional) Logical flag indicating if console output should be suppressed. Default is to \code{FALSE}.}
+  \item{data}{A data frame containing the incomplete data, the auxiliary variables, the cluster indicator variable, and any other variables that should be included in the imputed datasets.}
+  \item{type}{An integer vector specifying the role of each variable in the imputation model or a list of two vectors specifying a two-level model (see 'Details').}
+  \item{formula}{A formula specifying the role of each variable in the imputation model or a list of two formulas specifying a two-level model. The basic model is constructed by \code{model.matrix}, which allows including derived variables in the imputation model using \code{I()} (see 'Details' and 'Examples').}
+  \item{random.L1}{A character string denoting if the covariance matrix of residuals should vary across groups and how the values of these matrices are stored (see 'Details'). Can be \code{"none"} (common covariance matrix), \code{"mean"} (random covariance matrix, storing only mean values), or \code{"full"} (random covariance matrix, storing all values). Default is \code{"none"}.}
+  \item{n.burn}{The number of burn-in iterations before any imputations are drawn. Default is 5,000.}
+  \item{n.iter}{The number of iterations between imputations. Default is 100.}
+  \item{m}{The number of imputed data sets to generate. Default is 10.}
+  \item{group}{(optional) A character string denoting the name of an additional grouping variable to be used with the \code{formula} argument. If specified, the imputation is run separately within each of these groups.}
+  \item{prior}{(optional) A list with components \code{Binv}, \code{Dinv}, and \code{a} for specifying prior distributions for the covariance matrix of random effects and the covariance matrix of residuals (see 'Details'). Default is to use least-informative priors.}
+  \item{seed}{(optional) An integer value initializing R's random number generator for reproducible results. Default is to use the global seed.}
+  \item{save.pred}{(optional) Logical flag indicating if variables derived using \code{formula} should be included in the imputed data sets. Default is \code{FALSE}.}
+  \item{keep.chains}{(optional) A character string denoting which chains of the MCMC algorithm to store. Can be \code{"full"} (stores chains for all parameters) or \code{"diagonal"} (stores chains for fixed effects and diagonal entries of the covariance matrices). Default is \code{"full"} (see 'Details').}
+  \item{silent}{(optional) Logical flag indicating if console output should be suppressed. Default is \code{FALSE}.}
 
 }
 
 \details{
 
-This function serves as an interface to the \code{jomo} package and supports imputation of single-level and multilevel continuous and categorical data.
-In order for categorical variables to be detected correctly, these must be formatted as a \code{factor} variables (see examples).
+This function serves as an interface to the \code{jomo} package and supports imputation of single-level and multilevel continuous and categorical data at both level 1 and 2 (see Carpenter & Kenward, 2013; Goldstein et al., 2009).
+In order for categorical variables to be detected correctly, these must be formatted as a \code{factor} variables (see 'Examples').
 The imputation model can be specified using either the \code{type} or the \code{formula} argument.
 
 The \code{type} interface is designed to provide quick-and-easy imputations using \code{jomo}. The \code{type} argument must be an integer vector denoting the role of each variable in the imputation model:
@@ -50,10 +51,11 @@ The \code{type} interface is designed to provide quick-and-easy imputations usin
 }
 At least one target variable and, for multilevel imputation, the cluster indicator must be specified.
 If the cluster indicator is omitted, single-level imputation will be performed.
-The intercept is automatically included both as a fixed and random effect.
+The intercept is automatically included as both a fixed and (for multilevel models) a random effect.
 If a variable of type \code{-1} is found, then separate imputations are performed within each level of that variable.
 
-The \code{formula} argument is intended as more flexible and feature-rich interface to \code{jomo}. Specifying the \code{formula} argument is similar to specifying other formulae in R.
+The \code{formula} argument is intended as a more flexible and feature-rich interface to \code{jomo}.
+Specifying the \code{formula} argument is similar to specifying other formulae in R.
 Given below is a list of operators that \code{jomoImpute} currently understands:
 \itemize{
   \item{\code{~}: separates the target (left-hand) and predictor (right-hand) side of the model}
@@ -62,17 +64,17 @@ Given below is a list of operators that \code{jomoImpute} currently understands:
   \item{\code{|}: denotes cluster-specific random effects and specifies the cluster indicator (e.g., \code{1|ID})}
   \item{\code{I()}: defines functions to be interpreted by \code{model.matrix}}
 }
-If the cluster indicator is omitted, single-level imputation will be run.
+If the cluster indicator is omitted, single-level imputation will be performed.
 For multilevel imputation, predictors are allowed to have fixed effects, random effects, or both on all target variables.
-The intercept is automatically included both as a fixed and, for multilevel imputation, a random effect.
-Both can be constrained if necessary (see \code{\link{panImpute}}).
+The intercept is automatically included as both a fixed and (for multilevel models) a random effect.
+Both can be suppressed if needed (see \code{\link{panImpute}}).
 Note that, when specifying random effects other than the intercept, these will \emph{not} be automatically added as fixed effects and must be included explicitly.
 Any predictors defined by \code{I()} will be used for imputation but not included in the data set unless \code{save.pred = TRUE}.
 
-If missing data occur at both levels of the sample (level 1 and level 2), then a list of two \code{formula}s or \code{type}s may be provided.
-The first element of this list denotes the imputation model for variables at level 1.
-The second element denotes the imputation model for variables at level 2.
-In such a case, missing values are imputed jointly at both levels (see examples, see also Carpenter and Kenward, 2013; Goldstein et al., 2009).
+If missing data occur at both level 1 and 2, the imputation model is specified as a list of two \code{formula}s or \code{type}s, respectively.
+The first element of this list denotes the model specification for variables at level 1.
+The second element denotes the model specification for variables at level 2.
+Missing data are imputed jointly at both levels (see 'Examples', see also Carpenter and Kenward, 2013; Goldstein et al., 2009).
 
 It is possible to model the covariance matrix of residuals at level 1 as random across clusters (Yucel, 2011; Carpenter & Kenward, 2013).
 The \code{random.L1} argument determines this behavior and how the values of these matrices are stored.
@@ -80,11 +82,11 @@ If set to \code{"none"}, a common covariance matrix is assumed across groups (si
 If set to \code{"mean"}, the covariance matrices are random, but only the average covariance matrix is stored at each iteration.
 If set to \code{"full"}, the covariance matrices are random, and all variances and covariances from all clusters are stored.
 
-In order to run separate imputations for each level of an additional grouping variable, the \code{group} argument may be used.
-The name of the grouping variable must be given in quotes.
+In order to run separate imputations for each level of an additional grouping variable, the \code{group} argument can be used.
+The name of the grouping variable must be given as a character string (i.e., in quotation marks).
 
-As a default prior, \code{jomoImpute} uses "least informative" inverse-Wishart priors for the covariance matrix of random effects (and residuals at level 2) and the covariance matrix of residuals at level 1, that is, with minimum degrees of freedom (largest dispersion) and identity matrices for scale.
-For better control, the \code{prior} argument may be used for specifying alternative prior distributions.
+The default prior distribution for the covariance matrices in \code{jomoImpute} are "least informative" inverse-Wishart priors with minimum positive degrees of freedom (largest dispersion) and the identity matrix for scale.
+The \code{prior} argument can be used to specify alternative prior distributions.
 These must be supplied as a list containing the following components:
 \itemize{
   \item{\code{Binv}: scale matrix for the covariance matrix of residuals at level 1}
@@ -95,21 +97,21 @@ Note that \code{jomo} does not allow for the degrees of freedom for the inverse-
 These are always set to the lowest value possible (largest dispersion) or determined iteratively if the residuals at level 1 are modeled as random (see above).
 For single-level imputation, only \code{Binv} is relevant.
 
-In imputation models with many parameters, the number of parameter chains being saved can be reduced with the \code{keep.chains} argument (see \code{\link{panImpute}}).
+In imputation models with many parameters, the number of chains in the MCMC algorithm being stored can be reduced with the \code{keep.chains} argument (see also \code{\link{panImpute}}).
 This setting influences the storage mode of parameters (e.g., dimensions and indices of arrays) and should be used with caution.
 
 }
 
 \value{
 
-Returns an object of class \code{mitml}, containing the following components:
+An object of class \code{mitml}, containing the following components:
 
   \item{data}{The original (incomplete) data set, sorted according to the cluster variable and (if given) the grouping variable, with several attributes describing the original order (\code{"sort"}), grouping (\code{"group"}) and factor levels of categorical variables.}
   \item{replacement.mat}{A matrix containing the multiple replacements (i.e., imputations) for each missing value. The replacement matrix contains one row for each missing value and one one column for each imputed data set.}
   \item{index.mat}{A matrix containing the row and column index for each missing value. The index matrix is used to \emph{link} the missing values in the data set with their corresponding rows in the replacement matrix.}
   \item{call}{The matched function call.}
   \item{model}{A list containing the names of the cluster variable, the target variables, and the predictor variables with fixed and random effects, at level 1 and level 2, respectively.}
-  \item{random.L1}{A character string denoting the handling of the (random) covariance matrix of residuals at level 1 (see details).}
+  \item{random.L1}{A character string denoting the handling of the (random) covariance matrix of residuals at level 1 (see 'Details').}
   \item{prior}{The prior parameters used in the imputation model.}
   \item{iter}{A list containing the number of burn-in iterations, the number of iterations between imputations, and the number of imputed data sets.}
   \item{par.burnin}{A multi-dimensional array containing the parameters of the imputation model from the burn-in phase.}
@@ -119,7 +121,7 @@ Returns an object of class \code{mitml}, containing the following components:
 
 \note{
 
-For objects of class \code{mitml}, methods for the generic functions \code{print}, \code{summary}, and \code{plot} have been defined.
+For objects of class \code{mitml}, methods for the generic functions \code{print}, \code{summary}, and \code{plot} are available to inspect the fitted imputation model.
 \code{mitmlComplete} is used for extracting the imputed data sets.
 
 }
@@ -137,7 +139,7 @@ Yucel, R. M. (2011). Random covariances and mixed-effects models for imputing mu
 
 \examples{
 # NOTE: The number of iterations in these examples is much lower than it
-# should be! This is done in order to comply with CRAN policies, and more
+# should be. This is done in order to comply with CRAN policies, and more
 # iterations are recommended for applications in practice!
 
 data(studentratings)

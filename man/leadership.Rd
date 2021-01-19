@@ -3,11 +3,10 @@
 \docType{data}
 \title{Example data set on leadership style and job satisfaction}
 \description{
-This data set is a slightly altered version of the data set simulated by Paul D. Bliese as described in Klein et al. (2000).
-The data set consists of 750 employees, nested within 50 work groups.
-The data set features employees' ratings on negative leadership style, job satisfaction, and workload as well as a measure for each work group's cohesion.
+Data set based on the data simulated by Paul D. Bliese as described in Klein et al. (2000) with slight modifications.
+The data set consists of 750 employees, nested within 50 work groups, and includes employees' ratings on negative leadership style, job satisfaction, and workload as well as a measure for each work group's cohesion.
 
-The original data set is available in the \code{multilevel} package and was altered by (a) transforming workload into a categorical variable, (b) transforming cohesion into a group-level variable, and (c) by inducing missing values.
+The original data set is available in the \code{multilevel} package and was modified by (a) transforming workload into a categorical variable, (b) transforming cohesion into a group-level variable, and (c) by inducing missing values.
 }
 \usage{data(leadership)}
 \format{A data frame containing 750 observations on 5 variables.}

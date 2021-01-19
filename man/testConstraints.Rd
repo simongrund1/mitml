@@ -2,7 +2,7 @@
 \alias{testConstraints}
 \title{Test functions and constraints of model parameters}
 \description{
-Performs hypothesis tests for arbitrary functions of a parameter vector using the Delta method.
+Performs hypothesis tests for arbitrary functions of the model parameters using the Delta method.
 }
 
 \usage{
@@ -13,36 +13,36 @@ testConstraints(model, qhat, uhat, constraints, method = c("D1", "D2"),
 }
 \arguments{
 
-  \item{model}{A list of fitted statistical models (see examples).}
-  \item{qhat, uhat}{Two matrices/arrays or lists containing estimates of the parameter vector and its covariance matrix, respectively, for each imputed data set (see examples).}
-  \item{constraints}{A character vector specifying constraints or functions of the vector of model parameters to be tested.}
-  \item{method}{A character string denoting the method by which the test is performed. Can be either \code{"D1"} or \code{"D2"} (see details). Default is to \code{"D1"}.}
-  \item{ariv}{A character string denoting how the ARIV is calculated. Can be either \code{"default"} or \code{"positive"} (see details).}
-  \item{df.com}{(optional) A single number or a numeric vector denoting the complete-data degrees of freedom for the hypothesis test. Only used if \code{method = "D1"}.}
+  \item{model}{A list of fitted statistical models as produced by \code{\link{with.mitml.list}} or similar.}
+  \item{qhat}{A matrix or list containing the point estimates of the parameters for each imputed data set (see 'Details').}
+  \item{uhat}{An array or list containing the variance-covariance matrix of the parameters for each imputed data set (see 'Details').}
+  \item{constraints}{A character vector specifying constraints or functions of the vector of model parameters to be tested (see 'Details').}
+  \item{method}{A character string denoting the method by which the test is performed. Can be \code{"D1"} or \code{"D2"} (see 'Details'). Default is \code{"D1"}.}
+  \item{ariv}{A character string denoting how the ARIV is calculated. Can be \code{"default"} or \code{"positive"} (see 'Details').}
+  \item{df.com}{(optional) A single number or a numeric vector denoting the complete-data degrees of freedom for the hypothesis test (see 'Details'). Only used if \code{method = "D1"}.}
 
 }
 \details{
 
-This function is similar in functionality to \code{\link{testModels}} but extended to arbitrary functions (or constraints) of the model parameters.
-The function is based on the Delta method (e.g., Casella & Berger, 2002) according to which any function of the parameters can be tested using Wald-like methods, assuming that their sampling distribution is approximately normal.
-It is assumed that the parameters can be extracted using \code{coef} and \code{vcov} methods from the fitted models (or similar; e.g., regression coefficients, fixed effects in multilevel models)
-In cases where this is not possible, hypothesis tests can be carried out using user-supplied matrices/arrays or lists (\code{qhat} and \code{uhat}, see examples).
+This function performs tests of arbitrary functions (or constraints) of the model parameters using similar methods as \code{\link{testModels}}.
+The function relies on the Delta method (e.g., Casella & Berger, 2002) for testing functions of the parameters and assumes that their sampling distribution is approximately normal.
+The parameters can either be extracted automatically from the fitted statistical models (\code{model}) or provided manually as matrices, arrays, or lists (\code{qhat} and \code{uhat}, see 'Examples').
 
-Constraints and functions of the model parameters can be specified in the \code{constraints} argument.
-The constraints must be supplied as a character vector, where each string denotes a function or a constraint to be tested (see examples).
+Constraints and other functions of the model parameters are specified in the \code{constraints} argument.
+The constraints must be supplied as a character vector, where each string denotes a function or a constraint to be tested (see 'Examples').
 
-The Wald-like tests that are carried out by \code{testConstraints} can be aggregated across data sets with the two methods \eqn{D_1} (Li, Raghunathan & Rubin, 1991) and \eqn{D_2} (Li, Meng, Raghunathan & Rubin, 1991), where \eqn{D_1} operates on the constrained estimates and standard errors, and \eqn{D_2} operates on the Wald-statistics (for an explanation, see \code{testModels}).
+The Wald-like tests that are carried out by \code{testConstraints} are pooled across the imputed data sets with the \eqn{D_1} (Li, Raghunathan & Rubin, 1991) or \eqn{D_2} (Li, Meng, Raghunathan & Rubin, 1991) method, where \eqn{D_1} operates on the constrained point and variance estimates, and \eqn{D_2} operates on the Wald-statistics (for additional details, see \code{testModels}).
 The pooled estimates and standard errors reported in the output are always based on \eqn{D_1}.
 
-For \eqn{D_1}, the complete-data degrees of freedom can be adjusted for smaller samples by specifying \code{df.com}.
+For \eqn{D_1}, the complete-data degrees of freedom can be adjusted for smaller samples by specifying \code{df.com} (see \code{testModels}).
 
 This function supports general statistical models that define \code{coef} and \code{vcov} methods (e.g., \code{lm}, \code{glm}, \code{lavaan} and others) as well as multilevel models estimated with \code{lme4} or \code{nlme} and GEEs estimated with \code{geepack}.
-The arguments \code{qhat} and \code{uhat} allow for more general hypothesis tests regardless of model class.
+The arguments \code{qhat} and \code{uhat} provide a general method for pooling parameter estimates regardless of model type (see 'Examples').
 Support for further models may be added in future releases.
 
-The \code{ariv} argument determines how the average relative increase in variance (ARIV) is calculated.
+The \code{ariv} argument determines how the average relative increase in variance (ARIV) is calculated (see \code{testModels}).
 If \code{ariv = "default"}, the default estimators are used.
-If \code{ariv = "positive"}, the default estimators are used but constrained to take on strictly positive values (for additional details, see \code{\link{testModels}}.
+If \code{ariv = "positive"}, the default estimators are used but constrained to take on strictly positive values.
 
 }
 \value{
@@ -77,8 +77,9 @@ fit.lm <- with(implist, lm(SchClimate ~ ReadDis + MathDis))
 # apply Rubin's rules
 testEstimates(fit.lm)
 
-# * Example 1: test 'identity' function of two parameters
-# multi-parameter hypothesis test, equivalent to model comparison
+# * Example 1: test 'identity' function of two parameters (automatic)
+# test equivalent to model comparison with a restricted model (without 'ReadDis'
+# and 'MathDis')
 
 cons <- c("ReadDis", "MathDis")
 testConstraints(fit.lm, constraints = cons)
@@ -89,25 +90,27 @@ testConstraints(fit.lm, constraints = cons, df.com = 749)
 # ... using D2
 testConstraints(fit.lm, constraints = cons, method = "D2")
 
-# * Example 2: test for equality of two effects
-# tests the hypothesis that the effects of 'ReadDis' and 'MathDis'
+# * Example 2: test for equality of two parameters
+# tests the hypothesis that the coefficients pertaining to 'ReadDis' and 'MathDis'
 # are equal (ReadDis = MathDis)
 
 cons <- c("ReadDis-MathDis")
 testConstraints(fit.lm, constraints = cons)
 
 # * Example 3: test against a fixed value
-# tests the hypothesis that the effect of "ReadDis" is one (ReadDis = 1)
+# tests the hypothesis that the coefficient of "ReadDis" is equal to one
+# (i.e., 'ReadDis' - 1 == 0)
 
 cons <- c("ReadDis-1")
 testConstraints(fit.lm, constraints = cons)
 
-# * Example 4: test 'identity' using arrays and list
+# * Example 4: test 'identity' function of two parameters (qhat, uhat)
 
 fit.lm <- with(implist, lm(SchClimate ~ ReadDis + MathDis))
 
-cons <- c("ReadDis", "MathDis")
 qhat <- sapply(fit.lm, coef)
 uhat <- sapply(fit.lm, function(x) vcov(x), simplify = "array")
+
+cons <- c("ReadDis", "MathDis")
 testConstraints(qhat = qhat, uhat = uhat, constraints = cons)
 }

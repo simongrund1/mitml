@@ -15,28 +15,27 @@ write.mitmlSPSS(x, filename, sep = "\t", dec = ".", na.value = -999, syntax = TR
 \arguments{
 
   \item{x}{An object of class \code{mitml} or \code{mitml.list} as produced by \code{panImpute}, \code{jomoImpute}, \code{mitmlComplete}, or similar).}
-  \item{filename}{Basic file name of the data and syntax files, to be specified without file extension.}
+  \item{filename}{File base name of the data and syntax files, specified without file extension.}
   \item{sep}{The field separator.}
   \item{dec}{The decimal separator.}
   \item{na.value}{A numeric value coding the missing data in the resulting data file.}
-  \item{syntax}{A logical flag indicating if an SPSS syntax file should be generated. This file contains instructions for SPSS for reading in the data file. Default is to \code{TRUE}.}
-  \item{locale}{(optional) A character string specifying the localization to be used in SPSS (e.g., \code{"en_US"}, \code{"de_DE"}). This argument may be specified if SPSS reads the data incorrectly due to conflicting locale settings.}
+  \item{syntax}{A logical flag indicating if an SPSS syntax file should be generated. This file contains instructions for SPSS for reading in the data file. Default is \code{TRUE}.}
+  \item{locale}{(optional) A character string specifying the localization to be used in SPSS (e.g., \code{"en_US"}, \code{"de_DE"}; see 'Details').}
 
 }
 
 \details{
 
-Multiply imputed data sets in SPSS are contained in a single file, in which an \code{Imputation_} variable separates the original data and the various imputed data sets.
-During export, factors are converted to numeric, whereas character variables are left "as is".
+In SPSS, multiply imputed data are contained in a single file, in which an \code{Imputation_} variable separates the original data and the various imputed data sets.
+During export, factors are converted to numeric, whereas character variables are left ``as is''.
 
 By default, \code{write.mitmlSPSS} generates a raw text file containing the data, along with a syntax file containing instructions for SPSS.
-This syntax file mimics SPSS's functionality to read text files but circumvents certain problems that may occur when using the GUI.
-In order to read in the data, the syntax file must be opened and executed using SPSS.
-The syntax file may be altered manually if problems occur, for example, if the file path of the data file is not correctly represented in the syntax.
+This syntax file mimics SPSS's functionality to read text files with sensible settings.
+In order to read in the data, the syntax file must be opened and executed using SPSS, or open using the GUI.
+Manual changes to the syntax file can be required, for example, if the file path of the data file is not correctly represented in the syntax.
+The \code{locale} argument can be used to ensure that SPSS reads the data in the correct locale.
 
 Alternatively, \code{\link{write.mitmlSAV}} may be used for exporting directly to the SPSS native \code{.sav} format.
-However, this may offer less control over the data format.
-
 }
 
 \value{
@@ -46,7 +45,7 @@ None (invisible \code{NULL}).
 }
 
 \references{
-IBM Corp. (2013). \emph{IBM SPSS Statistics for Windows, Version 22.0}. Armonk, NY: IBM Corp
+IBM Corp. \emph{IBM SPSS Statistics for Windows}. Armonk, NY: IBM Corp
 }
 
 \author{Simon Grund}

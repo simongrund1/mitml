@@ -21,7 +21,7 @@ Computes confidence intervals on the basis of the final parameter estimates and 
 }
 \details{
 
-This function calculates confidence intervals with the given confidence level for the specified parameters on the basis of a $t$-distribution, with estimates, standard errors, and degrees of freedom as returned by \code{testEstimates}.
+This function computes confidence intervals with the given confidence level for the pooled parameters on the basis of a \eqn{t}-distribution, with estimates, standard errors, and degrees of freedom as returned by \code{\link{testEstimates}}.
 
 }
 \value{
@@ -45,7 +45,7 @@ implist <- mitmlComplete(imp)
 fit <- with(implist, lm(ReadDis ~ 1 + ReadAchiev))
 est <- testEstimates(fit)
 
-# calculate confidence intervals
+# compute confidence intervals
 confint(est)
 
 # ... with different confidence levels

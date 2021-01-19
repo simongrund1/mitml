@@ -1,23 +1,29 @@
 \name{as.mitml.list}
 \alias{as.mitml.list}
 \title{Convert a list of data sets to \code{mitml.list}}
-\description{This function adds a \code{mitml.list} class attribute to a list of data frames. The resulting object can be used in further analyses.}
+\description{
+This function adds a \code{mitml.list} class attribute to a list of data frames. The resulting object can be used in further analyses.
+}
+
 \usage{
 
 as.mitml.list(x)
 
 }
+
 \arguments{
 
   \item{x}{A list of data frames.}
 
 }
+
 \value{
 
 The original list with an additional class attribute \code{mitml.list}.
-The list entries are converted to \code{data.frame} if necessary, in which case a note is printed.
+The list entries are converted into a \code{data.frame} if necessary, in which case a note is printed.
 
 }
+
 \author{Simon Grund}
 \seealso{\code{\link{is.mitml.list}}, \code{\link{long2mitml.list}}}
 

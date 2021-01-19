@@ -1,23 +1,29 @@
 \name{is.mitml.list}
 \alias{is.mitml.list}
 \title{Check if an object is of class \code{mitml.list}}
-\description{This function checks if its argument is a list of class \code{mitml.list}.}
+\description{
+This function checks if its argument is a list of class \code{mitml.list}.
+}
+
 \usage{
 
 is.mitml.list(x)
 
 }
+
 \arguments{
 
   \item{x}{An R object.}
 
 }
+
 \value{
 
-Either \code{TRUE} or \code{FALSE}.
+\code{TRUE} or \code{FALSE}.
 A warning message is displayed if the contents of \code{x} do not appear to be data frames.
 
 }
+
 \author{Simon Grund}
 \seealso{\code{\link{as.mitml.list}}}
 

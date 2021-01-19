@@ -15,15 +15,15 @@ Generates diagnostic plots for assessing the convergence and autocorrelation beh
 
 \arguments{
 
-  \item{x}{An object of class \code{mitml} as produced by \code{panImpute} and \code{jomoImpute}.}
+  \item{x}{An object of class \code{mitml} as produced by \code{panImpute} or \code{jomoImpute}.}
   \item{print}{A character vector containing one or several of \code{"beta"}, \code{"beta2"}, \code{"psi"} or \code{"sigma"} denoting which parameters should be plotted. Default is to plot all parameters.}
-  \item{pos}{Either \code{NULL} or an integer vector denoting a specific entry in either \code{"beta"}, \code{"beta2"}, \code{"psi"} or \code{"sigma"}. Default is to \code{NULL} plotting all entries.}
-  \item{group}{Either \code{"all"} or an integer denoting for which group plots should be generated. Used only when group-wise imputation was used. Default is to \code{"all"}.}
-  \item{trace}{One of \code{"imputation"}, \code{"burnin"} or \code{"all"} denoting which part of the parameter chain should be used for the trace plot. Default is to \code{"imputation"}, which plots only the iterations after burn-in.}
-  \item{thin}{An integer denoting the thinning factor that is applied before plotting. Default is to \code{1}, plotting the full chain.}
+  \item{pos}{Either \code{NULL} or an integer vector denoting a specific entry in \code{"beta"}, \code{"beta2"}, \code{"psi"} or \code{"sigma"}. Default is \code{NULL}, which plots all entries.}
+  \item{group}{Either \code{"all"} or an integer denoting for which group the plots should be generated. Used only when groupwise imputation was used. Default is \code{"all"}.}
+  \item{trace}{One of \code{"imputation"}, \code{"burnin"} or \code{"all"} denoting which part of the chain should be used for the trace plot. Default is \code{"imputation"}, which plots only the iterations after burn-in.}
+  \item{thin}{An integer denoting the thinning factor that is applied before plotting. Default is \code{1}, which corresponds to no thinning.}
   \item{smooth}{A numeric value denoting the smoothing factor for the trend line in trace plots. Higher values correspond to less smoothing. Default is \code{3}. If set to \code{0} or \code{NULL}, the trend line is suppressed.}
-  \item{n.Rhat}{An integer denoting the number of sequences used for calculating the potential scale reduction factor. Default is \code{3}.}
-  \item{export}{(optional) A character string specifying if plots should be exported to file. If \code{"png"} or \code{"pdf"}, then plots are printed into a folder named "mitmlPlots" in the current directory using either the \code{png} or \code{pdf} device. Default is to \code{"none"}, which does not export files.}
+  \item{n.Rhat}{An integer denoting the number of segments of each chain used for calculating the potential scale reduction factor. Default is \code{3}.}
+  \item{export}{(optional) A character string specifying if plots should be exported to a file. If \code{"png"} or \code{"pdf"}, then plots are printed into a folder named "mitmlPlots" in the current directory using either the \code{png} or the \code{pdf} device. Default is \code{"none"}, which does not export files.}
   \item{dev.args}{(optional) A named list containing additional arguments that are passed to the graphics device.}
   \item{\dots}{Parameters passed to the plotting functions.}
 
@@ -34,8 +34,8 @@ Generates diagnostic plots for assessing the convergence and autocorrelation beh
 The \code{plot} method generates a series of plots for the parameters of the imputation model which can be used for diagnostic purposes.
 In addition, a short summary of the parameter chain is displayed.
 
-Setting \code{print} to \code{"beta"}, \code{"beta2"}, \code{"psi"} and \code{"sigma"} will plot the fixed effects, the variances and covariances of random effects, and the variances and covariances of residuals, respectively.
-Here, \code{"beta2"} refers to the fixed effects for target variables at level 2 and is only used when imputations were carried out using a two-level model (\code{\link{jomoImpute}}).
+Setting \code{print} to \code{"beta"}, \code{"beta2"}, \code{"psi"} and \code{"sigma"} will plot the fixed effects, the variances and covariances of the random effects, and the variances and covariances of the residuals, respectively.
+In this context, \code{"beta2"} refers to the fixed effects for target variables at level 2 and is only used when a two-part model was specified in (\code{\link{jomoImpute}}).
 Each plotting window contains a trace plot (upper left), an autocorrelation plot (lower left), a kernel density approximation of the posterior distribution (upper right), and a posterior summary (lower right).
 The summary includes the following quantities:
 \describe{
@@ -48,14 +48,14 @@ The summary includes the following quantities:
   \item{\code{ACF-k}:}{Smoothed autocorrelation at lag \eqn{k}, where \eqn{k} is the number of iterations between imputations (see \code{\link{summary.mitml}})}
 }
 The \code{trace} and \code{smooth} arguments can be used to influence how the trace plot is drawn and what part of the chain should be used for it.
-The \code{thin} argument can be used for thinning the chain before plotting, in which case the number of data points is reduced in the trace plot, and the autocorrelation is calculated up to lag \eqn{k/}\code{thin} (see above).
-The \code{n.Rhat} argument controls the number of sequences that are used for calculating the potential scale reduction factor (\eqn{\hat{R}}) in each plot (see \code{summary.mitml}).
+The \code{thin} argument can be used for thinning the chain before plotting, in which case the number of data points is reduced in the trace plot, and the autocorrelation is calculated up to lag \eqn{k/thin} (see above).
+The \code{n.Rhat} argument controls the number of segments that are used for calculating the potential scale reduction factor (\eqn{\hat{R}}) in each plot (see \code{summary.mitml}).
 Further aguments to the graphics device are supplied using the \code{dev.args} argument.
 
-The \code{plot} function calculates and displays diagnostic information primarily for the imputation phase (i.e., for iterations after burn-in).
+The \code{plot} function computes and displays diagnostic information primarily for the imputation phase (i.e., for iterations after burn-in).
 This is the default in the \code{plot} function and the recommended method for most users.
-However, note that, when overriding the default using \code{trace = "burnin"}, the posterior summary and the trace plots do not convey the necessary information to establish convergence.
-When \code{trace = "all"}, the full chain is displayed with emphasis on the imputation phase, and the posterior summary is calculated based only on iterations after burn-in as recommended.
+If \code{trace = "all"}, the full chain is displayed with emphasis on the imputation phase, and the posterior summary is calculated based on only the iterations after burn-in (as recommended).
+If \code{trace = "burnin"}, the posterior summary and the trace plots are calculated based on only the burn-on interations, which is generally not sufficient to establish convergence and should be used with caution.
 
 }
 \note{

@@ -13,35 +13,35 @@ Provides summary statistics and additional information on imputations in objects
 
 \arguments{
 
-  \item{object}{An object of class \code{mitml} as produced by \code{panImpute} and \code{jomoImpute}.}
-  \item{n.Rhat}{(optional) An integer denoting the number of sequences used for calculating the potential scale reduction factor. Default is to \code{3}.}
-  \item{goodness.of.appr}{(optional) A logical flag indicating if the goodness of approximation should be printed. Default is to \code{FALSE} (see details).}
-  \item{autocorrelation}{(optional) A logical flag indicating if the autocorrelation should be printed. Default is to \code{FALSE} (see details).}
-  \item{\dots}{Not being used.}
+  \item{object}{An object of class \code{mitml} as produced by \code{panImpute} or \code{jomoImpute}.}
+  \item{n.Rhat}{(optional) An integer denoting the number of segments used for calculating the potential scale reduction factor. Default is \code{3}.}
+  \item{goodness.of.appr}{(optional) A logical flag indicating if the goodness of approximation should be printed. Default is \code{FALSE} (see 'Details').}
+  \item{autocorrelation}{(optional) A logical flag indicating if the autocorrelation should be printed. Default is \code{FALSE} (see 'Details').}
+  \item{\dots}{Not used.}
 
 }
 
 \details{
 
-The \code{summary} method calculates summary statistics for objects of class \code{mitml} as produced by \code{\link{panImpute}} and \code{\link{jomoImpute}}.
+The \code{summary} method calculates summary statistics for objects of class \code{mitml} as produced by \code{\link{panImpute}} or \code{\link{jomoImpute}}.
 The output includes the potential scale reduction factor (PSRF, or \eqn{\hat{R}}) and (optionally) the goodness of approximation and autocorrelation. 
 
-The PSRF is calculated for each parameter of the imputation model and may be interpreted as a measure of convergence (Gelman and Rubin, 1992).
+The PSRF is calculated for each parameter of the imputation model and can be used as a convergence diagnostic (Gelman and Rubin, 1992).
 Calculation of the PSRFs can be suppressed by setting \code{n.Rhat = NULL}.
-The PSRFs are not computed from different chains, but by dividing each chain from the imputation phase into a number of sequences as denoted by \code{n.Rhat}.
+The PSRFs are not computed from different chains but by dividing each chain from the imputation phase into a number of segments as denoted by \code{n.Rhat}.
 This is slightly different from the original method proposed by Gelman and Rubin.
 
-The goodness of approximation indicates what proportion of the posterior standard deviation is due to simulation error.
-For multiple imputation, the goodness of approximation is not essential; it should be considered only if posterior summaries, such as the EAP, are of interest.
-
-The autocorrelation includes estimates of the autocorrelation in the parameter chains at lag 1 (i.e., for consecutive draws) and for lags \eqn{k} and \eqn{2k}, where \eqn{k} is the number of iterations between imputations.
+The goodness of approximation measure indicates what proportion of the posterior standard deviation is due to simulation error.
+This is useful for assessing the accuracy of the posterior summaries (e.g., the EAP).
+The autocorrelation includes estimates of the autocorrelation in the chains at lag 1 (i.e., for consecutive draws) and for lags \eqn{k} and \eqn{2k}, where \eqn{k} is the number of iterations between imputations.
 For lag \eqn{k} and \eqn{2k}, the autocorrelation is slightly smoothed to reduce the influence of noise on the estimates (see \code{\link{plot.mitml}}).
 
 }
 
 \value{
 
-Returns an object of class \code{summary.mitml}. A print method is used for better readable console output.
+An object of class \code{summary.mitml}.
+A print method is used for more readable output.
 
 }
 

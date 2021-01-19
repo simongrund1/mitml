@@ -23,11 +23,11 @@ These functions allow concatenating lists of imputed data sets by data set, row,
 
 \details{
 
-These function allow concatenating multiple lists of imputed data sets.
-The function \code{c} concatenates by data set (i.e., by appending additional data sets to the list), \code{rbind} concatenates by row (i.e., appending additional rows to each data set), and \code{cbind} concatenates by column (i.e., by appending additional columns to each data set).
+The \code{c}, \code{cbind}, and \code{rbind} functions allow combining multiple lists of imputed data sets in different ways.
+The \code{c} method concatenates by data set (i.e., by appending additional data sets to the list), \code{rbind} concatenates by row (i.e., appending additional rows to each data set), and \code{cbind} concatenates by column (i.e., by appending additional columns to each data set).
 
 These functions are intended for experienced users and should be used with caution.
-Appending rows or columns from multiple imputation procedures is usually unsafe unless in special applications (see Examples).
+Appending rows or columns from multiple imputation procedures is usually unsafe unless in special applications (see 'Examples').
 }
 
 \value{

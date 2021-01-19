@@ -1,28 +1,34 @@
 \name{mitmlComplete}
 \alias{mitmlComplete}
 \title{Extract imputed data sets}
-\description{This function extracts imputed data sets from \code{mitml} class objects as produced by \code{panImpute} and \code{jomoImpute}.}
+\description{
+This function extracts imputed data sets from \code{mitml} class objects as produced by \code{panImpute} and \code{jomoImpute}.
+}
+
 \usage{
 
 mitmlComplete(x, print = "all", force.list = FALSE)
 
 }
+
 \arguments{
 
-  \item{x}{An object of class \code{mitml} as produced by \code{panImpute} and \code{jomoImpute}.}
-  \item{print}{Either an integer vector, \code{"list"}, or \code{"all"} denoting which data sets to extract. If set to \code{"list"} or \code{"all"}, then all imputed data sets will be returned as a list. Negative values and zero will return the original (incomplete) data set. Default is to \code{"all"}.}
-  \item{force.list}{(optional) Logical flag indicating if single data sets should be enclosed in a list. Default is to \code{FALSE}.}
+  \item{x}{An object of class \code{mitml} as produced by \code{panImpute} or \code{jomoImpute}.}
+  \item{print}{Either an integer vector, \code{"list"}, or \code{"all"} denoting which data sets to extract. If set to \code{"list"} or \code{"all"}, all imputed data sets will be returned as a list. Negative values and zero return the original (incomplete) data set. Default is \code{"all"}.}
+  \item{force.list}{(optional) Logical flag indicating if single data sets should be enclosed in a list. Default is \code{FALSE}.}
 
 }
+
 \value{
 
-Single data sets are returned as a data frame unless \code{force.list = TRUE}.
-If several data sets are extracted, the result is always a list of data sets with an additional class attribute \code{mitml.list}.
+Usually a list of imputed data with class \code{mitml.list}
+If only one data set is extracted: a data frame unless \code{force.list = TRUE}.
 
 }
-\author{Simon Grund}
 
+\author{Simon Grund}
 \seealso{\code{\link{panImpute}}, \code{\link{jomoImpute}}}
+
 \examples{
 data(studentratings)
 

@@ -19,7 +19,7 @@ read.mitml(filename)
 
 \value{
 
-Returns the saved \code{mitml} class object.
+An object of class \code{mitml}.
 
 }
 

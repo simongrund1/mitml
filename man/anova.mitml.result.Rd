@@ -15,33 +15,33 @@ Performs model comparisons for a series of nested statistical models fitted usin
 
 \arguments{
 
-  \item{object}{An object of class \code{mitml.result} as produced by \code{with.mitml.list}.}
-  \item{\dots}{Additional objects of class \code{mitml.result} to be included in the comparison.}
-  \item{method}{A character string denoting the method used for the model comparisons. Can be either \code{"D3"}, \code{"D4"} or \code{"D2"} (see details). Default is \code{"D3"}.}
-  \item{ariv}{A character string denoting how the ARIV is calculated. Can be either \code{"default"}, \code{"positive"}, or \code{"robust"} (see details).}
-  \item{data}{(optional) A list of imputed data sets (see details).}
+  \item{object}{An object of class \code{mitml.result} as produced by \code{\link{with.mitml.list}}.}
+  \item{\dots}{Additional objects of class \code{mitml.result} to be compared.}
+  \item{method}{A character string denoting the method used for the model comparison. Can be \code{"D3"}, \code{"D4"} or \code{"D2"} (see 'Details'). Default is \code{"D3"}.}
+  \item{ariv}{A character string denoting how the ARIV is calculated. Can be \code{"default"}, \code{"positive"}, or \code{"robust"} (see 'Details').}
+  \item{data}{(optional) A list of imputed data sets (see 'Details').}
 
 }
 
 \details{
 
-  This function performs likelihood-based comparisons between multiple statistical models fitted with \code{with.mitml.list}.
-  If possible, the models are compared using the \eqn{D_3} statistic (Meng & Rubin, 1992).
-  If this method is unavailable, the \eqn{D_4} or \eqn{D_2} statistic is used instead (Chan & Meng, 2019; Li, Meng, Raghunathan, & Rubin, 1991).
+This function performs likelihood-based comparisons between multiple statistical models fitted with \code{\link{with.mitml.list}}.
+If possible, the models are compared using the \eqn{D_3} statistic (Meng & Rubin, 1992).
+If this method is unavailable, the \eqn{D_4} or \eqn{D_2} statistic is used instead (Chan & Meng, 2019; Li, Meng, Raghunathan, & Rubin, 1991).
 
-  This function is essentially a wrapper for \code{\link{testModels}} with the advantage that several models can be compared simultaneously.
-  For a list of supported models and further options for more specific model comparisons, see \code{\link{testModels}}.
+This function is essentially a wrapper for \code{\link{testModels}} with the advantage that several models can be compared simultaneously.
+For a list of supported models and further options for more specific model comparisons, see \code{testModels}.
 
-  The \code{ariv} argument affects how the average relative increase in variance is calculated (see also \code{\link{testModels}}).
-  Note that the \eqn{D_4} method can fail if the data to which the model was fitted cannot be found.
-  In such a case, the \code{data} argument can be used to specify the list of imputed data sets directly (see also \code{\link{testModels}}).
+The \code{ariv} argument affects how the average relative increase in variance is calculated (see also \code{testModels}).
+Note that the \eqn{D_4} method can fail if the data to which the model was fitted cannot be found.
+In such a case, the \code{data} argument can be used to specify the list of imputed data sets directly (see also \code{testModels}).
 
 }
 
 \value{
 
-  Returns a list containing the results of each model comparison.
-  A \code{print} method is used for better readable output.
+A list containing the results of each model comparison.
+A \code{print} method is used for more readable output.
 
 }
 
@@ -60,7 +60,7 @@ implist <- mitmlComplete(imp)
 # simple comparison (same as testModels)
 fit0 <- with(implist, lmer(ReadAchiev ~ (1|ID), REML = FALSE))
 fit1 <- with(implist, lmer(ReadAchiev ~ ReadDis + (1|ID), REML = FALSE))
-anova(fit1,fit0)
+anova(fit1, fit0)
 
 \dontrun{
 # multiple comparisons

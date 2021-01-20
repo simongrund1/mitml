@@ -1,7 +1,7 @@
 is.mitml.list <- function(x){
 # checks if the argument is a list of class "mitml.list"
 
-  l <- any(class(x) == "mitml.list") & is.list(x)
+  l <- inherits(x, "mitml.list") & is.list(x)
   if(!l){
     return(FALSE)
   }else{

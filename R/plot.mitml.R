@@ -39,7 +39,7 @@ plot.mitml <- function(x, print = c("beta", "beta2", "psi", "sigma"), pos = NULL
 
   # grouping
   grp.labels <- unique(attr(x$data, "group"))
-  if(class(group) == "numeric") grp.labels <- grp.labels[group]
+  if(is.numeric(group)) grp.labels <- grp.labels[group]
   grp <- length(grp.labels)
 
   # export, graphical parameters

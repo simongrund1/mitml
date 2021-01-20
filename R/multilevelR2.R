@@ -6,10 +6,16 @@ multilevelR2 <- function(model, print = c("RB1", "RB2", "SB", "MVP")){
   method <- NULL
 
   # select method
-  cls <- ifelse(is.list(model), class(model[[1]]), class(model))
-  if(any(grepl("^l?merMod$", cls))) method <- "lmer"
-  if(any(grepl("^lme$", cls))) method <- "nlme"
-  if(is.null(method)) stop("Calculation of R-squared statistics not supported for models of class")
+  if(is.list(model)){
+    cls <- class(model[[1]])
+    if(inherits(model[[1]], "merMod")) method <- "lmer"
+    if(inherits(model[[1]], "lme")) method <- "nlme"
+  }else{
+    cls <- class(model)
+    if(inherits(model, "merMod")) method <- "lmer"
+    if(inherits(model, "lme")) method <- "nlme"
+  }
+  if(is.null(method)) stop("Calculation of multilevel R-squared statistics not supported for models of class '", paste0(cls, collapse = "|"), "'.")
 
   # calculate R-squared
   if(is.list(model)){

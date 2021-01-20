@@ -1,9 +1,9 @@
 write.mitmlMplus <- function(x, filename, suffix = "list", sep = "\t", dec = ".", na.value=-999){
 # write text files that can be read into Mplus
 
-  if(!"mitml"%in%class(x) & !"mitml.list"%in%class(x)) stop("'x' must be of class 'mitml' or 'mitml.list'.")
+  if(!inherits(x, "mitml") && !inherits(x, "mitml.list")) stop("'x' must be of class 'mitml' or 'mitml.list'.")
 
-  if("mitml"%in%class(x)){
+  if(inherits(x, "mitml")){
     x <- mitmlComplete(x, "all", force.list = TRUE)
   }
   m <- length(x)

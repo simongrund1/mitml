@@ -1,10 +1,10 @@
 write.mitmlSPSS <- function(x, filename, sep = "\t", dec = ".", na.value=-999, syntax = TRUE, locale = NULL){
 # write text file to be read into SPSS
 
-  if(!"mitml" %in% class(x) & !"mitml.list" %in% class(x)) stop("'x' must be of class 'mitml' or 'mitml.list'.")
-  if(!dec %in% c(",",".")) stop("Only a dot '.' or a comma ',' may be specified as decimal separator.")
+  if(!inherits(x, "mitml") && !inherits(x, "mitml.list")) stop("'x' must be of class 'mitml' or 'mitml.list'.")
+  if(!dec %in% c(",", ".")) stop("Only a dot '.' or a comma ',' may be specified as decimal separator.")
 
-  if("mitml" %in% class(x)){
+  if(inherits(x, "mitml")){
     x <- mitmlComplete(x, "all", force.list = TRUE)
   }
 

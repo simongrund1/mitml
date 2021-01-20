@@ -1,6 +1,6 @@
 mitmlComplete <- function(x, print = "all", force.list = FALSE){
 
-  if(sum(print<=0)>1) stop("Only one negative or zero value is allowed in 'print'.")
+  if(sum(print <= 0) > 1) stop("Only one negative or zero value is allowed in 'print'.")
 
   dat <- x$data
   srt <- order( attr(x$data, "sort") )
@@ -11,10 +11,10 @@ mitmlComplete <- function(x, print = "all", force.list = FALSE){
   ind <- x$index.mat
   rpm <- x$replacement.mat
 
-  if(class(print) %in% c("integer", "numeric")){
+  if(is.numeric(print)){
 
     if(length(print) == 1){
-      if(print>0){
+      if(print > 0){
         com <- .completeOne(dat, print, ind, rpm, method)
         out <- com[srt,]
       }else{
@@ -24,7 +24,7 @@ mitmlComplete <- function(x, print = "all", force.list = FALSE){
     }else{
       out <- list()
       for(ii in print){
-        if(ii>0){
+        if(ii > 0){
           com <- .completeOne(dat, ii, ind, rpm, method)
           out <- c(out, list(com[srt,]))
         }else{
@@ -44,8 +44,8 @@ mitmlComplete <- function(x, print = "all", force.list = FALSE){
 
   }
 
-  if(class(out) == "list") class(out) <- c("mitml.list", "list")
-  out
+  if(is.list(out) && !is.data.frame(out)) class(out) <- c("mitml.list", "list")
+  return(out)
 
 }
 

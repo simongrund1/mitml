@@ -46,6 +46,7 @@ Muthen, L. K., & Muthen, B. O. (2012). \emph{Mplus User's Guide. Seventh Edition
 \author{Simon Grund}
 \seealso{\code{\link{panImpute}}, \code{\link{jomoImpute}}, \code{\link{mitmlComplete}}}
 \examples{
+\dontrun{
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
@@ -53,4 +54,5 @@ imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m =
 
 # write imputation files, index file, and log file
 write.mitmlMplus(imp, filename = "imputation", suffix = "list", na.value = -999)
+}
 }

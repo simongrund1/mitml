@@ -26,6 +26,7 @@ An object of class \code{mitml}.
 \author{Simon Grund}
 \seealso{\code{\link{panImpute}}, \code{\link{jomoImpute}}, \code{\link{write.mitml}}}
 \examples{
+\dontrun{
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
@@ -35,8 +36,9 @@ imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m =
 write.mitml(imp, filename = "imputation.R")
 
 # read previously saved 'mitml' object
-previous.imp <- read.mitml("imputation.R")
+old.imp <- read.mitml("imputation.R")
 
-class(previous.imp)
-previous.imp
+class(old.imp)
+old.imp
+}
 }

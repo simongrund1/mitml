@@ -28,14 +28,16 @@ None (invisible \code{NULL}).
 \author{Simon Grund}
 \seealso{\code{\link{panImpute}}, \code{\link{jomoImpute}}, \code{\link{read.mitml}}}
 \examples{
+\dontrun{
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
 imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m = 5)
 
 # write full 'mitml' object (default)
-write.mitml(imp, filename = "imputation.R")
+write.mitml(imp, filename = "imputation.Rdata")
 
 # drop parameters of the imputation model
-write.mitml(imp, filename = "imputation.R", drop = TRUE)
+write.mitml(imp, filename = "imputation.Rdata", drop = TRUE)
+}
 }

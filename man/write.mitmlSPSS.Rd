@@ -51,6 +51,7 @@ IBM Corp. \emph{IBM SPSS Statistics for Windows}. Armonk, NY: IBM Corp
 \author{Simon Grund}
 \seealso{\code{\link{panImpute}}, \code{\link{jomoImpute}}, \code{\link{mitmlComplete}}, \code{\link{write.mitmlSAV}}}
 \examples{
+\dontrun{
 data(studentratings)
 
 fml <- ReadDis + SES ~ ReadAchiev + (1|ID)
@@ -59,4 +60,5 @@ imp <- panImpute(studentratings, formula = fml, n.burn = 1000, n.iter = 100, m =
 # write data file and SPSS syntax
 write.mitmlSPSS(imp, filename = "imputation", sep = "\t", dec = ".",
                 na.value = -999, locale = "en_US")
+}
 }

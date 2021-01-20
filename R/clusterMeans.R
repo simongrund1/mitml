@@ -34,4 +34,5 @@ clusterMeans <- function(x, cluster, adj = FALSE, group = NULL){
   }else{
     gm
   }
+
 }

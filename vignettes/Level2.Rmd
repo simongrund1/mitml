@@ -89,7 +89,7 @@ Except for the specification of the two-level model, the syntax is the same as i
 Here, we will run 5,000 burn-in iterations and generate 20 imputations, each 250 iterations apart.
 
 ```{r, results="hide"}
-imp <- jomoImpute(leadership, formula=fml, n.burn=5000, n.iter=250, m=20)
+imp <- jomoImpute(leadership, formula = fml, n.burn = 5000, n.iter = 250, m = 20)
 ```
 
 By looking at the `summary`, we can then review the imputation procedure and verify that the imputation model converged.

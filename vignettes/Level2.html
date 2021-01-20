@@ -16,6 +16,15 @@
 
 <script src="data:application/javascript;base64,Ly8gUGFuZG9jIDIuOSBhZGRzIGF0dHJpYnV0ZXMgb24gYm90aCBoZWFkZXIgYW5kIGRpdi4gV2UgcmVtb3ZlIHRoZSBmb3JtZXIgKHRvCi8vIGJlIGNvbXBhdGlibGUgd2l0aCB0aGUgYmVoYXZpb3Igb2YgUGFuZG9jIDwgMi44KS4KZG9jdW1lbnQuYWRkRXZlbnRMaXN0ZW5lcignRE9NQ29udGVudExvYWRlZCcsIGZ1bmN0aW9uKGUpIHsKICB2YXIgaHMgPSBkb2N1bWVudC5xdWVyeVNlbGVjdG9yQWxsKCJkaXYuc2VjdGlvbltjbGFzcyo9J2xldmVsJ10gPiA6Zmlyc3QtY2hpbGQiKTsKICB2YXIgaSwgaCwgYTsKICBmb3IgKGkgPSAwOyBpIDwgaHMubGVuZ3RoOyBpKyspIHsKICAgIGggPSBoc1tpXTsKICAgIGlmICghL15oWzEtNl0kL2kudGVzdChoLnRhZ05hbWUpKSBjb250aW51ZTsgIC8vIGl0IHNob3VsZCBiZSBhIGhlYWRlciBoMS1oNgogICAgYSA9IGguYXR0cmlidXRlczsKICAgIHdoaWxlIChhLmxlbmd0aCA+IDApIGgucmVtb3ZlQXR0cmlidXRlKGFbMF0ubmFtZSk7CiAgfQp9KTsK"></script>
 
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
@@ -107,6 +116,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 
 
+
 <link rel="stylesheet" href="data:text/css,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amax%2Dwidth%3A%20720px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2016px%3B%0Afont%2Dweight%3A%20500%3B%0Aline%2Dheight%3A%201%2E65%3B%0Atext%2Dalign%3A%20justify%3B%0Atext%2Djustify%3A%20inter%2Dword%3B%0Amargin%3A%202em%20auto%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2016px%3B%0Aline%2Dheight%3A%201%2E5%3B%0Atext%2Dalign%3A%20left%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2018px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E6em%200%3B%0A%7D%0Ablockquote%20%7B%0Aborder%2Dleft%3A3px%20dotted%20%23e5e5e5%3B%0Abackground%2Dcolor%3A%20%23fff%3B%0Apadding%3A%200%201em%3B%0Amargin%3A%200%2E9em%200%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%2C%20ol%20%7B%0Atext%2Dalign%3A%20left%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aline%2Dheight%3A%201%2E2%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Apadding%3A%200px%3B%0Awhite%2Dspace%3A%20pre%3B%20%0Aoverflow%2Dx%3A%20auto%3B%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%202px%3B%0A%7D%0Ah1%2C%20h2%2C%20h3%2C%20h4%2C%20h5%2C%20h6%20%7B%0Atext%2Dalign%3A%20left%3B%0Aline%2Dheight%3A%201%2E2%3B%0A%7D%0Ah1%20%7B%0Afont%2Dsize%3A%202em%3B%0Afont%2Dweight%3A%20600%3B%0A%7D%0Ah2%20%7B%0Acolor%3A%20%23191919%3B%0Afont%2Dsize%3A%201%2E5em%3B%0Afont%2Dweight%3A%20600%3B%0A%7D%0Ah3%2C%20h4%2C%20h5%20%7B%0Acolor%3A%20%23292929%3B%0Afont%2Dweight%3A%20600%3B%0A%7D%0A%0Ah6%20%7B%0Acolor%3A%23191919%3B%0Afont%2Dsize%3A%201%2E5em%3B%0Afont%2Dweight%3A%20600%3B%0Amargin%2Dtop%3A%200%2E83em%3B%0Amargin%2Dbottom%3A%200%2E83em%3B%0A%7D%0Ah6%20%7E%20p%20%7B%0Atext%2Dalign%3A%20left%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%23777%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%23aaa%3B%0Atext%2Ddecoration%3A%20underline%3B%0A%7D%0A%0A%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20%7B%0Amargin%2Dtop%3A%2025px%3B%0Amargin%2Dbottom%3A%2025px%3B%0Amargin%2Dleft%3A%20auto%3B%0Amargin%2Dright%3A%20auto%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0Aborder%2Dspacing%3A%200%3B%0A%7D%0Ath%20%7B%0Apadding%3A5px%2010px%3B%0Aborder%3A%201px%20solid%20%23b2b2b2%3B%0A%7D%0Atd%20%7B%0Apadding%3A5px%2010px%3B%0Aborder%3A%201px%20solid%20%23e5e5e5%3B%0A%7D%0Adt%20%7B%0Acolor%3A%23444%3B%0Afont%2Dweight%3A500%3B%0A%7D%0Ath%20%7B%0Acolor%3A%23444%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0A%0Aimg%20%7B%0Adisplay%3A%20block%3B%0Amargin%2Dleft%3A%20auto%3B%0Amargin%2Dright%3A%20auto%3B%0Amax%2Dwidth%3A100%25%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%0A%2Egif%5Fplay%2C%20%23gif%3Ahover%20%2Egif%5Fstop%7B%0Adisplay%3Anone%0A%7D%0A%2Egif%5Fstop%2C%20%23gif%3Ahover%20%2Egif%5Fplay%7B%0Adisplay%3Ablock%0A%7D%0A%0Apre%20code%20%7B%20color%3A%20%23707070%3B%20%7D%20%0Apre%20code%2Er%20%7B%20color%3A%20%23333333%3B%20%7D%20%0Acode%20span%2Ekw%20%7B%20color%3A%20%23558200%3B%20font%2Dweight%3A%20normal%3B%20%7D%20%0Acode%20span%2Eco%20%7B%20color%3A%20%23707070%3B%20font%2Dstyle%3A%20normal%3B%20%7D%20%0Acode%20span%2Edt%20%7B%20color%3A%20%23333333%3B%20%7D%20%0Acode%20span%2Efu%20%7B%20color%3A%20%23558200%3B%20%7D%20%20code%20span%2Edv%20%7B%20color%3A%20%23007878%3B%20%7D%20%0Acode%20span%2Ebn%20%7B%20color%3A%20%23007878%3B%20%7D%20%0Acode%20span%2Efl%20%7B%20color%3A%20%23007878%3B%20%7D%20%0Acode%20span%2Ech%20%7B%20color%3A%20%23985b00%3B%20%7D%20%0Acode%20span%2Est%20%7B%20color%3A%20%23985b00%3B%20%7D%20%0Acode%20span%2Eot%20%7B%20color%3A%20%23007878%3B%20%7D%20%0Acode%20span%2Eal%20%7B%20color%3A%20%23a61717%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" type="text/css" />
 
 
@@ -176,7 +186,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2>Generating imputations</h2>
 <p>Because the data contain missing values at both levels, imputations will be generated with <code>jomoImpute</code> (and not <code>panImpute</code>). Except for the specification of the two-level model, the syntax is the same as in applications with missing data only at Level 1.</p>
 <p>Here, we will run 5,000 burn-in iterations and generate 20 imputations, each 250 iterations apart.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">jomoImpute</span>(leadership, <span class="at">formula=</span>fml, <span class="at">n.burn=</span><span class="dv">5000</span>, <span class="at">n.iter=</span><span class="dv">250</span>, <span class="at">m=</span><span class="dv">20</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>imp <span class="ot">&lt;-</span> <span class="fu">jomoImpute</span>(leadership, <span class="at">formula =</span> fml, <span class="at">n.burn =</span> <span class="dv">5000</span>, <span class="at">n.iter =</span> <span class="dv">250</span>, <span class="at">m =</span> <span class="dv">20</span>)</span></code></pre></div>
 <p>By looking at the <code>summary</code>, we can then review the imputation procedure and verify that the imputation model converged.</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(imp)</span></code></pre></div>
 <pre><code># 
@@ -203,13 +213,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 # Potential scale reduction (Rhat, imputation phase):
 #  
 #          Min   25%  Mean Median   75%   Max
-# Beta:  1.001 1.001 1.001  1.001 1.001 1.001
+# Beta:  1.001 1.002 1.004  1.004 1.006 1.009
 # Beta2: 1.001 1.001 1.001  1.001 1.001 1.001
-# Psi:   1.000 1.001 1.003  1.001 1.003 1.009
-# Sigma: 1.000 1.003 1.004  1.004 1.006 1.009
+# Psi:   1.000 1.001 1.002  1.001 1.002 1.006
+# Sigma: 1.000 1.002 1.004  1.004 1.006 1.007
 # 
 # Largest potential scale reduction:
-# Beta: [1,3], Beta2: [1,1], Psi: [4,3], Sigma: [3,1]
+# Beta: [1,3], Beta2: [1,1], Psi: [1,1], Sigma: [2,1]
 # 
 # Missing data per variable:
 #     GRPID JOBSAT NEGLEAD WLOAD COHES
@@ -222,13 +232,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The completed data sets can then be extracted with <code>mitmlComplete</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>implist <span class="ot">&lt;-</span> <span class="fu">mitmlComplete</span>(imp, <span class="st">&quot;all&quot;</span>)</span></code></pre></div>
 <p>When inspecting the completed data, it is easy to verify that the imputations for variables at Level 2 are constant within groups as intended, thus preserving the two-level structure of the data.</p>
-<pre><code>#    GRPID      JOBSAT     NEGLEAD WLOAD      COHES
-# 73     5 -1.72143400  0.83025589  high  0.9023198
-# 74     5 -2.80749991  0.15335056  high  0.9023198
-# 75     5 -0.09541178  0.21886272   low  0.9023198
-# 76     6  0.68626611 -0.38190591  high -1.0275552
-# 77     6  1.52825873 -1.11035850   low -1.0275552
-# 78     6 -1.86298201 -0.05351001  high -1.0275552</code></pre>
+<pre><code>#    GRPID      JOBSAT     NEGLEAD WLOAD     COHES
+# 73     5 -1.72143400  0.83025589  high 0.9023198
+# 74     5  0.68223338  0.15335056  high 0.9023198
+# 75     5 -0.09541178  0.21886272   low 0.9023198
+# 76     6  0.68626611 -0.38190591  high 2.1086213
+# 77     6 -2.97953478 -1.05236552   low 2.1086213
+# 78     6 -1.86298201 -0.05351001  high 2.1086213</code></pre>
 <div id="references" class="section level6">
 <h6>References</h6>
 <p>Enders, C. K., Mistler, S. A., &amp; Keller, B. T. (2016). Multilevel multiple imputation: A review and evaluation of joint modeling and chained equations imputation. <em>Psychological Methods</em>, <em>21</em>, 222–240. doi: 10.1037/met0000063 (<a href="https://doi.org/10.1037/met0000063">Link</a>)</p>
@@ -236,7 +246,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Grund, S., Lüdtke, O., &amp; Robitzsch, A. (in press). Multiple imputation of missing data for multilevel models: Simulations and recommendations. <em>Organizational Research Methods</em>. doi: 10.1177/1094428117703686 (<a href="https://doi.org/10.1177/1094428117703686">Link</a>)</p>
 <hr />
 <pre><code># Author: Simon Grund (grund@ipn.uni-kiel.de)
-# Date:   2021-01-11</code></pre>
+# Date:   2021-01-20</code></pre>
 </div>
 </div>
 

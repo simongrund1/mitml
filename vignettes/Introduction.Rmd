@@ -101,7 +101,7 @@ This model allows for all relations between variables at Level 1 and 2 and is th
 The imputation procedure is then run for 5,000 iterations (burn-in), after which 100 imputations are drawn every 100 iterations.
 
 ```{r, results="hide"}
-imp <- panImpute(studentratings, formula=fml, n.burn=5000, n.iter=100, m=100)
+imp <- panImpute(studentratings, formula = fml, n.burn = 5000, n.iter = 100, m = 100)
 ```
 
 This step may take a few seconds.
@@ -124,10 +124,11 @@ Convergence can be assumed if the trace plot is stationary (i.e., does not "drif
 For this example, we examine only the plot for the parameter `Beta[1,2]` (i.e., the intercept of `ReadDis`).
 
 ```{r conv, echo=FALSE}
-plot(imp, trace="all", print="beta", pos=c(1,2), export="png", dev.args=list(width=720, height=380, pointsize=16))
+plot(imp, trace = "all", print = "beta", pos = c(1,2), export = "png",
+     dev.args = list(width=720, height=380, pointsize=16))
 ```
 ```{r, eval=FALSE}
-plot(imp, trace="all", print="beta", pos=c(1,2))
+plot(imp, trace = "all", print = "beta", pos = c(1,2))
 ```
 
 ![](mitmlPlots/BETA_ReadDis_ON_Intercept.png)
@@ -162,7 +163,7 @@ The resulting object is a list containing the 100 fitted models.
 To pool the results of these models into a set of final estimates and inferences, `mitml` offers the `testEstimates` function.
 
 ```{r}
-testEstimates(fit, var.comp=TRUE)
+testEstimates(fit, extra.pars = TRUE)
 ```
 
 The estimates can be interpreted in a manner similar to the estimates from the corresponding complete-data procedure.

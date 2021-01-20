@@ -61,7 +61,7 @@ In the present example, we generate 20 imputations from the following imputation
 
 ```{r, results="hide"}
 fml <- ReadDis + SES ~ 1 + Sex + (1|ID)
-imp <- panImpute(studentratings, formula=fml, n.burn=5000, n.iter=200, m=20)
+imp <- panImpute(studentratings, formula = fml, n.burn = 5000, n.iter = 200, m = 20)
 ```
 
 The completed data are then extracted with `mitmlComplete`.
@@ -78,9 +78,9 @@ For this purpose, the `mitml` package provides the `within` function, which appl
 In the following, we use this to (a) calculate the group means of SES and (b) center the individual scores around their group means.
 
 ```{r}
-implist <- within(implist,{
-  G.SES <- clusterMeans(SES,ID) # calculate group means
-  I.SES <- SES - G.SES          # center around group means
+implist <- within(implist, {
+  G.SES <- clusterMeans(SES, ID) # calculate group means
+  I.SES <- SES - G.SES           # center around group means
 })
 ```
 
@@ -106,7 +106,7 @@ For this purpose, `mitml` offers the `with` function.
 In the present example, we use it to fit the model of interest with the R package `lme4`.
 
 ```{r}
-fit <- with(implist,{
+fit <- with(implist, {
   lmer(MathAchiev ~ 1 + Sex + I.SES + G.SES + (1|ID))
 })
 ```
@@ -127,12 +127,12 @@ In `mitml`, Rubin's rules are implemented in the `testEstimates` function.
 testEstimates(fit)
 ```
 
-In addition, the argument `var.comp=TRUE` can be used to obtain pooled estimates of variance components, and `df.com` can be used to specify the complete-data degrees of freedom, which provides more appropriate (i.e., conservative) inferences in smaller samples.
+In addition, the argument `extra.pars = TRUE` can be used to obtain pooled estimates of variance components, and `df.com` can be used to specify the complete-data degrees of freedom, which provides more appropriate (i.e., conservative) inferences in smaller samples.
 
 For example, using a conservative value for the complete-data degrees of freedom for the fixed effects in the model of interest (Snijders & Bosker, 2012), the output changes as follows.
 
 ```{r}
-testEstimates(fit, var.comp=TRUE, df.com=46)
+testEstimates(fit, extra.pars = TRUE, df.com = 46)
 ```
 
 #### Multiple parameters and model comparisons
@@ -142,12 +142,12 @@ For example, the combined influence of SES (within and between groups) on mathem
 
 Multiple pooling methods for Wald and likelihood ratio tests (LRTs) are implemented in the `testModels` function.
 This function requires the specification of a full model and a restricted model, which are then compared using (pooled) Wald tests or LRTs.
-Specifically, `testModels` allows users to pool Wald tests ($D_1$), $\chi^2$ test statistics ($D_2$), and LRTs ($D_3$; for a comparison of these methods, see also Grund, Lüdtke, & Robitzsch, 2016b).
+Specifically, `testModels` allows users to pool Wald tests ($D_1$), $\chi^2$ test statistics ($D_2$), and LRTs ($D_3$ and $D_4$; for a comparison of these methods, see also Grund, Lüdtke, & Robitzsch, 2016b).
 
 To examine the combined influence of SES on mathematics achievement, the following restricted model can be specified and compared with the model of interest (using $D_1$).
 
 ```{r}
-fit.null <- with(implist,{
+fit.null <- with(implist, {
   lmer(MathAchiev ~ 1 + Sex + (1|ID))
 })
 
@@ -160,7 +160,7 @@ testModels(fit, fit.null)
 Similar to the test for individual parameters, smaller samples can be accommodated with `testModels` (with method $D_1$) by specifying the complete-data degrees of freedom for the denominator of the $F$ statistic.
 
 ```{r}
-testModels(fit, fit.null, df.com=46)
+testModels(fit, fit.null, df.com = 46)
 ```
 
 The pooling method used by `testModels` is determined by the `method` argument.
@@ -181,7 +181,7 @@ This constraint is defined and tested as follows.
 
 ```{r}
 c1 <- c("I.SES", "G.SES")
-testConstraints(fit, constraints=c1)
+testConstraints(fit, constraints = c1)
 ```
 
 This test is identical to the Wald test given in the previous section.
@@ -192,7 +192,7 @@ The contextual effect is simply the difference between the coefficients pertaini
 
 ```{r}
 c2 <- c("G.SES - I.SES")
-testConstraints(fit, constraints=c2)
+testConstraints(fit, constraints = c2)
 ```
 
 Similar to model comparisons, constraints can be tested with different methods ($D_1$ and $D_2$) and can accommodate smaller samples by a value for `df.com`.

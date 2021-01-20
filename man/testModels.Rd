@@ -50,7 +50,7 @@ This method is referred to as \eqn{D_4} and can be used by setting \code{method 
 The function supports different classes of statistical models depending on which \code{method} is chosen.
 \eqn{D_1} supports models that define \code{coef} and \code{vcov} methods (or similar) for extracting the parameter estimates and their estimated covariance matrix. 
 \eqn{D_2} can be used for the same models (if \code{use = "wald"} and models that define a \code{logLik} method (if \code{use = "likelihood"}).
-\eqn{D_3} supports linear models, linear mixed-effects models (see Laird, Lange, & Stram, 1987) with an arbitrary cluster structed if estimated with \code{lme4} or a single cluster if estimated by \code{nlme}, and structural equation models estimated with \code{lavaan}.
+\eqn{D_3} supports linear models, linear mixed-effects models (see Laird, Lange, & Stram, 1987) with an arbitrary cluster structed if estimated with \code{lme4} or a single cluster if estimated by \code{nlme}, and structural equation models estimated with \code{lavaan} (requires ML estimator, see 'Note').
 Finally, \eqn{D_4} supports models that define a \code{logLik} method but can fail if the data to which the model was fitted cannot be found.
 In such a case, users can provide the list of imputed data sets directly by specifying the \code{data} argument or refit with the \code{include.data} argument in \code{\link{with.mitml.list}}.
 Support for other statistical models may be added in future releases.
@@ -74,6 +74,7 @@ A \code{print} method is used for more readable output.
 
 The methods \eqn{D_4}, \eqn{D_3}, and the likelihood-based \eqn{D_2} assume that models were fit using maximum likelihood (ML).
 Models fit using REML are automatically refit using ML.
+Models fit in \code{'lavaan'} using the MLR estimator or similar techniques that require scaled \eqn{chi^2} difference tests are currently not supported.
 
 }
 

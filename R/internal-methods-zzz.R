@@ -48,6 +48,15 @@
 
 }
 
+.getDFs.lavaan <- function(object){
+
+  df <- attr(lavaan::logLik(object), "df")
+  attr(df, "type") <- "logLik"
+  return(df)
+
+}
+
+
 # * extract model formula
 
 .getFormula <- function(object, ...) UseMethod(".getFormula", object)

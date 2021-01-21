@@ -12,6 +12,8 @@ print.mitml.anova <- function(x, digits = 3, sci.limit = 5, ...){
   reml <- x$reml
   m <- x$test[[1]]$m
 
+  n.tests <- length(fml)
+
   # print header
   cat("\nCall:\n", paste(deparse(cll)), sep = "\n")
   cat("\nModel comparison calculated from", m, "imputed data sets.")
@@ -24,12 +26,16 @@ print.mitml.anova <- function(x, digits = 3, sci.limit = 5, ...){
 
   # print model formulas
   cat("\n")
-  for(mm in 1:length(fml)) cat("Model ", mm, ": ", fml[mm], "\n", sep = "")
+  for(mm in seq.int(1, n.tests)) cat("Model ", mm, ": ", fml[mm], "\n", sep = "")
   cat("\n")
 
-  # check for very large values
+  # combine multiple tests in one table
   test.tab <- lapply(test, "[[", "test")
   test.tab <- do.call(rbind, test.tab)
+  rn <- paste0(seq.int(1, n.tests - 1), " vs ", seq.int(2, n.tests), " ")
+  rownames(test.tab) <- rn
+
+  # format table
   test.digits <- c(digits, 0, rep(digits, ncol(test.tab)-2))
   out <- .formatTable(test.tab, digits = test.digits, sci.limit = sci.limit)
   for(i in seq_len(nrow(out))) cat("  ", out[i,], "\n")

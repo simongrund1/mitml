@@ -79,7 +79,7 @@ Models fit in \code{'lavaan'} using the MLR estimator or similar techniques that
 }
 
 \references{
-Chan, K. W., & Meng, X.-L. (2019). Multiple improvements of multiple imputation likelihood ratio tests. ArXiv:1711.08822 [Math, Stat]. \url{http://arxiv.org/abs/1711.08822}
+Chan, K. W., & Meng, X.-L. (2019). Multiple improvements of multiple imputation likelihood ratio tests. ArXiv:1711.08822 [Math, Stat]. \url{https://arxiv.org/abs/1711.08822}
 
 Laird, N., Lange, N., & Stram, D. (1987). Maximum likelihood computations with repeated measures: Application of the em algorithm. \emph{Journal of the American Statistical Association, 82}, 97-105.
 

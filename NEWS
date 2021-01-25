@@ -1,6 +1,26 @@
 # * RELEASE HISTORY OF THE 'mitml' PACKAGE:
 --
 
+# Version 0.4-0 (2021-01-25)
+--
+
+* testEstimates:   added initial support for SEM ('lavaan'); argument 'var.comp'
+                   is now deprecated and was replaced by 'extra.pars'
+
+* testModels:      added new pooling method for LRTs ('D4'); now adopts more
+                   accurate formula for small-sample degrees of freedom ('df.com');
+                   added initial support for SEM ('lavaan'); expanded support of
+                   'D3' for multilevel models ('lme4') with arbitrary number of
+                   clusters; added 'ariv' argument for different estimators
+
+* testConstraints: added initial support for SEM ('lavaan'); now adopts more
+                   accurate formula for small-sample degrees of freedom ('df.com')
+
+* anova.mitml.results: see 'testModels'; now uses 'D4' and 'D2' as fallback
+                   options (in that order)
+
+* other:           general code improvements
+
 # Version 0.3-6 (2018-07-10)
 --
 

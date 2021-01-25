@@ -388,4 +388,8 @@
 
 }
 
+# * survival::coxph (null models only)
+
+.getCoef.coxph.null <- function(object, ...) return(numeric(0))
+.getVcov.coxph.null <- function(object, ...) return(matrix(NA_real_, 0, 0))
 

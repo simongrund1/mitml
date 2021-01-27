@@ -35,7 +35,7 @@ print.mitml.testModels <- function(x, digits = 3, sci.limit = 5, ...){
   if(method == "D1"){
     footer <- TRUE
     if(adj.df){
-      cat("Hypothesis test adjusted for small samples with",
+      cat("Hypothesis test adjusted for small samples with ",
           paste0("df=[", paste(df.com, collapse = ","), "]\ncomplete-data degrees of freedom."),
           "\n", sep = "")
     }else{

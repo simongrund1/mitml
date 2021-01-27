@@ -17,7 +17,7 @@ The \code{with} and \code{within} methods evaluate R expressions in a list of mu
 
   \item{data}{A list of imputed data sets with class \code{mitml.list} as produced by \code{mitmlComplete} or \code{as.mitml.list}.}
   \item{expr}{An R expression to be evaluated for each data set.}
-  \item{include.data}{A logical flag indicating how \code{expr} is evaluated (see 'Details'). If \code{FALSE}, an environment is created from \code{data}, and \code{expr} is evaluated therein. If \code{TRUE}, a call is constructed from \code{expr} and evaluated with \code{data} in the data slot. Default is \code{FALSE}.}
+  \item{include.data}{Either a logical flag or a character string denoting how the data are included when \code{expr} is evaluated (see 'Details'). If \code{FALSE}, an environment is created from \code{data}, and \code{expr} is evaluated therein. If \code{TRUE}, a call is constructed from \code{expr} and evaluated with the imputed data in the \code{"data"} slot. If character, a call is constructed from \code{expr} and evaluated with the imputed data in the slot named by \code{include.data}. Default is \code{FALSE}.}
   \item{ignore}{A character vector naming objects that are created but should not be saved (see 'Details').}
   \item{\dots}{Not used.}
 
@@ -32,8 +32,11 @@ The \code{within} function is useful for transforming and computing variables in
 The \code{with} function is useful, for example, for fitting statistical models.
 The list of fitted models can be analyzed using \code{\link{testEstimates}}, \code{\link{testModels}}, \code{\link{testConstraints}}, or \code{\link[=anova.mitml.result]{anova}}.
 
-The \code{include.data} argument can be used to include the imputed data set in the call that evaluates \code{expr}.
-This is useful for fitting statistical models that require a data slot in the fitted model objects for subsequent analyses (e.g., in \code{lavaan} or \code{nlme}; see 'Examples'). 
+The \code{include.data} argument can be used to include the imputed data sets in the call to fit statistical models (\code{expr}) using \code{with}.
+This is useful for fitting models that require that the fitting function be called with a proper \code{data} argument (e.g., \code{lavaan} or \code{nlme}; see 'Examples'). 
+Setting \code{include.data = TRUE} will fit the model with the imputed data sets used as the \code{data} argument.
+Setting \code{include.data = "df"} (or similar) will fit the model with the imputed data sets as the \code{df} argument (useful if the function refers to the data by a nonstandard name, such as \code{"df"}).
+
 The \code{ignore} argument can be used to declare objects that are not to be saved in the data sets created by \code{within}.
 
 }

@@ -4,10 +4,18 @@ with.mitml.list <- function(data, expr, include.data = FALSE, ...){
   expr <- substitute(expr)
   pf <- parent.frame()
 
+  # check include.data argument
+  if(is.character(include.data)){
+    name.data <- include.data
+    include.data <- TRUE
+  }else{
+    name.data <- "data"
+  }
+
   out <- if(include.data){
 
     lapply(data, function(d, expr){
-      expr[["data"]] <- substitute(d)
+      expr[[name.data]] <- substitute(d)
       eval(expr, parent.frame())
     }, expr = expr)
 

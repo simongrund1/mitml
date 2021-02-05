@@ -82,11 +82,13 @@ fit.lm <- with(implist, lm(ReadAchiev ~ ReadDis))
 require(lme4)
 fit.lmer <- with(implist, lmer(ReadAchiev ~ ReadDis + (1|ID)))
 
-# fit structural equation model with lavaan (requires include.data = TRUE)
+\dontrun{
+# fit structural equation model with lavaan (with include.data = TRUE)
 require(lavaan)
 mod <- "ReadAchiev ~ ReadDis"
 fit.sem <- with(implist,
                 sem(model = mod, cluster = "ID", estimator = "MLR"),
                 include.data = TRUE)
+}
 }
 \keyword{methods}

@@ -8,7 +8,13 @@
   extras <- match.call(expand.dots = FALSE)$...
   for(i in names(extras)) cll[[i]] <- extras[[i]]
 
-  eval(cll, parent.frame())
+  # update, restricting search to parent frame and formula environment
+  ff <- environment(formula(object))
+  pf <- parent.frame()
+
+  tryCatch(eval(cll, envir = ff), error = function(e) {
+    eval(call, pf)
+  })
 
 }
 

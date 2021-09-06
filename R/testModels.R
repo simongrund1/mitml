@@ -35,9 +35,14 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
   reml.null.model <- sapply(null.model, .checkREML)
   reml <- any(reml.model, reml.null.model)
 
+  need.refit <- FALSE
+
   if(reml){
-    model[reml.model] <- lapply(model[reml.model], .updateML)
-    null.model[reml.null.model] <- lapply(null.model[reml.null.model], .updateML)
+    need.refit <- (method == "D2" && use == "likelihood") || method == "D3" || method == "D4"
+    if(need.refit){
+      model[reml.model] <- lapply(model[reml.model], .updateML)
+      null.model[reml.null.model] <- lapply(null.model[reml.null.model], .updateML)
+    }
   }
 
   # ***
@@ -79,8 +84,6 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
 
       # FIXME: better way to handle this?
       if(inherits(model[[1]], "lavaan")) stop("The 'D2' method currently only supports likelihood-based comparisons for objects of class 'lavaan'. Please see '?testModels' for a list of supported model types.")
-
-      reml <- FALSE
 
       # extract parameter estimates
       est <- .extractParameters(model, diagonal = FALSE)
@@ -219,7 +222,8 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
     use = use,
     ariv = ariv,
     data = !is.null(data),
-    reml = reml
+    reml = reml,
+    refit = need.refit
   )
 
   class(out) <- "mitml.testModels"

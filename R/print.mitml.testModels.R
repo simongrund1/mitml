@@ -1,11 +1,12 @@
 print.mitml.testModels <- function(x, digits = 3, sci.limit = 5, ...){
-# print method for MI estimates
+# print method for model comparisons
 
   cll <- x$call
   test <- x$test
   method <- x$method
   use <- x$use
   reml <- x$reml
+  refit <- x$refit
   m <- x$m
   data <- x$data
   ariv <- x$ariv
@@ -54,7 +55,11 @@ print.mitml.testModels <- function(x, digits = 3, sci.limit = 5, ...){
 
   if(reml){
     footer <- TRUE
-    cat("Models originally fit with REML were automatically refit using ML.\n")
+    if(refit){
+      cat("Models originally fitted with REML were refitted using ML.\n")
+    }else{
+      cat("Models fitted with REML were used as is.\n")
+    }
   }
 
   if(footer) cat("\n")

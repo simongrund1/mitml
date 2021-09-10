@@ -236,7 +236,6 @@
     fml <- as.formula(sub("~", "~ 0 +", deparse(formula(object, random.only = TRUE))))
 
     # update model with fixed contribution of fixed effects
-    # NOTE: for merMods, local evaluation in parent frame avoids issues with update/update.formula
     newobj <- .localUpdate(object, formula = fml, data = model.frame(object), offset = linpred)
 
     # get variance components
@@ -285,8 +284,11 @@
   for(cc in names(cl)) stackdat[,cc] <- as.integer(as.factor(stackdat[,cc]))
 
   # update model with stacked data
-  # NOTE: for merMods, local evaluation in parent frame avoids issues with update/update.formula
-  newobj <- .localUpdate(object, data = stackdat)
+  # NOTE: update.merMod will find global objects of the same name before local ones (very bad),
+  # so we need to update in a separate environment
+  env <- new.env()
+  assign("stackdat", value = stackdat, envir = env)
+  newobj <- .localUpdate(object, envir = env, data = stackdat)
 
   return(newobj)
 

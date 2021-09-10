@@ -1,4 +1,4 @@
-.localUpdate <- function(object, ...){
+.localUpdate <- function(object, envir = parent.frame(), ...){
 # update call in parent frame
 
   cll <- getCall(object)
@@ -8,13 +8,8 @@
   extras <- match.call(expand.dots = FALSE)$...
   for(i in names(extras)) cll[[i]] <- extras[[i]]
 
-  # update, restricting search to parent frame and formula environment
-  ff <- environment(formula(object))
-  pf <- parent.frame()
-
-  tryCatch(eval(cll, envir = ff), error = function(e) {
-    eval(call, pf)
-  })
+  # update in local environment
+  eval(cll, envir = envir)
 
 }
 

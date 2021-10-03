@@ -90,13 +90,13 @@ This method can be used to apply arbitrary transformations to all of the complet
 > Due to how it is implemented, `within` cannot be used directly with `dplyr`.
 > Instead, users may use `with` instead of `within` with the following workaround.
 >```{r, eval=FALSE}
-implist <- with(implist,{
-   df <- data.frame(as.list(environment()))
-   df <- ... # dplyr commands
-   df
-})
-implist <- as.mitml.list(implist)
-```
+>implist <- with(implist,{
+>   df <- data.frame(as.list(environment()))
+>   df <- ... # dplyr commands
+>   df
+>})
+>implist <- as.mitml.list(implist)
+>```
 > Advanced users may also consider using `lapply` for a similar workaround.<span style="color:white">`</span>
 
 ## Fitting the analysis model

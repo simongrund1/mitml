@@ -105,6 +105,10 @@
 
 }
 
+# * MASS::polr
+
+.getCoef.polr <- function(object, ...) return(summary(object)$coefficients[,1])
+
 # * lme4::(g)lmer
 
 .getCoef.merMod <- function(object, ...) return(lme4::fixef(object))

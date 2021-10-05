@@ -47,7 +47,8 @@
     "lme4" = "^g?l?merMod$",
     "nlme" = "^n?lme$",
     "geepack" = "^geeglm$",
-    "survival" = "^coxph$"
+    "survival" = "^coxph$",
+    "MASS" = "^polr$"
   )
 
   # match class to package names

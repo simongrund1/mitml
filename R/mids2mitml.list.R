@@ -1,7 +1,7 @@
 mids2mitml.list <- function(x){
 # convert mids to mitml.list
 
-  if(!requireNamespace("mice", quietly = TRUE)) stop("The 'mice' package must be installed in order to use this function.")
+  if(!requireNamespace("mice", quietly = TRUE)) stop("The 'mice' package must be installed to use this function.")
   m <- x$m
 
   out <- list()

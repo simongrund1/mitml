@@ -1,6 +1,17 @@
 # * RELEASE HISTORY OF THE 'mitml' PACKAGE:
 --
 
+# Version 0.4-3 (2021-10-05)
+--
+
+* mitml.list2mids: new function (converts objects from 'mitml.list' to 'mids')
+
+* testEstimates,   added features (support for ordinal models estimated with
+  testConstraints, 'MASS::polr')       
+  testModels:
+
+* other:           bugfix (fixes vignette build errors)
+
 # Version 0.4-2 (2021-09-10)
 --
 

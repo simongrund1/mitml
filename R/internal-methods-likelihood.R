@@ -402,6 +402,33 @@
 
 }
 
+# * nlme::gls
+
+.getDataLL.gls <- function(object){
+
+  out <- nlme::getData(object)
+  return(out)
+
+}
+
+.updateStackedLL.gls <- function(object, datalist){
+
+  # add levels to clustering variables
+  grp.fml <- nlme::getGroupsFormula(object)
+  cl <- sub("^~", "", deparse(grp.fml))
+  for(ii in seq_along(datalist)){
+    datalist[[ii]][,cl] <- paste0("imp", ii, "_", datalist[[ii]][,cl])
+  }
+
+  # update model with stacked data
+  stackdat <- do.call(rbind, datalist)
+  stackdat[,cl] <- as.integer(as.factor(stackdat[,cl]))
+  newobj <- update(object, data = stackdat)
+
+  return(newobj)
+
+}
+
 # * lavaan::lavaan
 
 .getLL.lavaan <- function(object){

@@ -66,20 +66,22 @@
 }
 
 .formatTable <- function(x, prefix = "%.", postfix = "f", digits = 3, sci.limit = 5, width,
-                         col.names, row.names, labels = NULL, labels.sep = 3){
-# format table with common format and fixed width
+                         col.names = colnames(x), row.names = rownames(x), labels = NULL,
+                         labels.sep = 3){
 
-  # row and column names
-  if(missing(col.names)) col.names <- colnames(x)
-  if(missing(row.names)) row.names <- rownames(x)
+# format table with common format and fixed width
 
   # fotmat
   fmt <- paste0(prefix, digits, postfix)
   if(ncol(x) %% length(fmt)) stop("Format and table dimensions do not match.")
   fmt <- rep_len(fmt, length.out = ncol(x))
 
-  # format for large values
-  isLarge <- apply(x, 2, function(z, a) any(z >= 10^a), a = sci.limit)
+  # format for large values (ignore NA/NaN)
+  isLarge <- apply(x, 2, function(z, l){
+    y <- any(z >= 10^l)
+    y[is.na(y) | is.nan(y)] <- FALSE
+    return(y)
+  }, l = sci.limit)
   fmt[isLarge] <- sub(paste0(postfix, "$"), "e", fmt[isLarge])
 
   # make formatted matrix

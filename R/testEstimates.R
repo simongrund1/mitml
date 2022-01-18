@@ -132,6 +132,10 @@ testEstimates <- function(model, qhat, uhat, extra.pars = FALSE, df.com = NULL, 
       ep.out <- NULL
       warning("Computation of variance components not supported for objects of class '", paste(cls, collapse = "|"), "' (see ?with.mitml.list for manual calculation).")
 
+    }else if(length(ep.Qhat) == 0){
+
+      ep.out <- NULL
+
     }else{
 
       ep.Qbar <- apply(ep.Qhat, 1, mean)

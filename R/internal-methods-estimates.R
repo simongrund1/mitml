@@ -279,6 +279,70 @@
 
 }
 
+# * glmmTMB::glmmTMB
+
+.getCoef.glmmTMB <- function(object, ...) return(glmmTMB::fixef(object)$cond)
+.getVcov.glmmTMB <- function(object, ...) return(vcov(object)$cond)
+
+.getMisc.glmmTMB <- function(object){
+
+  # variance components by cluster variable
+  # NOTE: only conditional mean model (not dispersion or zero-inflation model)
+  vc <- glmmTMB::VarCorr(object)$cond
+  clus <- names(vc)
+
+  # loop over cluster variables
+  out.list <- list()
+  for(cc in clus){
+
+    vc.cc <- vc[[cc]]
+    if(is.null(dim(vc.cc))) dim(vc.cc) <- c(1, 1)
+    nms <- sub("^[(]Intercept[)]$", "Intercept", rownames(vc.cc))
+
+    vc.out <- diag(vc.cc)
+    names(vc.out) <- paste0(nms, "~~", nms, "|", cc)
+
+    vc.ind <- which(upper.tri(vc.cc), arr.ind = TRUE)
+    for(ii in seq_len(nrow(vc.ind))){
+      vc.ii <- vc.cc[vc.ind[ii, , drop = FALSE]]
+      names(vc.ii) <- paste0(nms[vc.ind[ii, 1]], "~~", nms[vc.ind[ii, 2]], "|", cc)
+      vc.out <- c(vc.out, vc.ii)
+    }
+
+    out.list[[cc]] <- vc.out
+
+  }
+
+  # residual variance (if model uses [constant] scale)
+  useSc <- attr(vc, "useSc") && !is.na(attr(vc, "sc"))
+  if(useSc){
+
+    rv <- attr(vc, "sc")^2
+    names(rv) <- "Residual~~Residual"
+
+    out.list[["Residual"]] <- rv
+
+  }
+
+  # get additional parameters (ICC; only for single clustering)
+  if(useSc && length(clus) == 1){
+
+    hasIntercept <- "(Intercept)" %in% colnames(vc[[clus]])
+    if(hasIntercept){
+      iv <- vc[[clus]]["(Intercept)", "(Intercept)"]
+      icc <- iv / (iv + rv)
+      names(icc) <- paste("ICC|", clus, sep = "")
+    }
+
+    out.list[["ICC"]] <- icc
+
+  }
+
+  out <- do.call(c, unname(out.list))
+  return(out)
+
+}
+
 # * geepack::geeglm
 
 .getMisc.geeglm <- function(object){

@@ -26,7 +26,7 @@ testModels <- function(model, null.model, method = c("D1", "D2", "D3", "D4"), us
   cls <- class(model[[1]])
   cls.null <- class(null.model[[1]])
 
-  if(cls[1] != cls.null[1]) warning("The 'model' and 'null.model' arguments appear to include objects of different classes. Results may not be trustworthy.")
+  if(!inherits(null.model[[1]], cls)) warning("The 'model' and 'null.model' arguments appear to include objects of different classes. Results may not be trustworthy.")
 
   .checkNamespace(union(cls, cls.null))
 

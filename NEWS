@@ -4,6 +4,11 @@
 # Version 0.4-4 (2021-11-09)
 --
 
+* coef, vcov:      new methods for extracting pooled parameter estimates and the
+                   pooled variance-covariance matrix
+* testEstimates:   no longer requires specifying variance estimates (uhat) when
+                   manually pooling estimated parameters (qhat), fixed spurious
+                   warning for 'coxph' models
 * testModels:      added initial support for 'D4' for models fitted with GLS
                    ('nlme')
 

@@ -1,4 +1,4 @@
-testEstimates <- function(model, qhat, uhat, extra.pars = FALSE, df.com = NULL, ...){
+testEstimates <- function(model, qhat, uhat = NULL, extra.pars = FALSE, df.com = NULL, ...){
 # combine scalar estimates from the analysis of multiply imputed data
 
   # ***
@@ -10,55 +10,62 @@ testEstimates <- function(model, qhat, uhat, extra.pars = FALSE, df.com = NULL, 
   extra.pars <- .checkDeprecated(extra.pars, arg.list = dots, name = "var.comp")
 
   # check model specification
-  if(missing(model) == (missing(qhat) || missing(uhat))){
-    stop("Either 'model' or both 'qhat' and 'uhat' must be supplied.")
+  if(missing(model) == missing(qhat)){
+    stop("Either 'model' or 'qhat' must be supplied.")
   }
 
-  # check misc. parameters
-  if(!extra.pars) ep.out <- NULL
+  # check extra parameters
+  if(!extra.pars) pooled.ep.est <- NULL
 
   # ***
-  # process matrix, array or list arguments
+  # process matrix, array or list input
   #
 
   if(!missing(qhat)){
 
-    # check input
-    if(missing(uhat)) stop("Either 'model' or both 'qhat' and 'uhat' must be supplied.")
-    if(!is.matrix(qhat) && is.array(qhat)) stop("The 'qhat' argument must be either a matrix or a list.")
+    # check arguments
+    if(extra.pars) warning("The 'extra.pars' argument is ignored when 'qhat' is used.")
 
-    # convert point estimates
+    # check qhat
+    if(!is.matrix(qhat) && is.array(qhat)) stop("The 'qhat' argument must be either a matrix or a list.")
     if(is.matrix(qhat)){
       qhat <- lapply(seq_len(ncol(qhat)), function(i, Q) Q[,i], Q = qhat)
     }
  
-    # convert variance estimates
-    if(is.matrix(uhat)){
-      uhat <- lapply(seq_len(ncol(uhat)), function(i, U) U[,i], U = uhat)
-    }else
-    if(is.array(uhat)){
-      uhat <- lapply(seq_len(dim(uhat)[3]), function(i, U) diag(as.matrix(U[,,i])), U = uhat)
+    # check uhat
+    if(!is.null(uhat)){
+
+      # convert formats
+      if(is.matrix(uhat)){
+        uhat <- lapply(seq_len(ncol(uhat)), function(i, U) U[,i], U = uhat)
+      }else
+      if(is.array(uhat)){
+        uhat <- lapply(seq_len(dim(uhat)[3]), function(i, U) diag(as.matrix(U[,,i])), U = uhat)
+      }
+
     }
 
-    # ensure proper format
+    # convert to common format
     m <- length(qhat)
-    if(m != length(uhat)) stop("Dimensions of 'qhat' and 'uhat' do not match.")
-
     Qhat <- matrix(unlist(qhat), ncol = m)
-    Uhat <- matrix(unlist(uhat), ncol = m)
-    if(any(!is.finite(Uhat))) stop("Missing values in 'uhat' are not allowed.")
+    if(is.null(uhat)){
+      Uhat <- NULL
+    }else{
+      Uhat <- matrix(unlist(uhat), ncol = m)
+      if(any(!is.finite(Uhat))) stop("Missing values in 'uhat' are not allowed.")
+    }
 
+  # get parameter names
     nms <- names(qhat[[1]])
     if(is.null(nms)) nms <- paste0("Parameter.", 1:nrow(Qhat))
 
     cls <- NULL
-    ep.out <- NULL
-    if(extra.pars) warning("The 'extra.pars' argument is ignored when 'qhat' and 'uhat' are used.")
+    pooled.ep.est <- NULL
 
   }
 
   # ***
-  # process fitted models
+  # process model input
   #
 
   if(!missing(model)){
@@ -95,65 +102,27 @@ testEstimates <- function(model, qhat, uhat, extra.pars = FALSE, df.com = NULL, 
   # pool results
   #
 
-  Qbar <- apply(Qhat, 1, mean)
-  Ubar <- apply(Uhat, 1, mean)
-  B <- apply(Qhat, 1, var)
-  T <- Ubar + (1+m^(-1)) * B
+  # pool estimates
+  pooled.est <- .pool.estimates(Qhat = Qhat, Uhat = Uhat, m = m, df.com = df.com, par.labels = nms)
 
-  se <- sqrt(T)
-  t <- Qbar/se
-
-  r <- (1+m^(-1))*B/Ubar
-
-  # compute degrees of freedom
-  v <- vm <- (m-1)*(1+r^(-1))^2
-  if(!is.null(df.com)){
-    lam <- r/(r+1)
-    vobs <- (1-lam)*((df.com+1)/(df.com+3))*df.com
-    v <- (vm^(-1)+vobs^(-1))^(-1)
-  }
-
-  fmi <- (r+2/(v+3))/(r+1)
-
-  # create output for parameter estimates
-  pval <- 2 * (1 - pt(abs(t), df = v))   # two-tailed p-value, SiG 2017-02-09
-  out <- matrix(c(Qbar, se, t, v, pval, r, fmi), ncol = 7)
-  colnames(out) <- c("Estimate", "Std.Error", "t.value", "df", "P(>|t|)", "RIV", "FMI") # two-tailed p-value, SiG 2017-02-09
-  rownames(out) <- nms
-
-  # preserve parameter labels (if any)
-  attr(out, "par.labels") <- attr(nms, "par.labels")
-
-  # create output for other parameter estimates
+  # pool estimates of extra parameters
   if(extra.pars && !missing(model)){
 
     if(is.null(ep.Qhat)){
-
-      ep.out <- NULL
+      pooled.ep.est <- NULL
       warning("Computation of variance components not supported for objects of class '", paste(cls, collapse = "|"), "' (see ?with.mitml.list for manual calculation).")
-
     }else if(length(ep.Qhat) == 0){
-
-      ep.out <- NULL
-
+      pooled.ep.est <- NULL
     }else{
-
-      ep.Qbar <- apply(ep.Qhat, 1, mean)
-      ep.out <- matrix(ep.Qbar, ncol = 1)
-      colnames(ep.out) <- "Estimate"
-      rownames(ep.out) <- ep.nms
-
-      # parameter labales
-      attr(ep.out, "par.labels") <- attr(ep.nms, "par.labels")
-
+      pooled.ep.est <- .pool.estimates(Qhat = ep.Qhat, Uhat = NULL, par.labels = ep.nms)
     }
 
   }
 
   out <- list(
     call = match.call(),
-    estimates = out,
-    extra.pars = ep.out,
+    estimates = pooled.est,
+    extra.pars = pooled.ep.est,
     m = m,
     adj.df = !is.null(df.com),
     df.com = df.com,

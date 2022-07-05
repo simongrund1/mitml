@@ -14,7 +14,7 @@ testEstimates(model, qhat, uhat, extra.pars = FALSE, df.com = NULL, ...)
 
   \item{model}{A list of fitted statistical models as produced by \code{\link{with.mitml.list}} or similar.}
   \item{qhat}{A matrix or list containing the point estimates of the parameters for each imputed data set (see 'Details').}
-  \item{uhat}{An array, matrix, or list containing the variance estimates (i.e., squared standard errors) of the parameters for each imputed data set (see 'Details').}
+  \item{uhat}{(optional) An array, matrix, or list containing the variance estimates (i.e., squared standard errors) of the parameters for each imputed data set (see 'Details').}
   \item{extra.pars}{A logical flag indicating if estimates of additional parameters (e.g., variance components) should be calculated. Default is \code{FALSE}.}
   \item{df.com}{(optional) A numeric vector denoting the complete-data degrees of freedom for the hypothesis tests (see 'Details').}
   \item{\dots}{Not used.}
@@ -84,5 +84,6 @@ fit.lmer <- with(implist, lmer(SES ~ ReadAchiev + (1|ID)))
 qhat <- sapply(fit.lmer, fixef)
 uhat <- sapply(fit.lmer, function(x) diag(vcov(x)))
 
+testEstimates(qhat = qhat)
 testEstimates(qhat = qhat, uhat = uhat)
 }

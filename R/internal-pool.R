@@ -1,4 +1,4 @@
-.pool.estimates <- function(Qhat, Uhat, m, df.com = NULL, par.labels = NULL){
+.pool.estimates <- function(Qhat, Uhat, m, diagonal = FALSE, df.com = NULL, nms = NULL){
 
   # pool point estimates
   Qbar <- apply(Qhat, 1, mean)
@@ -6,14 +6,14 @@
   # pool variances and inferences
   if(!is.null(Uhat)){
 
-    Ubar <- apply(Uhat, 1, mean)
-    B <- apply(Qhat, 1, var)
+    Ubar <- apply(Uhat, 1:2, mean)
+    B <- tcrossprod(Qhat - Qbar) / (m-1)
     T <- Ubar + (1+m^(-1)) * B
 
-    se <- sqrt(T)
+    se <- sqrt(diag(T))
     t <- Qbar/se
 
-    r <- (1+m^(-1))*B/Ubar
+    r <- (1 + m^(-1)) * diag(B) / diag(Ubar)
 
     # compute degrees of freedom
     v <- vm <- (m-1)*(1+r^(-1))^2
@@ -24,11 +24,12 @@
     }
 
     fmi <- (r+2/(v+3))/(r+1)
-    pval <- 2 * (1 - pt(abs(t), df = v))   # two-tailed p-value, SiG 2017-02-09
+    pval <- 2 * (1 - pt(abs(t), df = v))
 
     # create output
     out <- matrix(c(Qbar, se, t, v, pval, r, fmi), ncol = 7)
-    colnames(out) <- c("Estimate", "Std.Error", "t.value", "df", "P(>|t|)", "RIV", "FMI") # two-tailed p-value, SiG 2017-02-09
+    colnames(out) <- c("Estimate", "Std.Error", "t.value", "df", "P(>|t|)", "RIV", "FMI")
+    if(!diagonal) attr(out, "T") <- T
 
   }else{
 
@@ -39,8 +40,8 @@
   }
 
   # parameter names
-  rownames(out) <- par.labels
-  attr(out, "par.labels") <- attr(par.labels, "par.labels")
+  rownames(out) <- nms
+  attr(out, "par.labels") <- attr(nms, "par.labels")
 
   return(out)
 

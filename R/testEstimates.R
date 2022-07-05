@@ -25,6 +25,8 @@ testEstimates <- function(model, qhat, uhat = NULL, extra.pars = FALSE, df.com =
 
     # check arguments
     if(extra.pars) warning("The 'extra.pars' argument is ignored when 'qhat' is used.")
+    pooled.ep.est <- NULL
+    cls <- NULL
 
     # check qhat
     if(!is.matrix(qhat) && is.array(qhat)) stop("The 'qhat' argument must be either a matrix or a list.")
@@ -35,32 +37,40 @@ testEstimates <- function(model, qhat, uhat = NULL, extra.pars = FALSE, df.com =
     # check uhat
     if(!is.null(uhat)){
 
-      # convert formats
       if(is.matrix(uhat)){
         uhat <- lapply(seq_len(ncol(uhat)), function(i, U) U[,i], U = uhat)
-      }else
+      } else
       if(is.array(uhat)){
-        uhat <- lapply(seq_len(dim(uhat)[3]), function(i, U) diag(as.matrix(U[,,i])), U = uhat)
+        uhat <- lapply(seq_len(dim(uhat)[3]), function(i, U) as.matrix(U[,,i]), U = uhat)
+      }
+
+      # check uhat entries
+      if(is.list(uhat) && is.null(dim(uhat[[1]]))){
+        uhat <- lapply(uhat, diag)
+        uhat.diag <- TRUE
+      }else{
+        uhat.diag <- FALSE
       }
 
     }
 
-    # convert to common format
+    # convert to standard format
     m <- length(qhat)
     Qhat <- matrix(unlist(qhat), ncol = m)
+    p <- nrow(Qhat)
     if(is.null(uhat)){
       Uhat <- NULL
     }else{
-      Uhat <- matrix(unlist(uhat), ncol = m)
+      Uhat <- array(unlist(uhat), dim = c(p, p, m))
       if(any(!is.finite(Uhat))) stop("Missing values in 'uhat' are not allowed.")
     }
 
-  # get parameter names
+    # get parameter names
     nms <- names(qhat[[1]])
     if(is.null(nms)) nms <- paste0("Parameter.", 1:nrow(Qhat))
 
-    cls <- NULL
-    pooled.ep.est <- NULL
+    # pool results
+    pooled.est <- .pool.estimates(Qhat = Qhat, Uhat = Uhat, m = m, diagonal = uhat.diag, df.com = df.com, nms = nms)
 
   }
 
@@ -78,21 +88,32 @@ testEstimates <- function(model, qhat, uhat = NULL, extra.pars = FALSE, df.com =
     .checkNamespace(cls)
 
     # extract parameter estimates
-    est <- .extractParameters(model, diagonal = TRUE, include.extra.pars = TRUE)
+    est <- .extractParameters(model, include.extra.pars = TRUE)
 
     Qhat <- est$Qhat
     Uhat <- est$Uhat
     nms <- est$nms
 
+    # pool estimates
+    pooled.est <- .pool.estimates(Qhat = Qhat, Uhat = Uhat, m = m, df.com = df.com, nms = nms)
+
+    # handle extra parameters
     if(extra.pars){
 
+      # extract parameter estimates
       ep.est <- .extractMiscParameters(model)
       ep.Qhat <- ep.est$Qhat
       ep.nms <- ep.est$nms
 
-    }else{
-
-      ep.Qhat <- ep.nms <- NULL
+      # pool estimates
+      if(is.null(ep.Qhat)){
+        pooled.ep.est <- NULL
+        warning("Computation of variance components not supported for objects of class '", paste(cls, collapse = "|"), "' (see ?with.mitml.list for manual calculation).")
+      }else if(length(ep.Qhat) == 0){
+        pooled.ep.est <- NULL
+      }else{
+        pooled.ep.est <- .pool.estimates(Qhat = ep.Qhat, Uhat = NULL, nms = ep.nms)
+      }
 
     }
 
@@ -102,20 +123,8 @@ testEstimates <- function(model, qhat, uhat = NULL, extra.pars = FALSE, df.com =
   # pool results
   #
 
-  # pool estimates
-  pooled.est <- .pool.estimates(Qhat = Qhat, Uhat = Uhat, m = m, df.com = df.com, par.labels = nms)
-
   # pool estimates of extra parameters
   if(extra.pars && !missing(model)){
-
-    if(is.null(ep.Qhat)){
-      pooled.ep.est <- NULL
-      warning("Computation of variance components not supported for objects of class '", paste(cls, collapse = "|"), "' (see ?with.mitml.list for manual calculation).")
-    }else if(length(ep.Qhat) == 0){
-      pooled.ep.est <- NULL
-    }else{
-      pooled.ep.est <- .pool.estimates(Qhat = ep.Qhat, Uhat = NULL, par.labels = ep.nms)
-    }
 
   }
 

@@ -173,11 +173,11 @@ In addition, the output includes diagnostic quantities such as the fraction of m
 
 Grund, S., Lüdtke, O., & Robitzsch, A. (2016). Multiple imputation of multilevel missing data: An introduction to the R package pan. *SAGE Open*, *6*(4), 1–17. doi: 10.1177/2158244016668220 ([Link](https://doi.org/10.1177/2158244016668220))
 
-Grund, S., Lüdtke, O., & Robitzsch, A. (in press). Multiple imputation of missing data for multilevel models: Simulations and recommendations. *Organizational Research Methods*. doi: 10.1177/1094428117703686 ([Link](https://doi.org/10.1177/1094428117703686))
+Grund, S., Lüdtke, O., & Robitzsch, A. (2018). Multiple imputation of missing data for multilevel models: Simulations and recommendations. *Organizational Research Methods*, *21*(1), 111–149. doi: 10.1177/1094428117703686 ([Link](https://doi.org/10.1177/1094428117703686))
 
 ---
 
 ```{r, echo=F}
-cat("Author: Simon Grund (grund@ipn.uni-kiel.de)\nDate:  ", as.character(Sys.Date()))
+cat("Author: Simon Grund (simon.grund@uni-hamburg.de)\nDate:  ", as.character(Sys.Date()))
 ```
 

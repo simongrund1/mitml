@@ -125,11 +125,11 @@ Enders, C. K., Mistler, S. A., & Keller, B. T. (2016). Multilevel multiple imput
 
 Goldstein, H., Carpenter, J. R., Kenward, M. G., & Levin, K. A. (2009).  Multilevel models with multivariate mixed response types. *Statistical Modelling*, *9*, 173–197. doi: 10.1177/1471082X0800900301 ([Link](https://doi.org/10.1177/1471082X0800900301))
 
-Grund, S., Lüdtke, O., & Robitzsch, A. (in press). Multiple imputation of missing data for multilevel models: Simulations and recommendations. *Organizational Research Methods*. doi: 10.1177/1094428117703686 ([Link](https://doi.org/10.1177/1094428117703686))
+Grund, S., Lüdtke, O., & Robitzsch, A. (2018). Multiple imputation of missing data for multilevel models: Simulations and recommendations. *Organizational Research Methods*, *21*(1), 111–149. doi: 10.1177/1094428117703686 ([Link](https://doi.org/10.1177/1094428117703686))
 
 ---
 
 ```{r, echo=F}
-cat("Author: Simon Grund (grund@ipn.uni-kiel.de)\nDate:  ", as.character(Sys.Date()))
+cat("Author: Simon Grund (simon.grund@uni-hamburg.de)\nDate:  ", as.character(Sys.Date()))
 ```
 

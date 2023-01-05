@@ -213,6 +213,6 @@ Snijders, T. A. B., & Bosker, R. J. (2012). *Multilevel analysis: An introductio
 ---
 
 ```{r, echo=F}
-cat("Author: Simon Grund (grund@ipn.uni-kiel.de)\nDate:  ", as.character(Sys.Date()))
+cat("Author: Simon Grund (simon.grund@uni-hamburg.de)\nDate:  ", as.character(Sys.Date()))
 ```
 

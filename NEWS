@@ -8,9 +8,10 @@
                    pooled variance-covariance matrix
 * testEstimates:   no longer requires specifying variance estimates (uhat) when
                    manually pooling estimated parameters (qhat), fixed spurious
-                   warning for 'coxph' models
+                   warning for 'coxph' models, added initial support for
+                   'glmmTMB'
 * testModels:      added initial support for 'D4' for models fitted with GLS
-                   ('nlme')
+                   ('nlme'), added initial support for 'glmmTMB'
 
 # Version 0.4-3 (2021-10-05)
 --

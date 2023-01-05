@@ -2,12 +2,12 @@ Package: mitml
 Type: Package
 Title: Tools for Multiple Imputation in Multilevel Modeling
 Version: 0.4-4
-Date: 2022-07-05
+Date: 2023-01-05
 Author:  Simon Grund [aut,cre], Alexander Robitzsch [aut], Oliver Luedtke [aut]
 Maintainer: Simon Grund <simon.grund@uni-hamburg.de>
 BugReports: https://github.com/simongrund1/mitml/issues
 Imports: pan, jomo, haven, grDevices, graphics, stats, methods, utils
-Suggests: mice, miceadds, Amelia, lme4, nlme, lavaan, geepack, survival, knitr, rmarkdown
+Suggests: mice, miceadds, Amelia, lme4, nlme, lavaan, geepack, glmmTMB, survival, knitr, rmarkdown
 LazyData: true
 LazyLoad: true
 Description: Provides tools for multiple imputation of missing data in multilevel

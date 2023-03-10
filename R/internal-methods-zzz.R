@@ -4,21 +4,21 @@
 
 # * check for REML fit
 
-.checkREML <- function(object, ...) UseMethod(".checkREML", object)
+.checkREML <- function(object) UseMethod(".checkREML", object)
 .checkREML.default <- function(object) return(FALSE)
 .checkREML.merMod <- function(object) return(lme4::isREML(object))
 .checkREML.lme <- function(object) return(object$method == "REML")
 
 # * update REML fit with ML
 
-.updateML <- function(object, ...) UseMethod(".updateML", object)
+.updateML <- function(object) UseMethod(".updateML", object)
 .updateML.default <- function(object) return(object)
 .updateML.merMod <- function(object) return(.localUpdate(object, REML = FALSE))
 .updateML.lme <- function(object) return(.localUpdate(object, data = object$data, method = "ML"))
 
 # * determine degrees of freedom
 
-.getDFs <- function(object, ...) UseMethod(".getDFs", object)
+.getDFs <- function(object) UseMethod(".getDFs", object)
 
 .getDFs.default <- function(object){
 
@@ -59,7 +59,7 @@
 
 # * extract model formula
 
-.getFormula <- function(object, ...) UseMethod(".getFormula", object)
+.getFormula <- function(object) UseMethod(".getFormula", object)
 
 .getFormula.default <- function(object){
 

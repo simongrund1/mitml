@@ -115,11 +115,11 @@
 # generic functions
 #
 
-.getLL <- function(object, ...) UseMethod(".getLL", object)
-.getArgsLL <- function(object, ...) UseMethod(".getArgsLL", object)
+.getLL <- function(object) UseMethod(".getLL", object)
+.getArgsLL <- function(object) UseMethod(".getArgsLL", object)
 .getUserLL <- function(object, ...) UseMethod(".getUserLL", object)
-.getDataLL <- function(object, ...) UseMethod(".getDataLL", object)
-.updateStackedLL <- function(object, ...) UseMethod(".updateStackedLL", object)
+.getDataLL <- function(object) UseMethod(".getDataLL", object)
+.updateStackedLL <- function(object, datalist) UseMethod(".updateStackedLL", object)
 
 # ***
 # default methods
@@ -129,7 +129,10 @@
 .getArgsLL.default <- function(object) return(NULL)
 .getUserLL.default <- function(object, ...) return(NULL)
 .getDataLL.default <- function(object) return(model.frame(object))
-.updateStackedLL.default <- function(object, datalist) return(update(object, data = do.call(rbind, datalist)))
+.updateStackedLL.default <- function(object, datalist) {
+  ll <- update(object, data = do.call(rbind, datalist))
+  return(ll)
+}
 
 # ***
 # class-specific methods

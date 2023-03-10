@@ -67,7 +67,7 @@
 
 .getCoef <- function(object, ...) UseMethod(".getCoef", object)
 .getVcov <- function(object, ...) UseMethod(".getVcov", object)
-.getMisc <- function(object, ...) UseMethod(".getMisc", object)
+.getMisc <- function(object) UseMethod(".getMisc", object)
 
 # ***
 # default methods
@@ -99,9 +99,9 @@
 .getMisc.glm <- function(object){
 
   fam <- tolower(object$family$family)
-  if(fam == "gaussian") .getMisc.lm(object)
+  out <- if (fam == "gaussian") .getMisc.lm(object) else NULL
 
-  return(NULL)
+  return(out)
 
 }
 

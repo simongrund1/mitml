@@ -68,6 +68,11 @@
   t <- k*(m-1)
   if(!is.null(df.com)){
 
+    # warn about poor behavior for t<=4
+    if (t <= 4) {
+      warning("Degrees of freedom (df.com) may not be trustworthy, because the number of imputations is too low (m \u2264 5). To obtain trustworthy results, re-run the procedure with a larger number of imputations.")
+    }
+
     # small-sample degrees of freedom (Reiter, 2007; Eq. 1-2)
     a <- r*t/(t-2)
     vstar <- ( (df.com+1) / (df.com+3) ) * df.com
